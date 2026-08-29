@@ -1,0 +1,31 @@
+{
+  "name": "maatram-website",
+  "version": "1.0.0",
+  "description": "Maatram - Free Screen Time & Focus App for Students",
+  "main": "gate.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaatramReelsBlocking/maatram.git"
+  },
+  "keywords": [
+    "screen-time",
+    "focus-app",
+    "productivity",
+    "student-app"
+  ],
+  "author": "Maatram",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaatramReelsBlocking/maatram/issues"
+  },
+  "homepage": "https://github.com/MaatramReelsBlocking/maatram#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
