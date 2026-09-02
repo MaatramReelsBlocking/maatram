@@ -9,8 +9,8 @@ Then:
   git commit -m "add app download page"
   git push
 
-Live at:  https://maatram-website.vercel.app/download.html
-Direct:   https://maatram-website.vercel.app/downloads/maatram.apk
+Live at:  https://maatram.co.in/download.html
+Direct:   https://maatram.co.in/downloads/maatram.apk
 
 Link to it from your nav / socials page with:
 
