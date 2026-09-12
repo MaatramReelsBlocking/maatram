@@ -9,7 +9,7 @@ const ok = (name, cond) => { cond ? pass++ : (fail++, console.log('  FAIL  ' + n
 const read = f => fs.readFileSync(path.join(__dirname, f), 'utf8');
 
 const PAGES = ['index.html','timers.html','app-gate.html','study-room.html','stats.html',
-               'leaderboard.html','sports.html','socials.html','download.html','roles.html','login.html'];
+               'leaderboard.html','sports.html','socials.html','download.html','login.html'];
 
 /* ── 1. file exists, parses, no duplicate ids ── */
 const sports = read('sports.html');
@@ -90,7 +90,6 @@ ok('roll accumulates lifetime', /patch\.lifetime = life\+pts/.test(gate));
 ok('first run adopts instead of wiping', /first ever run: adopt/.test(gate));
 ok('roll skipped when cycle current', /if\(d\.cycle===now\) return;/.test(gate));
 ok('roll never blocks the page', /catch\(e\)\{ \}\s*\/\* never block/.test(gate));
-ok('roll called after role check', gate.indexOf('await roll(') > gate.indexOf("if(!d.role)"));
 ok('no cron / no server key in gate', !/firebase-admin|serviceAccount/i.test(gate));
 
 /* behavioural test of the roll logic, lifted out of gate.js */
@@ -151,7 +150,6 @@ ok('event title length capped', /title\.size\(\) <= 80/.test(rules));
 ok('reset branch allows zeroing', /neu\(\)\.points == 0/.test(rules));
 ok('reset branch requires a cycle change', /neu\(\)\.cycle != old\(\)\.get\('cycle', ?''\)/.test(rules));
 ok('normal caps still enforced', /old\(\)\.points \+ 100/.test(rules));
-ok('classes block untouched', /match \/classes\/\{code\}/.test(rules));
 
 /* ── 11. flat delivery (he uploads to the repo root) ── */
 const files = fs.readdirSync(__dirname).filter(f => f !== 'node_modules' && f !== 'package.json' && f !== 'package-lock.json');
@@ -180,10 +178,9 @@ ok('notes are inserted as text, not HTML', /li\.textContent=t/.test(sports));
   ok('fallback bucket covered', !!COACH['Other']);
 })();
 
-/* ── 13. teachers and parents are off the board ── */
+/* ── 13. board filters banned users ── */
 ok('competes() helper exists', /function competes\(v\)/.test(lb));
-ok('missing role still competes', /!v\.role \|\| v\.role==='student'/.test(lb));
-ok('board read filters non-students', /if\(!competes\(v\)\)return;[\s\S]{0,200}cloudUsers\.push/.test(lb));
+ok('board read filters banned', /if\(!competes\(v\)\)return;[\s\S]{0,200}cloudUsers\.push/.test(lb));
 ok('same filter covers the all-time board', /if\(!competes\(v\)\)return;[\s\S]{0,200}cloudLife\s*\.push/.test(lb));
 ok('fetch window widened past the 50 shown', /limit\(300\)/.test(lb));
 ok('still shows only 50', /cloudUsers=cloudUsers\.slice\(0,50\)/.test(lb) && /cloudLife\s*=cloudLife\s*\.slice\(0,50\)/.test(lb));
@@ -204,10 +201,6 @@ ok('saved filters restored on load', /maatram_sport'\);[\s\S]{0,120}getItem\('ma
 ok('publish snaps the filter onto the new event', /\$\('fSport'\)\.value=ev\.sport; \$\('fWhen'\)\.value='up'/.test(sports));
 ok('publish message names where it went', /Filter moved to '\+ev\.sport/.test(sports));
 
-ok('viewer notice markup', !!L.getElementById('watchNote'));
-ok('viewer notice hidden by default', L.getElementById('watchNote').hasAttribute('hidden'));
-ok('notice waits for gate.js role', /MutationObserver[\s\S]{0,200}data-role/.test(lb));
-ok('notice only for teacher or parent', /r!=='teacher'&&r!=='parent'/.test(lb));
 
 console.log('\n' + pass + '/' + (pass + fail) + ' checks pass' + (fail ? '  — ' + fail + ' FAILED' : ''));
 process.exit(fail ? 1 : 0);

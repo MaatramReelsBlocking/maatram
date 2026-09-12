@@ -157,10 +157,6 @@
   footer{margin-top:56px;text-align:center;color:var(--dim);font-size:11px;letter-spacing:1.4px}
   footer b{color:var(--green)}
   @media(max-width:560px){.podium{gap:8px}.pod .nm{font-size:11px}}
-  #watchNote{max-width:520px;margin:0 auto 18px;text-align:center;font-size:12.5px;line-height:1.6;
-    color:var(--dim);background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:12px 16px}
-  #watchNote b{color:var(--ink);text-transform:capitalize}
-
   /* ══ board cycle tabs ══ */
   .tabs{display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
   .tabs button{min-height:44px;padding:11px 20px;border-radius:100px;cursor:pointer;
@@ -250,7 +246,7 @@ body{padding-top:52px!important}
 <a class="skip-link" href="#main">Skip to main content</a>
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="index.html"><span class="mn-mark">M</span><b>MAATRAM</b></a>
-  <span class="mn-spacer"></span><a class="mn-link" href="index.html">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link active" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="roles.html">Account</a>
+  <span class="mn-spacer"></span><a class="mn-link" href="index.html">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link active" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
   <div id="mnavAuth">
     <a id="mnavIn" href="login.html">Sign in</a>
     <div id="mnavChip">
@@ -285,7 +281,6 @@ body{padding-top:52px!important}
     <p>Real students · Real points · Real change</p>
   </div>
 
-  <p id="watchNote" hidden>You are signed in as a <b id="watchRole">teacher</b> — this board ranks students only, so your name never appears here.</p>
 
   <div class="tabs" role="tablist" aria-label="Leaderboard cycle">
     <button id="tabMonth" role="tab" aria-selected="true" type="button">This month</button>
@@ -307,7 +302,9 @@ body{padding-top:52px!important}
     <p>No champions yet — add your name above, finish a focus session, and be the first name in Maatram history.</p>
   </div>
 
-  <footer>MAATRAM · <b>Action ⟹ Value</b> · Points update as you complete sessions</footer>
+  <section style="max-width:680px;margin:48px auto 0;padding:0 20px 8px;color:var(--dim,#8FA3A0);font-size:13.5px;line-height:1.75">Maatram’s productivity leaderboard is part of a free, open-source focus app built for students. Every point on this board comes from real Pomodoro and Deep Work timer sessions, App Gate hard locks and study-room streaks — no fake accounts, no paid boosts. If you’re looking for a free study app that turns focus into friendly competition, gamifies productivity with streaks and badges, and helps you beat phone addiction one session at a time, this is what a Maatram leaderboard is for.</section>
+
+<footer>MAATRAM · <b>Action ⟹ Value</b> · Points update as you complete sessions</footer>
 </div>
 
 <script>
@@ -339,13 +336,7 @@ let myId=store.get('maatram_board_me')||null;
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function initials(n){return esc(n.trim().split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase()||'?')}
 
-/* Only students appear on the board. Teachers and parents use Maatram to
-   watch a class, so ranking them against the students they supervise makes
-   no sense. Docs written before roles existed have no role field: they are
-   students, so a missing role still competes.
-   ponytail: filtered client-side over a 120-doc window instead of a
-   where('role','==','student') query, which would need a composite index. */
-function competes(v){ return !!v && v.banned!==true && (!v.role || v.role==='student'); }
+function competes(v){ return !!v && v.banned!==true; }
 
 let cloudUsers=[];   // this month's points  (users.points, zeroed on the 1st)
 let cloudLife=[];    // all time              (users.lifetime + this month's points)
@@ -367,21 +358,7 @@ function setTab(t){
   $('tabMonth').setAttribute('aria-selected', t==='month'?'true':'false');
   $('tabLife').setAttribute('aria-selected', t==='life'?'true':'false');
   cycleNote();
-
-/* gate.js writes html[data-role] only after Firebase answers, which is later
-   than this script, so watch for it instead of reading once. */
-(function watchBanner(){
-  function show(){
-    const r=document.documentElement.dataset.role;
-    if(r!=='teacher'&&r!=='parent')return false;
-    $('watchRole').textContent=r;
-    $('watchNote').hidden=false;
-    return true;
-  }
-  if(show())return;
-  const mo=new MutationObserver(()=>{ if(show()) mo.disconnect(); });
-  mo.observe(document.documentElement,{attributes:true,attributeFilter:['data-role']});
-})(); render();
+  render();
 }
 
 function render(){

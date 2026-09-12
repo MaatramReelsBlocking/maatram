@@ -7,7 +7,7 @@ const group=n=>console.log('\n== '+n);
 const read=f=>fs.readFileSync(path.join(__dirname,f),'utf8');
 
 const GATED=['timers','app-gate','study-room','stats','leaderboard'];
-const OPEN =['index','socials','download','login','roles'];
+const OPEN =['index','socials','download','login'];
 
 group('gate.js wiring');
 GATED.forEach(n=>{
@@ -22,19 +22,18 @@ OPEN.forEach(n=>{
 group('nav link');
 [...GATED,...OPEN].forEach(n=>{
   const h=read(n+'.html');
-  ok(n+': Account link present once', (h.match(/href="roles\.html"/g)||[]).length>=1
-     && (h.match(/class="mn-link(?: active)?" href="roles\.html"/g)||[]).length===1);
+  ok(n+': Account link present once', (h.match(/href="login\.html"/g)||[]).length>=1
+     && (h.match(/class="mn-link(?: active)?" href="login\.html"/g)||[]).length===1);
   ok(n+': nav has all 10 links', (h.match(/class="mn-link/g)||[]).length===10);
   ok(n+': Sports link present once', (h.match(/class="mn-link(?: active)?" href="sports\.html"/g)||[]).length===1);
 });
 
 group('gate.js behaviour');
 const G=read('gate.js');
-ok('never gates roles.html', /PAGE==='roles\.html'/.test(G));
 ok('never gates login.html', /PAGE==='login\.html'/.test(G));
 ok('never gates auth-bridge.html', /auth-bridge\.html/.test(G));
 ok('remembers the page it bounced from', /sessionStorage\.setItem\('maatram_next'/.test(G));
-ok('uses replace, not push (no back-button trap)', /location\.replace\('roles\.html'\)/.test(G));
+ok('uses replace, not push (no back-button trap)', /location\.replace\('login\.html'\)/.test(G));
 ok('reveals on import failure (offline never locks out)', /catch\(e\)\{ reveal\(\); return; \}/.test(G));
 
 function run(url){
@@ -55,20 +54,9 @@ ok('http: veil element shown', !!d2.window.document.getElementById('mgate'));
 ok('http: page content hidden by CSS rule',
    /html\.mgate body>\*\{visibility:hidden!important\}/.test(d2.window.document.getElementById('maatramGateCSS').textContent));
 
-let d3=run('http://localhost/roles.html');
-ok('http roles.html: not gated', !d3.window.document.documentElement.classList.contains('mgate'));
-
 setTimeout(()=>{
   ok('http: reveals when Firebase cannot load (offline)',
      !d2.window.document.documentElement.classList.contains('mgate'));
-
-  group('roles.html return hop');
-  const R=read('roles.html');
-  ok('reads maatram_next', /sessionStorage\.getItem\('maatram_next'\)/.test(R));
-  ok('clears it after use', /removeItem\('maatram_next'\)/.test(R));
-  ok('validates the target filename', /\^\[a-z0-9-\]\+\\\.html\$/.test(R));
-  ok('never hops back to roles.html', /n!=='roles\.html'/.test(R));
-  ok('hops only on a fresh pick', (R.match(/,true\);/g)||[]).length===3);
 
   console.log('\n'+pass+' pass, '+fail+' fail');
   process.exit(fail?1:0);

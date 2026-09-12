@@ -1,13 +1,13 @@
 /* ══ Maatram · page gate ══
    One line per page:  <script src="gate.js"></script>  (right after theme.js)
-   Signed out, or signed in with no profile chosen -> roles.html.
-   Never add this to roles.html or login.html (redirect loop). */
+   Signed out -> login.html.
+   Never add this to login.html or auth-bridge.html (redirect loop). */
 (function(){
   var HOSTED = location.protocol==='http:'||location.protocol==='https:';
   if(!HOSTED) return;                       /* opened from a file: leave the page alone */
 
   var PAGE=(location.pathname.split('/').pop()||'index.html');
-  if(PAGE==='roles.html'||PAGE==='login.html'||PAGE==='auth-bridge.html') return;
+  if(PAGE==='login.html'||PAGE==='auth-bridge.html') return;
 
   /* hide the page before anything paints, so signed-out content never flashes */
   var s=document.createElement('style');
@@ -31,7 +31,7 @@
   }
   function send(){
     try{ sessionStorage.setItem('maatram_next',PAGE); }catch(e){}
-    location.replace('roles.html');
+    location.replace('login.html');
   }
 
 
@@ -102,8 +102,6 @@
         try{ var snap=await F.getDoc(F.doc(db,'users',user.uid)); d=snap.exists()?snap.data():{}; }
         catch(e){ reveal(); return; }       /* read failed: let them work, do not trap them */
         if(enforce(U,auth,d)) return;      /* banned or kicked by an admin */
-        if(!d.role){ send(); return; }
-        try{ document.documentElement.dataset.role=d.role; }catch(e){}
         /* stay live: a ban or kick lands while the page is open */
         try{ F.onSnapshot(F.doc(db,'users',user.uid),function(s){
                if(s.exists()) enforce(U,auth,s.data());

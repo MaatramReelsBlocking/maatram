@@ -62,7 +62,7 @@ ok('banned users cannot rank',    /v\.banned!==true/.test(board));
 
 console.log('\ngate.js');
 ok('defines enforce()',           /function enforce\(U,auth,d\)/.test(gate));
-ok('runs before the role check',  gate.indexOf('enforce(U,auth,d)') < gate.indexOf("if(!d.role)"));
+
 ok('listens for a live ban',      /onSnapshot\(F\.doc\(db,'users',user\.uid\)/.test(gate));
 ok('remembers the last kick',     /maatram_kick_seen/.test(gate));
 ok('veil keeps line breaks',      /white-space:pre-line/.test(gate));
