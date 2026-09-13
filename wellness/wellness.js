@@ -36,6 +36,17 @@ const commonSwapMeta={diets:['vegetarian','eggs','nonveg','vegan','any'],allerge
 const mealSwapOptions=(type,currentId)=>[...meals.filter(m=>m.type===type),...(swapMeals[type]||[]).map(([id,name,desc])=>({id,type,name,desc,...commonSwapMeta}))].filter(m=>m.id!==currentId&&m.diets.includes(profile.diet)&&!m.allergens.some(a=>profile.avoid.includes(a))).slice(0,5);
 const goalCopy={gain:['Nourish your momentum.','Energy-rich meals with regular snacks help you keep up with school, sport and life.'],muscle:['Fuel. Move. Recover.','Protein-containing meals, carbohydrates and rest work together.'],fitness:['Move with steady energy.','Balanced meals designed to support everyday activity.'],balanced:['A better plate rhythm.','Simple, familiar meals that help make balance repeatable.'],habits:['Keep it easy to repeat.','A reliable rhythm beats a perfect day.'],manage:['Feel steady and satisfied.','Balanced meals and consistent routines—never skipping meals.']};
 let day=0,plan=[],currentSwap=null,points=430,streak=5;
+
+const savedProfile=localStorage.getItem('maatramWellnessProfile');
+const savedPlan=localStorage.getItem('maatramWellnessPlan');
+
+if(savedProfile){
+  Object.assign(profile,JSON.parse(savedProfile));
+}
+
+if(savedPlan){
+  plan=JSON.parse(savedPlan);
+}
 const wellnessTrack={meals:0,hydration:0,activity:0,sleep:0,rewarded:false};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function show(id){$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');$$('.nav-action').forEach(x=>x.classList.toggle('active',x.dataset.screen===id));window.scrollTo({top:0,behavior:'smooth'});}
@@ -48,7 +59,7 @@ $$('[data-next]').forEach(b=>b.onclick=()=>toNext(b.dataset.next));$$('[data-bac
 $$('[data-choice] button').forEach(b=>b.onclick=()=>{const parent=b.closest('[data-choice]');parent.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');profile[parent.dataset.choice]=b.dataset.value;if(parent.dataset.choice==='goal')$('#goalHint').textContent='GOAL LOCKED IN';if(parent.dataset.choice==='activity')$('#activityHint').textContent='ACTIVITY LEVEL SAVED';});
 $('#dietChips').querySelectorAll('button').forEach(b=>b.onclick=()=>{$$('#dietChips button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');profile.diet=b.dataset.value;$('#preferenceHint').textContent='PREFERENCE SAVED';});
 $('#avoidChips').querySelectorAll('button').forEach(b=>b.onclick=()=>{b.classList.toggle('selected');profile.avoid=$$('#avoidChips button.selected').map(x=>x.dataset.value);});
-$('#generate').onclick=()=>{if(!profile.diet){$('#preferenceHint').textContent='PICK A FOOD PREFERENCE FIRST';return}profile.other=$('#otherAvoid').value.trim();show('loading');let lines=['Checking your preferences...','Building familiar meal options...','Keeping your plan practical...'];let n=0;let interval=setInterval(()=>{$('#loadingLine').textContent=lines[++n]||'Your plan is ready.';if(n>=lines.length){clearInterval(interval);buildPlan();renderPlan();setTimeout(()=>show('plan'),380)}},620)};
+$('#generate').onclick=()=>{if(!profile.diet){$('#preferenceHint').textContent='PICK A FOOD PREFERENCE FIRST';return}profile.other=$('#otherAvoid').value.trim();show('loading');let lines=['Checking your preferences...','Building familiar meal options...','Keeping your plan practical...'];let n=0;let interval=setInterval(()=>{$('#loadingLine').textContent=lines[++n]||'Your plan is ready.';if(n>=lines.length){clearInterval(interval);buildPlan();localStorage.setItem('maatramWellnessProfile',JSON.stringify(profile));localStorage.setItem('maatramWellnessPlan',JSON.stringify(plan));renderPlan();setTimeout(()=>show('plan'),380)}},620)};
 $('#dayTabs').onclick=e=>{if(e.target.dataset.day!==undefined){day=+e.target.dataset.day;renderPlan()}};
 $('#mealList').onclick=e=>{if(e.target.dataset.meal===undefined)return;currentSwap=+e.target.dataset.meal;const meal=plan[day][currentSwap];const options=mealSwapOptions(meal.type,meal.id);$('#swapOptions').innerHTML=options.map(x=>`<button class="swap-option" data-id="${x.id}"><b>${x.name}</b><small>${x.desc}</small></button>`).join('');$('#swapModal').classList.add('open');$('#swapModal').setAttribute('aria-hidden','false')};
 $('#swapOptions').onclick=e=>{const button=e.target.closest('[data-id]');if(!button)return;const replacement=[...meals,...Object.entries(swapMeals).flatMap(([type,items])=>items.map(([id,name,desc])=>({id,type,name,desc,...commonSwapMeta})))].find(m=>m.id===button.dataset.id);plan[day][currentSwap]=replacement;$('#closeSwap').click();renderPlan()};$('#closeSwap').onclick=()=>{$('#swapModal').classList.remove('open');$('#swapModal').setAttribute('aria-hidden','true')};
