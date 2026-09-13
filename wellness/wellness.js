@@ -71,3 +71,7 @@ $$('.track-card button').forEach(b=>b.onclick=()=>{const card=b.closest('.track-
 $('#homeOpen').onclick=()=>show('intro');
 $$('.nav-action').forEach(button=>button.onclick=()=>{if(!plan.length){show('intro');return}show(button.dataset.screen)});
 if(location.hash){history.replaceState(null,'',location.pathname);show('intro');}
+if(plan.length){
+  renderPlan();
+  show('plan');
+}
