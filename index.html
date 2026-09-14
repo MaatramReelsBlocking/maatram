@@ -130,21 +130,20 @@
     display:flex;justify-content:center;
   }
   h1.neon .L{
-    display:inline-block;color:var(--ink);opacity:0;
-    transform:translateY(90px) rotateX(80deg) scale(.6);filter:blur(14px);
+    display:inline-block;color:var(--ink);
+    /* painted in final position: this is the LCP element, and the old
+       fly-in held it at opacity 0 until ~1.9s */
     text-shadow:
       0 0 6px rgba(234,255,246,.9),
       0 0 20px rgba(47,227,143,.8),
       0 0 60px rgba(55,182,255,.45);
   }
   h1.neon .L.in{
-    animation:letterIn .85s cubic-bezier(.2,1.5,.3,1) forwards,
-              neonPulse 3.2s ease-in-out 1.2s infinite alternate;
+    animation:neonPulse 3.2s ease-in-out 1.2s infinite alternate;
   }
   /* occasional flicker on two letters, like a real neon sign */
-  h1.neon .L:nth-child(3).in{animation:letterIn .85s cubic-bezier(.2,1.5,.3,1) forwards,flicker 4.5s linear 2.2s infinite}
-  h1.neon .L:nth-child(6).in{animation:letterIn .85s cubic-bezier(.2,1.5,.3,1) forwards,flicker 6.2s linear 3.1s infinite}
-  @keyframes letterIn{to{opacity:1;transform:none;filter:blur(0)}}
+  h1.neon .L:nth-child(3).in{animation:flicker 4.5s linear 2.2s infinite}
+  h1.neon .L:nth-child(6).in{animation:flicker 6.2s linear 3.1s infinite}
   @keyframes neonPulse{
     from{text-shadow:0 0 6px rgba(234,255,246,.9),0 0 20px rgba(47,227,143,.8),0 0 60px rgba(55,182,255,.45)}
     to  {text-shadow:0 0 8px rgba(234,255,246,1),0 0 30px rgba(47,227,143,1),0 0 90px rgba(255,110,199,.5)}
