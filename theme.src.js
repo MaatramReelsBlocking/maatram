@@ -419,7 +419,7 @@
   +'backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);'
   +'box-shadow:0 18px 40px rgba(0,0,0,.55)}'
   +'#themePanel.open{opacity:1;pointer-events:auto;transform:none}'
-  +'#themePanel h4{font-size:10.5px;letter-spacing:2.2px;text-transform:uppercase;'
+  +'#themePanel .tp-h{font-size:10.5px;letter-spacing:2.2px;text-transform:uppercase;'
   +'color:#8A928E;font-weight:700;margin:0 0 12px}'
   +'.th-opt{display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;margin-bottom:8px;'
   +'border-radius:14px;cursor:pointer;text-align:left;font-family:inherit;'
@@ -651,9 +651,9 @@
     document.body.appendChild(btn);
 
     var panel=document.createElement('div');
-    panel.id='themePanel'; panel.setAttribute('role','menu');
+    panel.id='themePanel'; panel.setAttribute('role','menu'); panel.setAttribute('aria-labelledby','tpH');
     panel.innerHTML=
-      '<h4>Site theme</h4>'
+      '<div class="tp-h" id="tpH">Site theme</div>'
       +'<button type="button" class="th-opt'+(MIN?'':' on')+'" data-t="neon" role="menuitem">'
       +'<span class="sw neon"></span><span><b>Neon</b><span>Original — vivid green &amp; blue</span></span></button>'
       +'<button type="button" class="th-opt'+(MIN?' on':'')+'" data-t="minimal" role="menuitem">'
