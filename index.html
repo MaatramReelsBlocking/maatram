@@ -83,7 +83,7 @@
   :root{
     --bg:#02090c;--ink:#eafff6;--dim:#7da99b;
     --green:#2fe38f;--blue:#37b6ff;--gold:#ffd166;--pink:#ff6ec7;
-    --font-display:'Orbitron',sans-serif;--font-body:'Inter',system-ui,sans-serif;
+    --font-display:'Orbitron',sans-serif;--font-body:'Inter','Inter Fallback',system-ui,sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%;overflow:hidden}
@@ -256,7 +256,7 @@
 /* ══ MAATRAM UNIVERSAL NAV ══ */
 #mnav{position:fixed;top:0;left:0;right:0;height:52px;z-index:600;display:flex;align-items:center;gap:5px;
   padding:0 14px;background:rgba(2,10,8,.82);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter',system-ui,sans-serif;cursor:auto}
+  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter','Inter Fallback',system-ui,sans-serif;cursor:auto}
 #mnav *{cursor:pointer}
 #mnav .mn-logo{display:flex;align-items:center;gap:8px;margin-right:10px;text-decoration:none;color:#eafff6}
 #mnav .mn-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#2fe38f,#37b6ff);
@@ -328,15 +328,15 @@ body{padding-top:52px!important}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap" media="print" onload="this.media='all';this.onload=null">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=optional">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=optional" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=optional"></noscript>
 <script src="theme.js"></script>
 
 <style id="mfootCSS">
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 #mfoot{position:relative;z-index:6;max-width:1080px;margin:0 auto;padding:56px 22px 130px;
-  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#8b9698;
+  font-family:Inter,'Inter Fallback',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#8b9698;
   border-top:1px solid rgba(255,255,255,.08);line-height:1.65;font-size:14.5px}
 #mfoot h2{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#cfd8d7;margin:0 0 14px;font-weight:700}
 #mfoot h3{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#7f8b8d;margin:0 0 12px;font-weight:700}
@@ -733,13 +733,13 @@ addEventListener('resize',fitAll);
     <p class="proof-kick">Built in the open, not just claimed</p>
     <div class="proof-row">
       <a href="https://github.com/MaatramReelsBlocking/Maatram-" target="_blank" rel="noopener" class="proof-badge">
-        <img loading="lazy" decoding="async" src="https://img.shields.io/github/stars/MaatramReelsBlocking/Maatram-?style=flat-square&color=2fe38f&labelColor=0a1c16" alt="Maatram GitHub stars">
+        <img loading="lazy" decoding="async" src="https://img.shields.io/github/stars/MaatramReelsBlocking/Maatram-?style=flat-square&color=2fe38f&labelColor=0a1c16" width="94" height="20" alt="Maatram GitHub stars">
       </a>
       <a href="https://github.com/MaatramReelsBlocking/Maatram-" target="_blank" rel="noopener" class="proof-badge">
-        <img loading="lazy" decoding="async" src="https://img.shields.io/github/forks/MaatramReelsBlocking/Maatram-?style=flat-square&color=37b6ff&labelColor=0a1c16" alt="Maatram GitHub forks">
+        <img loading="lazy" decoding="async" src="https://img.shields.io/github/forks/MaatramReelsBlocking/Maatram-?style=flat-square&color=37b6ff&labelColor=0a1c16" width="94" height="20" alt="Maatram GitHub forks">
       </a>
       <a href="https://github.com/MaatramReelsBlocking/Maatram-/blob/main/LICENSE" target="_blank" rel="noopener" class="proof-badge">
-        <img loading="lazy" decoding="async" src="https://img.shields.io/badge/license-MIT-2fe38f?style=flat-square&labelColor=0a1c16" alt="MIT License">
+        <img loading="lazy" decoding="async" src="https://img.shields.io/badge/license-MIT-2fe38f?style=flat-square&labelColor=0a1c16" width="106" height="20" alt="MIT License">
       </a>
       <a href="leaderboard.html" class="proof-badge proof-cta">See real students on the live leaderboard →</a>
     </div>
@@ -752,7 +752,7 @@ addEventListener('resize',fitAll);
 .proof-kick{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#7f8b8d;margin:0 0 16px;font-weight:700}
 .proof-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-bottom:14px}
 .proof-badge{display:inline-flex;align-items:center;text-decoration:none;border-radius:100px}
-.proof-badge img{display:block;height:20px}
+.proof-badge img{display:block;height:20px;width:auto;min-width:88px}
 .proof-cta{padding:9px 18px;font-size:12.5px;font-weight:700;color:#eafff6;border:1px solid rgba(47,227,143,.3);
   background:rgba(47,227,143,.06);transition:all .25s}
 .proof-cta:hover{border-color:rgba(47,227,143,.6);background:rgba(47,227,143,.12)}
@@ -793,7 +793,7 @@ addEventListener('resize',fitAll);
         <li><a href="download.html">Download the Android app</a></li>
         <li><a href="blog.html">Updates</a></li>
         <li><a href="https://github.com/MaatramReelsBlocking/Maatram-" target="_blank" rel="noopener">Source code on GitHub</a></li>
-        <li><a href="mailto:maatram97@gmail.com">maatram97@gmail.com</a></li>
+        <li><a class="eml" data-u="maatram97" data-d="gmail.com" href="#contact">maatram97 (at) gmail.com</a></li>
         <li><a href="privacy.html">Privacy Policy</a></li>
         <li><a href="terms.html">Terms of Service</a></li>
       </ul>

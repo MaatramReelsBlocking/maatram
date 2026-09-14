@@ -125,6 +125,14 @@
       ]
     }
   ],
+  "rewrites": [
+    { "source": "/pomodoro-timer", "destination": "/timers.html" },
+    { "source": "/deep-work-timer", "destination": "/timers.html" },
+    { "source": "/app-blocker-for-study", "destination": "/app-gate.html" },
+    { "source": "/group-study-rooms", "destination": "/study-room.html" },
+    { "source": "/screen-time-tracker", "destination": "/stats.html" },
+    { "source": "/leaderboard", "destination": "/leaderboard.html" }
+  ],
   "redirects": [
     {
       "source": "/get",

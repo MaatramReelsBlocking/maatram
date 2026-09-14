@@ -84,7 +84,7 @@
     --bg:#000;--ink:#eafff6;--dim:#7da99b;
     --green:#2fe38f;--blue:#37b6ff;--gold:#ffd166;--pink:#ff6ec7;--danger:#ff5d73;
     --card:rgba(12,28,24,.72);--stroke:rgba(47,227,143,.16);
-    --font-display:'Sora',sans-serif;--font-body:'Inter',system-ui,sans-serif;
+    --font-display:'Sora',sans-serif;--font-body:'Inter','Inter Fallback',system-ui,sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:var(--font-body);-webkit-font-smoothing:antialiased;min-height:100vh}
@@ -165,7 +165,7 @@
 /* ══ MAATRAM UNIVERSAL NAV ══ */
 #mnav{position:fixed;top:0;left:0;right:0;height:52px;z-index:600;display:flex;align-items:center;gap:5px;
   padding:0 14px;background:rgba(2,10,8,.82);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter',system-ui,sans-serif;cursor:auto}
+  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter','Inter Fallback',system-ui,sans-serif;cursor:auto}
 #mnav *{cursor:pointer}
 #mnav .mn-logo{display:flex;align-items:center;gap:8px;margin-right:10px;text-decoration:none;color:#eafff6}
 
@@ -216,9 +216,9 @@ body{padding-top:52px!important}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all';this.onload=null">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=optional">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=optional" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=optional"></noscript>
 <script>
 /* stub so feature code can always call it; hosted engine overrides */
 window.maatramAward=window.maatramAward||function(pts,reason){

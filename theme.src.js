@@ -24,12 +24,14 @@
   if(MIN){
     var l=document.createElement('link');
     l.rel='stylesheet';
-    l.href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap';
+    l.href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=optional';
     document.head.appendChild(l);
   }
 
   /* ─────────────────────── SKIN CSS ─────────────────────── */
-  var css = ''
+  /* minimal-skin CSS: only injected when that skin is active, so the default
+     skin does not parse ~15KB of unused rules on every page (see cssBoth) */
+  var cssMin = ''
   /* ── token override: html.minimal beats :root, recolors every var-driven rule ── */
   +'html.minimal{'
   +'--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;'
@@ -286,9 +288,13 @@
   +'.ms-end p{color:#8A928E;font-size:14px;margin:0 0 26px}'
   +'.ms-foot{border-top:1px solid rgba(255,255,255,.09);padding-top:22px;'
   +'display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;'
-  +'font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#6F7A75}'
+  +'font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#6F7A75}';
 
   /* ═══════ index (BOTH themes): scrollable story sections (anotherone.finance-style) ═══════ */
+  var cssBoth = ''
+  /* fallback face metric-matched to Inter: if the webfont arrives mid-load the
+     swap shifts layout by ~0 instead of reflowing the page (CLS) */
+  +"@font-face{font-family:'Inter Fallback';src:local('Arial');size-adjust:107.12%;ascent-override:90.20%;descent-override:22.48%;line-gap-override:0%}"
   +'html.m-index,html.m-index body{height:auto!important;overflow-x:hidden!important;overflow-y:auto!important}'
   +'html.m-index .stack{position:relative!important;left:auto!important;top:auto!important;'
   +'transform:none!important;margin:0 auto;min-height:100svh;display:flex;justify-content:center}'
@@ -429,6 +435,8 @@
   +'.th-opt b{display:block;font-size:12.5px;font-weight:700}'
   +'.th-opt span{display:block;font-size:10px;color:#8A928E;margin-top:2px}'
   +'@media(pointer:coarse){#themePanel{bottom:60px;right:12px}}';
+
+  var css = (MIN ? cssMin : '') + cssBoth;
 
   var st=document.createElement('style');
   st.id='maatramThemeCSS';
@@ -677,4 +685,23 @@
   if(document.readyState==='loading')
     document.addEventListener('DOMContentLoaded',build);
   else build();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   Email de-obfuscation — addresses ship split across data attributes
+   so scrapers can't regex them out of the HTML. Without JS the page
+   still shows a human-readable "user (at) domain" form.
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  function reveal(){
+    var list=document.querySelectorAll('a.eml[data-u][data-d]');
+    for(var i=0;i<list.length;i++){
+      var a=list[i], addr=a.getAttribute('data-u')+'@'+a.getAttribute('data-d');
+      a.href='mailto:'+addr;
+      var t=a.querySelector('.eml-t');
+      (t||a).textContent=addr;
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',reveal);
+  else reveal();
 })();

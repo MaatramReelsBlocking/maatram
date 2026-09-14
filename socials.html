@@ -82,7 +82,7 @@
 <style>
   :root{--ink:#eafff6;--dim:#7da99b;--green:#2fe38f;--blue:#37b6ff;--gold:#ffd166;--pink:#ff6ec7;
     --card:rgba(12,28,24,.72);--stroke:rgba(47,227,143,.16);
-    --font-display:'Sora',sans-serif;--font-body:'Inter',system-ui,sans-serif}
+    --font-display:'Sora',sans-serif;--font-body:'Inter','Inter Fallback',system-ui,sans-serif}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:#000;color:var(--ink);font-family:var(--font-body);min-height:100vh;-webkit-font-smoothing:antialiased}
   #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -127,7 +127,7 @@
 /* ══ MAATRAM UNIVERSAL NAV ══ */
 #mnav{position:fixed;top:0;left:0;right:0;height:52px;z-index:600;display:flex;align-items:center;gap:5px;
   padding:0 14px;background:rgba(2,10,8,.82);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter',system-ui,sans-serif;cursor:auto}
+  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter','Inter Fallback',system-ui,sans-serif;cursor:auto}
 #mnav *{cursor:pointer}
 #mnav .mn-logo{display:flex;align-items:center;gap:8px;margin-right:10px;text-decoration:none;color:#eafff6}
 
@@ -202,15 +202,15 @@ body{padding-top:52px!important}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all';this.onload=null">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=optional">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=optional" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=optional"></noscript>
 <script src="theme.js"></script>
 
 <style id="mfootCSS">
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 #mfoot{position:relative;z-index:6;max-width:1080px;margin:0 auto;padding:56px 22px 130px;
-  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#8b9698;
+  font-family:Inter,'Inter Fallback',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#8b9698;
   border-top:1px solid rgba(255,255,255,.08);line-height:1.65;font-size:14.5px}
 #mfoot h2{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#cfd8d7;margin:0 0 14px;font-weight:700}
 #mfoot h3{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#7f8b8d;margin:0 0 12px;font-weight:700}
@@ -305,7 +305,7 @@ body{padding-top:52px!important}
     <p class="c-sub">Found a bug, have an idea, or just want to say hi? We read everything.</p>
     <div class="c-grid">
       <div class="c-ways">
-        <a href="mailto:maatram97@gmail.com"><span class="cw-ic">✉️</span><span><b>Email</b><span>maatram97@gmail.com</span></span></a>
+        <a class="eml" data-u="maatram97" data-d="gmail.com" href="#contact"><span class="cw-ic">✉️</span><span><b>Email</b><span class="eml-t">maatram97 (at) gmail.com</span></span></a>
       </div>
       <div class="c-form">
         <input id="fbName" type="text" placeholder="Your name (optional)">
@@ -328,7 +328,7 @@ document.getElementById('fbSend').addEventListener('click',async()=>{
   if(!msg){ document.getElementById('fbMsg').focus(); return; }
   btn.disabled=true; const orig=btn.textContent; btn.textContent='Sending…';
   try{
-    const res=await fetch('https://formsubmit.co/ajax/maatram97@gmail.com',{
+    const res=await fetch('https://formsubmit.co/ajax/'+['maatram97','gmail.com'].join('@'),{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({name:name||'Anonymous',message:msg,_subject:'Maatram feedback'+(name?' — '+name:'')})
@@ -342,7 +342,7 @@ document.getElementById('fbSend').addEventListener('click',async()=>{
     btn.textContent=orig; btn.disabled=false;
     const subject=encodeURIComponent('Maatram feedback'+(name?' — '+name:''));
     const body=encodeURIComponent(msg+(name?'\n\n— '+name:''));
-    location.href='mailto:maatram97@gmail.com?subject='+subject+'&body='+body;
+    location.href='mailto:'+['maatram97','gmail.com'].join('@')+'?subject='+subject+'&body='+body;
   }
 });
 /* staggered card entrance */
@@ -522,7 +522,7 @@ if(!reduced)requestAnimationFrame(loop);else loop();
         <li><a href="socials.html">Socials &amp; contact</a></li>
         <li><a href="blog.html">Updates</a></li>
         <li><a href="https://github.com/MaatramReelsBlocking/Maatram-" target="_blank" rel="me noopener">Source code on GitHub</a></li>
-        <li><a href="mailto:maatram97@gmail.com">maatram97@gmail.com</a></li>
+        <li><a class="eml" data-u="maatram97" data-d="gmail.com" href="#contact">maatram97 (at) gmail.com</a></li>
         <li><a href="privacy.html">Privacy Policy</a></li>
         <li><a href="terms.html">Terms of Service</a></li>
       </ul>
