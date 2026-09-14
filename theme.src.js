@@ -291,114 +291,11 @@
   +'font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#6F7A75}';
 
   /* ═══════ index (BOTH themes): scrollable story sections (anotherone.finance-style) ═══════ */
+  /* Shared CSS. The index story rules and the Inter fallback face used to
+     live here; they are static in the pages now, so this script no longer
+     has to run before first paint. What is left only styles the Customize
+     UI control, which this script creates anyway. */
   var cssBoth = ''
-  /* fallback face metric-matched to Inter: if the webfont arrives mid-load the
-     swap shifts layout by ~0 instead of reflowing the page (CLS) */
-  +"@font-face{font-family:'Inter Fallback';src:local('Arial');size-adjust:107.12%;ascent-override:90.20%;descent-override:22.48%;line-gap-override:0%}"
-  +'html.m-index,html.m-index body{height:auto!important;overflow-x:hidden!important;overflow-y:auto!important}'
-  +'html.m-index .stack{position:relative!important;left:auto!important;top:auto!important;'
-  +'transform:none!important;margin:0 auto;min-height:100svh;display:flex;justify-content:center}'
-  +'html.m-index .hint{position:absolute}html.minimal.m-index .hint{display:none}'
-  +'html.m-index .corner.bl,html.m-index .corner.br{position:absolute}'
-
-  +'.m-story{display:none}'
-  +'html.m-index .m-story{display:block;position:relative;z-index:6;max-width:1080px;'
-  +'margin:0 auto;padding:0 20px 120px}'
-  +'html.m-index .m-sec{padding:96px 0 24px}'
-  +'html.m-index .m-eyebrow{font-size:10.5px;letter-spacing:3.4px;text-transform:uppercase;color:var(--dim,#8A928E);'
-  +'font-weight:700;margin-bottom:14px}'
-  +'html.m-index .m-sec h2{font-family:var(--font-display,"Fredoka"),sans-serif;font-weight:600;'
-  +'font-size:clamp(28px,5vw,50px);line-height:1.08;letter-spacing:-.01em;color:var(--ink,#ECEFEE);margin-bottom:14px}'
-  +'html.m-index .m-sec h2 em{font-style:normal;color:var(--green,#9CC0B2)}'
-  +'html.m-index .m-lead{color:var(--dim,#8A928E);font-size:clamp(14px,1.6vw,16.5px);line-height:1.65;max-width:620px}'
-
-  +'html.m-index .m-grid{display:grid;gap:18px;margin-top:34px;'
-  +'grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))}'
-  +'html.m-index .m-card{position:relative;overflow:hidden;border-radius:26px;padding:22px 22px 26px;'
-  +'background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);'
-  +'backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);'
-  +'box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);'
-  +'opacity:0;transform:translate3d(0,34px,0);'
-  +'transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),'
-  +'border-color .35s,box-shadow .35s}'
-  +'html.m-index .m-card.in{opacity:1;transform:none}'
-  +'html.m-index .m-card:nth-child(2){transition-delay:.09s}'
-  +'html.m-index .m-card:nth-child(3){transition-delay:.18s}'
-  +'html.m-index .m-card:nth-child(4){transition-delay:.27s}'
-  +'html.m-index .m-card:nth-child(5){transition-delay:.36s}'
-  +'html.m-index .m-card:hover{border-color:rgba(156,192,178,.42);'
-  +'box-shadow:0 26px 56px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.11);transform:translate3d(0,-6px,0)}'
-  /* sheen sweep on hover */
-  +'html.m-index .m-card::after{content:"";position:absolute;inset:0;pointer-events:none;'
-  +'background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.09) 50%,transparent 62%);'
-  +'transform:translateX(-110%);transition:transform .9s cubic-bezier(.16,1,.3,1)}'
-  +'html.m-index .m-card:hover::after{transform:translateX(110%)}'
-  +'html.m-index .m-card h3{font-family:var(--font-display,"Fredoka"),sans-serif;font-weight:600;'
-  +'font-size:18px;color:var(--ink,#ECEFEE);margin:16px 0 6px}'
-  +'html.m-index .m-card p{color:var(--dim,#8A928E);font-size:13.5px;line-height:1.6}'
-  +'html.m-index .m-tag{display:inline-block;margin-top:14px;font-size:10.5px;letter-spacing:1.8px;'
-  +'text-transform:uppercase;font-weight:700;color:var(--green,#9CC0B2);padding:6px 12px;border-radius:100px;'
-  +'border:1px solid rgba(156,192,178,.3);background:rgba(156,192,178,.07)}'
-
-  /* generated art frame */
-  +'html.m-index .m-fig{position:relative;height:172px;border-radius:20px;overflow:hidden;'
-  +'background:radial-gradient(120% 100% at 70% 15%,rgba(175,206,193,.16),rgba(11,12,11,0) 62%),rgba(0,0,0,.28);'
-  +'border:1px solid rgba(255,255,255,.09);display:grid;place-items:center}'
-  +'html.m-index .m-fig svg{width:100%;height:100%;display:block}'
-  +'html.m-index .m-fig .p{transition:transform .75s cubic-bezier(.16,1,.3,1),opacity .6s}'
-  +'html.m-index .m-card:hover .m-fig .p1{transform:translate(0,-9px) rotate(-4deg)}'
-  +'html.m-index .m-card:hover .m-fig .p2{transform:translate(11px,7px) rotate(6deg)}'
-  +'html.m-index .m-card:hover .m-fig .p3{transform:translate(-12px,6px) rotate(-6deg)}'
-  +'html.m-index .m-card:hover .m-fig .p4{transform:scale(1.08)}'
-  +'html.m-index .m-fig .spin{transform-origin:50% 50%;transition:transform 1.1s cubic-bezier(.16,1,.3,1)}'
-  +'html.m-index .m-card:hover .m-fig .spin{transform:rotate(38deg)}'
-  +'html.m-index .m-fig .grow{transition:transform .8s cubic-bezier(.16,1,.3,1);transform-origin:50% 100%}'
-  +'html.m-index .m-card:hover .m-fig .grow{transform:scaleY(1.22)}'
-  +'html.m-index .m-fig .dash{stroke-dasharray:5 7;transition:stroke-dashoffset 1.4s linear,opacity .5s}'
-  +'html.m-index .m-card:hover .m-fig .dash{stroke-dashoffset:-96}'
-
-  /* metric strip */
-  +'html.m-index .m-metrics{display:grid;gap:14px;margin-top:30px;'
-  +'grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}'
-  +'html.m-index .m-metric{border-radius:20px;padding:18px 18px;background:rgba(255,255,255,.045);'
-  +'border:1px solid rgba(255,255,255,.11);backdrop-filter:blur(18px);'
-  +'opacity:0;transform:translate3d(0,26px,0);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}'
-  +'html.m-index .m-metric.in{opacity:1;transform:none}'
-  +'html.m-index .m-metric b{display:block;font-family:var(--font-display,"Fredoka"),sans-serif;'
-  +'font-size:26px;font-weight:600;color:var(--ink,#ECEFEE)}'
-  +'html.m-index .m-metric span{display:block;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;'
-  +'color:var(--dim,#8A928E);margin-top:5px}'
-
-  /* section reveal */
-  +'html.m-index .m-rev{opacity:0;transform:translate3d(0,28px,0);'
-  +'transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1)}'
-  +'html.m-index .m-rev.in{opacity:1;transform:none}'
-
-  /* closing CTA */
-  +'html.m-index .m-cta{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap}'
-  +'html.m-index .m-cta a{text-decoration:none;font-weight:700;font-size:13px;letter-spacing:.4px;'
-  +'padding:14px 26px;border-radius:100px;transition:transform .2s,box-shadow .25s,background .25s}'
-  +'html.m-index .m-cta a.pri{background:rgba(255,255,255,.94);color:#0B0C0B;'
-  +'border:1px solid rgba(255,255,255,.55);box-shadow:0 10px 26px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.9)}'
-  +'html.m-index .m-cta a.pri:hover{background:#fff;transform:translateY(-2px)}'
-  +'html.m-index .m-cta a.sec{background:rgba(255,255,255,.06);color:var(--ink,#ECEFEE);'
-  +'border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(16px)}'
-  +'html.m-index .m-cta a.sec:hover{border-color:rgba(156,192,178,.5);transform:translateY(-2px)}'
-
-  /* scroll cue under hero */
-  +'html.m-index .m-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);'
-  +'z-index:7;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--dim,#8A928E);'
-  +'display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}'
-  +'html.m-index .m-cue s{display:block;width:1px;height:34px;text-decoration:none;'
-  +'background:linear-gradient(180deg,rgba(156,192,178,.7),transparent);animation:mCue 2.4s ease-in-out infinite}'
-  +'@keyframes mCue{0%,100%{opacity:.25;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}'
-  +'@media(prefers-reduced-motion:reduce){.m-cue s{animation:none!important}}'
-  +'html.perf .m-cue s{animation:none}'
-  +'@media(max-width:640px){html.m-index .m-sec{padding:72px 0 18px}html.m-index .m-fig{height:150px}}'
-
-  /* index corner label sits where the pill goes — lift it clear (both skins) */
-  +'.corner.br{bottom:62px!important}'
-
   /* ═══════════ Customize UI control (both skins) ═══════════ */
   +'#themeBtn{position:fixed;bottom:18px;right:18px;z-index:901;display:flex;align-items:center;gap:8px;'
   +'padding:9px 14px;border-radius:100px;cursor:pointer;font-size:11.5px;letter-spacing:1.2px;'

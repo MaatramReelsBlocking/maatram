@@ -23,8 +23,13 @@
 <meta name="twitter:image" content="https://maatram.co.in/og-image.png">
 <link rel="icon" href="favicon.ico">
 <link rel="manifest" href="site.webmanifest">
-<script src="theme.js"></script>
+<script>/* Skin class + the few tokens that must exist at first paint, so
+   theme.js itself no longer has to block rendering. */
+(function(){var m=null;try{m=localStorage.getItem('maatram_theme');}catch(_){}if(m!=='minimal')return;document.documentElement.classList.add('minimal');var s=document.createElement("style");s.textContent="html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:\"Plus Jakarta Sans\",\"Sora\",sans-serif;--font-body:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}";document.head.appendChild(s);})();</script>
+<script defer src="theme.js?v=2"></script>
 <style>
+@font-face{font-family:'Inter Fallback';src:local('Arial');size-adjust:107.12%;ascent-override:90.20%;descent-override:22.48%;line-gap-override:0%}
+
 :root{
   --bg:#06090B; --panel:rgba(255,255,255,.045); --line:rgba(255,255,255,.13);
   --ink:#ECEFEE; --dim:#8FA3A0; --green:#2FE38F; --blue:#3FA9F5;

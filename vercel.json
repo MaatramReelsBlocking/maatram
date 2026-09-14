@@ -51,11 +51,12 @@
       ]
     },
     {
+      "comment": "Safe only because pages request theme.js?v=N. BUMP THAT v IN EVERY HTML FILE WHEN YOU EDIT theme.js, or visitors keep the old one for a year.",
       "source": "/theme.js",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
@@ -124,14 +125,6 @@
         }
       ]
     }
-  ],
-  "rewrites": [
-    { "source": "/pomodoro-timer", "destination": "/timers.html" },
-    { "source": "/deep-work-timer", "destination": "/timers.html" },
-    { "source": "/app-blocker-for-study", "destination": "/app-gate.html" },
-    { "source": "/group-study-rooms", "destination": "/study-room.html" },
-    { "source": "/screen-time-tracker", "destination": "/stats.html" },
-    { "source": "/leaderboard", "destination": "/leaderboard.html" }
   ],
   "redirects": [
     {
