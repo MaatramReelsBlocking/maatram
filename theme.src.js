@@ -535,7 +535,11 @@
   ];
 
   function buildStory(){
-    if(document.querySelector('.m-story')) return;
+    /* index.html now ships the story as static markup so it is readable
+       without JS. When it is already there we skip straight to the
+       animation wiring; the builder below stays as the fallback. */
+    var existing=document.querySelector('.m-story');
+    if(existing){ wireStory(existing); return; }
     var wrap=document.createElement('main');
     wrap.className='m-story';
 
@@ -583,10 +587,14 @@
       +'</div></section>';
 
     document.body.appendChild(wrap);
+    wireStory(wrap);
+  }
 
+  /* cue + reveal animation, for either the static or the built story */
+  function wireStory(wrap){
     /* scroll cue under the hero */
     var stack=document.querySelector('.stack');
-    if(stack){
+    if(stack && !stack.querySelector('.m-cue')){
       var cue=document.createElement('div');
       cue.className='m-cue'; cue.setAttribute('aria-hidden','true');
       cue.innerHTML='<s></s>SCROLL';
