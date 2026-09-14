@@ -51,7 +51,6 @@
       ]
     },
     {
-      "comment": "Safe only because pages request theme.js?v=N. BUMP THAT v IN EVERY HTML FILE WHEN YOU EDIT theme.js, or visitors keep the old one for a year.",
       "source": "/theme.js",
       "headers": [
         {

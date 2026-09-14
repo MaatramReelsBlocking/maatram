@@ -1,4 +1,11 @@
 /* ══════════════════════════════════════════════════════════════════
+   !! CACHE WARNING !!
+   theme.js is served with Cache-Control: max-age=31536000, immutable
+   (see vercel.json). Pages request it as theme.js?v=N — that query is
+   the only thing that busts the cache. EDIT THIS FILE, AND YOU MUST
+   BUMP ?v=N IN EVERY HTML FILE, or visitors keep the old copy for a
+   year.  grep -l 'theme.js?v=' *.html   to find them all.
+   ══════════════════════════════════════════════════════════════════
    MAATRAM Theme Engine — "Customize UI"
    Two skins: neon (original, untouched) | minimal (glass + neumorphic)
    Storage: localStorage 'maatram_theme' = 'neon' | 'minimal'
