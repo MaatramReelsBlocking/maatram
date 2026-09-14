@@ -287,13 +287,18 @@ body{padding-top:52px!important}
   document.addEventListener('click',e=>{ if(!e.target.closest('#mnavChip')) menu.classList.remove('open'); });
   if(!(location.protocol==='http:'||location.protocol==='https:'))return;  // file:// → nav stays simple
   try{
-    const [{initializeApp,getApps,getApp},{getAuth,onAuthStateChanged,signOut},{getFirestore,doc,onSnapshot,runTransaction}]=await Promise.all([
+    const [{initializeApp,getApps,getApp},{getAuth,onAuthStateChanged,signOut}]=await Promise.all([
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
-      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
     ]);
     const app=getApps().length?getApp():initializeApp({apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",authDomain:"maatram-859f4.firebaseapp.com",projectId:"maatram-859f4",storageBucket:"maatram-859f4.firebasestorage.app",messagingSenderId:"770970784123",appId:"1:770970784123:web:7c73c74ddb2179b69dedde"});
-    const auth=getAuth(app),db=getFirestore(app);
+    const auth=getAuth(app);
+    /* Firestore is only ever touched once somebody is signed in, so it loads on
+       demand instead of up front. Signed-out visitors — and page-speed tests —
+       never download it. */
+    let db=null,doc=null,onSnapshot=null,runTransaction=null,fsReady=null;
+    const loadFs=()=>fsReady||(fsReady=import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+      .then(m=>{ doc=m.doc; onSnapshot=m.onSnapshot; runTransaction=m.runTransaction; db=m.getFirestore(app); }));
     let unsub=null;
     /* ══ Maatram points engine (all pages) ══ */
     let __mtUser=null;
@@ -311,6 +316,7 @@ body{padding-top:52px!important}
       if(__mtUser){
         const uid=__mtUser.uid;
         try{
+          await loadFs();
           await runTransaction(db,async t=>{
             const r=doc(db,'users',uid);
             const s=await t.get(r);
@@ -336,13 +342,15 @@ body{padding-top:52px!important}
       setTimeout(()=>t.remove(),3200);
     }
 
-    onAuthStateChanged(auth,u=>{
+    onAuthStateChanged(auth,async u=>{
       __mtUser=u;
       if(unsub){unsub();unsub=null;}
       if(u){
         inBtn.style.display='none';chip.style.display='flex';
         document.getElementById('mnavPic').src=u.photoURL||'';
         document.getElementById('mnavNm').textContent=(u.displayName||'You').split(' ')[0];
+        await loadFs();
+        if(__mtUser!==u) return;               /* signed out again while loading */
         unsub=onSnapshot(doc(db,'users',u.uid),s=>{
           document.getElementById('mnavPts').textContent=((s.exists()&&s.data().points)||0)+' PTS';
         },()=>{});
