@@ -214,8 +214,8 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 <a class="skip" href="#main">Skip to main content</a>
 
 <nav id="mnav" aria-label="Main navigation">
-  <a class="mn-logo" href="index.html"><span class="mn-mark">M</span><b>MAATRAM</b></a>
- <span class="mn-spacer"></span><a class="mn-link" href="index.html">Home</a><a class="mn-link active" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
+  <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
+ <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link active" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
   <div id="mnavAuth">
     <a id="mnavIn" href="login.html">Sign in</a>
     <div id="mnavChip">
@@ -447,8 +447,8 @@ Linux     sha256sum maatram-v1.1.apk</pre>
       <dt>Service</dt><dd>AppBlockerService — the accessibility service behind Hard Lock,
         the friction gate and usage reminders</dd>
       <dt>Signing</dt><dd>Release key, schemes v1 + v2 · certificate valid to 2051</dd>
-      <dt>Source</dt><dd><a href="https://github.com/MaatramReelsBlocking/Maatram-"
-        rel="noopener">github.com/MaatramReelsBlocking/Maatram-</a></dd>
+      <dt>Source</dt><dd><a href="https://github.com/MaatramReelsBlocking/maatram"
+        rel="noopener">github.com/MaatramReelsBlocking/maatram</a></dd>
     </dl>
   </section>
 
@@ -473,7 +473,7 @@ Linux     sha256sum maatram-v1.1.apk</pre>
 <footer>
   <div class="wrap">
     <div class="links">
-      <a href="index.html">Home</a>
+      <a href="/">Home</a>
       <a href="timers.html">Timers</a>
       <a href="app-gate.html">App Gate</a>
       <a href="study-room.html">Study Room</a>
@@ -489,19 +489,21 @@ Linux     sha256sum maatram-v1.1.apk</pre>
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
-  "@type":"SoftwareApplication",
-  "name":"Maatram",
-  "operatingSystem":"Android 5.1+",
-  "applicationCategory":"UtilitiesApplication",
-  "softwareVersion":"1.1",
-  "fileSize":"3041603",
-  "downloadUrl":"https://maatram.co.in/maatram-v1.1.apk",
-  "installUrl":"https://maatram.co.in/download.html",
+  "@type":"WebPage",
+  "name":"Download the Maatram Android App",
   "url":"https://maatram.co.in/download.html",
-  "isAccessibleForFree":true,
-  "offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},
-  "publisher":{"@type":"Organization","name":"Maatram",
-    "url":"https://maatram.co.in/"}
+  "isPartOf":{"@type":"WebSite","name":"Maatram","url":"https://maatram.co.in/"},
+  "publisher":{"@type":"Organization","name":"Maatram","url":"https://maatram.co.in/"},
+  "mainEntity":{
+    "@type":"MediaObject",
+    "name":"Maatram Android app (APK)",
+    "contentUrl":"https://maatram.co.in/maatram-v1.1.apk",
+    "encodingFormat":"application/vnd.android.package-archive",
+    "contentSize":"3041603",
+    "version":"1.1",
+    "operatingSystem":"Android 5.1+",
+    "isAccessibleForFree":true
+  }
 }
 </script>
 

@@ -75,8 +75,8 @@ body{padding-top:52px!important}
 /* ---- roles page ---- */
 main{padding:clamp(34px,7vw,66px) 0 90px}
 .eyebrow{font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin:0 0 12px}
-h1{font-size:clamp(28px,6.4vw,46px);line-height:1.1;letter-spacing:-.03em;margin:0 0 14px}
-h1 em{font-style:normal;background:linear-gradient(120deg,var(--green),var(--blue));
+h1,.h1{font-size:clamp(28px,6.4vw,46px);line-height:1.1;letter-spacing:-.03em;margin:0 0 14px}
+h1 em,.h1 em{font-style:normal;background:linear-gradient(120deg,var(--green),var(--blue));
   -webkit-background-clip:text;background-clip:text;color:transparent}
 .lede{color:var(--dim);font-size:clamp(15px,2.4vw,17px);margin:0 0 26px;max-width:56ch}
 h2{font-size:clamp(19px,3.8vw,26px);letter-spacing:-.02em;margin:0 0 6px}
@@ -159,8 +159,8 @@ dialog#pick::backdrop{background:rgba(3,6,8,.82);backdrop-filter:blur(6px)}
 <a class="skip" href="#main">Skip to main content</a>
 
 <nav id="mnav" aria-label="Main navigation">
-  <a class="mn-logo" href="index.html"><span class="mn-mark">M</span><b>MAATRAM</b></a>
-  <span class="mn-spacer"></span><a class="mn-link" href="index.html">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link active" href="roles.html">Account</a>
+  <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
+  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link active" href="roles.html">Account</a>
   <div id="mnavAuth">
     <a id="mnavIn" href="login.html">Sign in</a>
     <div id="mnavChip">
@@ -275,7 +275,7 @@ dialog#pick::backdrop{background:rgba(3,6,8,.82);backdrop-filter:blur(6px)}
   <!-- ============ B. workspace ============ -->
   <section id="secWs" hidden>
     <p class="eyebrow" id="wsRole"></p>
-    <h1>Hi, <em id="wsName">there</em></h1>
+    <h2 class="h1">Hi, <em id="wsName">there</em></h2>
 
     <!-- student -->
     <div id="wsStudent" hidden>

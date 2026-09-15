@@ -105,8 +105,8 @@ android/           Capacitor Android project
 No install, no server needed for the front end:
 
 ```bash
-git clone https://github.com/MaatramReelsBlocking/Maatram-.git
-cd Maatram-
+git clone https://github.com/MaatramReelsBlocking/maatram.git
+cd maatram
 open index.html          # or just double-click it
 ```
 

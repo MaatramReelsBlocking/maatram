@@ -57,9 +57,11 @@ ok('no stale /downloads/maatram.apk link', !/downloads\/maatram\.apk/.test(HTML)
 
 /* ---------- JSON-LD ---------- */
 const ld = JSON.parse(doc.querySelector('script[type="application/ld+json"]').textContent);
-ok('JSON-LD is SoftwareApplication', ld['@type'] === 'SoftwareApplication');
-ok('JSON-LD fileSize == real size', ld.fileSize === String(apkBytes), ld.fileSize);
-ok('JSON-LD downloadUrl matches button', ld.downloadUrl.endsWith('/' + dl.getAttribute('href')));
+ok('JSON-LD is WebPage', ld['@type'] === 'WebPage');
+ok('JSON-LD mainEntity contentSize == real size',
+  ld.mainEntity && ld.mainEntity.contentSize === String(apkBytes), ld.mainEntity && ld.mainEntity.contentSize);
+ok('JSON-LD mainEntity contentUrl matches button',
+  !!(ld.mainEntity && ld.mainEntity.contentUrl && ld.mainEntity.contentUrl.endsWith('/' + dl.getAttribute('href'))));
 
 /* ---------- SEO head ---------- */
 ok('canonical present', !!doc.querySelector('link[rel=canonical]'));
