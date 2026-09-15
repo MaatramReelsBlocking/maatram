@@ -1,0 +1,27 @@
+# Maatram
+
+> Maatram is a free focus and digital wellbeing app for students, built by class 10B at SSVM School of Excellence. It cuts screen time with an app gate, focus timers, live study rooms and a points system. Web app plus an Android build. Tagline: Bringing a change in you.
+
+Everything on the site runs on one points balance: finishing focus sessions and study-room time pays points, breaking an app lock costs them.
+
+## Core pages
+
+- [Home](https://maatram.co.in/): what Maatram is, the six tools, FAQ.
+- [Focus Timers](https://maatram.co.in/timers.html): Pomodoro 25/5 and Deep Work 90/15 timers with points and streaks.
+- [App Gate](https://maatram.co.in/app-gate.html): hard lock for social apps, 5 to 90 minutes.
+- [Study Room](https://maatram.co.in/study-room.html): five students on one room code, synced timers, strikes and chat.
+- [Screen Stats](https://maatram.co.in/stats.html): daily per-app screen-time logging, weekly charts and bonus.
+- [Leaderboard](https://maatram.co.in/leaderboard.html): live ranking of signed-in students by points.
+- [Sports](https://maatram.co.in/sports.html): sports corner.
+- [Download](https://maatram.co.in/download.html): Android build.
+
+## About
+
+- [Blog](https://maatram.co.in/blog.html)
+- [Socials and contact](https://maatram.co.in/socials.html)
+- [Privacy policy](https://maatram.co.in/privacy.html)
+- [Terms](https://maatram.co.in/terms.html)
+
+## Optional
+
+- [Sitemap](https://maatram.co.in/sitemap.xml)

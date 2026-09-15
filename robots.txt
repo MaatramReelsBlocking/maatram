@@ -34,3 +34,6 @@ User-agent: MJ12bot
 Crawl-delay: 10
 
 Sitemap: https://maatram.co.in/sitemap.xml
+
+# AI/answer-engine summary of this site
+# https://maatram.co.in/llms.txt

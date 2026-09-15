@@ -20,11 +20,15 @@ OPEN.forEach(n=>{
 });
 
 group('nav link');
+// nav grows over time; index is the reference, every page must match it
+const NAV_LINKS=(read('index.html')?.match(/class="mn-link/g)||[]).length;
+ok('index nav has links to match against', NAV_LINKS>0, String(NAV_LINKS));
+
 [...GATED,...OPEN].forEach(n=>{
   const h=read(n+'.html');
   ok(n+': Account link present once', (h.match(/href="login\.html"/g)||[]).length>=1
      && (h.match(/class="mn-link(?: active)?" href="login\.html"/g)||[]).length===1);
-  ok(n+': nav has all 10 links', (h.match(/class="mn-link/g)||[]).length===10);
+  ok(n+': nav link count matches index', (h.match(/class="mn-link/g)||[]).length===NAV_LINKS);
   ok(n+': Sports link present once', (h.match(/class="mn-link(?: active)?" href="sports\.html"/g)||[]).length===1);
 });
 
