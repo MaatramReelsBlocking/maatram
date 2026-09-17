@@ -1,24 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="m-index">
 <head>
-<script>
-/* ══ MAATRAM Performance Mode — shared across all pages ══
-   Sets window.MAATRAM_PERF (true = performance/low-lag mode) BEFORE any
-   page canvas code runs, so each page's LITE flag can honor it.
-   Default: ON for weak/old devices, user can override and it persists. */
-(function(){
-  var KEY='maatram_perf';
-  var weak = matchMedia('(pointer:coarse)').matches
-          || innerWidth<820
-          || (navigator.hardwareConcurrency||8)<=4
-          || (navigator.deviceMemory||8)<=4;
-  var saved=null; try{saved=localStorage.getItem(KEY);}catch(_){}
-  var on = saved===null ? weak : saved==='1';
-  window.MAATRAM_PERF = on;
-  try{ if(saved===null) localStorage.setItem(KEY, on?'1':'0'); }catch(_){}
-  document.documentElement.classList.toggle('perf', on);
-})();
-</script>
+<script>!function(){var e="maatram_perf",t=matchMedia("(pointer:coarse)").matches||innerWidth<820||(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4,a=null;try{a=localStorage.getItem(e)}catch(e){}var r=null===a?t:"1"===a;window.MAATRAM_PERF=r;try{null===a&&localStorage.setItem(e,r?"1":"0")}catch(e){}document.documentElement.classList.toggle("perf",r)}();</script>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,9 +12,10 @@
 <meta name="keywords" content="Maatram, screen time app, app gate, study room, focus timer, Pomodoro timer, Deep Work timer, app blocker for students, digital wellbeing app, student productivity app, free focus app, SSVM School of Excellence">
 <meta name="author" content="Maatram">
 <meta name="publisher" content="Maatram">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="robots" content="index, follow, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-image-preview:large, max-video-preview:-1">
 <link rel="canonical" href="https://maatram.co.in/">
+<link rel="alternate" type="text/plain" title="Maatram summary for AI assistants" href="/llms.txt">
 <link rel="alternate" hreflang="en" href="https://maatram.co.in/">
 <link rel="alternate" hreflang="x-default" href="https://maatram.co.in/">
 <meta name="theme-color" content="#06090B">
@@ -77,308 +61,23 @@
 <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
 <!-- structured data -->
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://maatram.co.in/#org","name":"Maatram","url":"https://maatram.co.in/","logo":{"@type":"ImageObject","url":"https://maatram.co.in/icon-512.png","width":512,"height":512},"slogan":"Bringing a change in you","email":"maatram97@gmail.com","foundingDate":"2026","description":"Maatram is a free, open-source screen-time and focus platform built by students for students.","sameAs":["https://www.instagram.com/maatram_360/","https://x.com/Maatram_360","https://www.linkedin.com/in/maatram-exe-10b295423/","https://github.com/MaatramReelsBlocking/maatram","https://discord.gg/qdbK2VgjV"]},{"@type":"WebSite","@id":"https://maatram.co.in/#website","url":"https://maatram.co.in/","name":"Maatram","alternateName":"Maatram — Bringing a change in you","inLanguage":"en","publisher":{"@id":"https://maatram.co.in/#org"}},{"@type":["WebApplication","SoftwareApplication"],"@id":"https://maatram.co.in/#webapp","name":"Maatram","url":"https://maatram.co.in/","applicationCategory":"ProductivityApplication","applicationSubCategory":"Digital Wellbeing","operatingSystem":"Any (web browser), Android","browserRequirements":"Requires JavaScript. Works in all modern browsers.","softwareVersion":"6.3","image":"https://maatram.co.in/og-image.png","screenshot":"https://maatram.co.in/og-image.png","description":"Maatram helps students cut screen time and stay focused with study timers, a social-media app gate, live study rooms, streaks and weekly screen-time reports. Free, open source, made by Gen Z for Gen Z.","inLanguage":"en","isAccessibleForFree":true,"license":"https://github.com/MaatramReelsBlocking/maatram","offers":{"@type":"Offer","price":"0","priceCurrency":"INR","availability":"https://schema.org/InStock"},"featureList":["Pomodoro and Deep Work study timers","App Gate friction layer for social media","Hard Lock app blocking from 5 to 90 minutes","Live study rooms for up to five people","Daily and weekly screen-time statistics","Productivity points, streaks and leaderboard"],"publisher":{"@id":"https://maatram.co.in/#org"},"author":{"@id":"https://maatram.co.in/#org"}},{"@type":"WebPage","@id":"https://maatram.co.in/#webpage","url":"https://maatram.co.in/","name":"Maatram — Free Screen Time & Focus App for Students","description":"Maatram helps students cut screen time and stay focused with study timers, a social-media app gate, live study rooms, streaks and weekly screen-time reports. Free, open source, made by Gen Z for Gen Z.","inLanguage":"en","isPartOf":{"@id":"https://maatram.co.in/#website"},"about":{"@id":"https://maatram.co.in/#webapp"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://maatram.co.in/og-image.png"},"breadcrumb":{"@id":"https://maatram.co.in/#breadcrumb"}},{"@type":"BreadcrumbList","@id":"https://maatram.co.in/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://maatram.co.in/"}]},{"@type":"FAQPage","@id":"https://maatram.co.in/#faq","mainEntity":[{"@type":"Question","name":"Is Maatram free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Maatram is completely free and open source. There are no ads, no paid tier and no subscription."}},{"@type":"Question","name":"How does Maatram reduce screen time?","acceptedAnswer":{"@type":"Answer","text":"Maatram puts friction between you and distracting apps. The App Gate makes you wait and pay a points toll before opening social media, Hard Lock blocks chosen apps for 5 to 90 minutes, and focus timers plus study rooms reward the time you spend off your phone."}},{"@type":"Question","name":"Do I need to create an account?","acceptedAnswer":{"@type":"Answer","text":"No. You can use the timers, App Gate and screen-time stats without signing in. Signing in with Google only syncs your points and streaks across devices and puts you on the leaderboard."}},{"@type":"Question","name":"Where is my screen-time data stored?","acceptedAnswer":{"@type":"Answer","text":"Day-by-day usage data is stored locally in your own browser. Only your productivity points and profile are synced when you choose to sign in."}},{"@type":"Question","name":"Who built Maatram?","acceptedAnswer":{"@type":"Answer","text":"Maatram was built by a team of class 10 students at SSVM School of Excellence as an open-source school venture — inspired by Gen Z, made by Gen Z, made for Gen Z."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://maatram.co.in/#org","name":"Maatram","url":"https://maatram.co.in/","logo":{"@type":"ImageObject","url":"https://maatram.co.in/icon-512.png","width":512,"height":512},"slogan":"Bringing a change in you","email":"maatram97@gmail.com","foundingDate":"2026","description":"Maatram is a free, open-source screen-time and focus platform built by students for students.","sameAs":["https://www.instagram.com/maatram_360/","https://x.com/Maatram_360","https://www.linkedin.com/in/maatram-exe-10b295423/","https://github.com/MaatramReelsBlocking/maatram","https://discord.gg/qdbK2VgjV"],"address":{"@type":"PostalAddress","addressLocality":"Coimbatore","addressRegion":"Tamil Nadu","addressCountry":"IN"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://maatram.co.in/#website","url":"https://maatram.co.in/","name":"Maatram","alternateName":"Maatram — Bringing a change in you","inLanguage":"en","publisher":{"@id":"https://maatram.co.in/#org"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","@id":"https://maatram.co.in/#webapp","name":"Maatram","url":"https://maatram.co.in/","applicationCategory":"ProductivityApplication","applicationSubCategory":"Digital Wellbeing","operatingSystem":"Any (web browser), Android","browserRequirements":"Requires JavaScript. Works in all modern browsers.","image":"https://maatram.co.in/og-image.png","screenshot":"https://maatram.co.in/og-image.png","description":"Maatram helps students cut screen time and stay focused with study timers, a social-media app gate, live study rooms, streaks and weekly screen-time reports. Free, open source, made by Gen Z for Gen Z.","inLanguage":"en","isAccessibleForFree":true,"license":"https://github.com/MaatramReelsBlocking/maatram","offers":{"@type":"Offer","price":"0","priceCurrency":"INR","availability":"https://schema.org/InStock"},"featureList":["Pomodoro and Deep Work study timers","App Gate friction layer for social media","Hard Lock app blocking from 5 to 90 minutes","Live study rooms for up to five people","Daily and weekly screen-time statistics","Productivity points, streaks and leaderboard"],"publisher":{"@id":"https://maatram.co.in/#org"},"author":{"@id":"https://maatram.co.in/#org"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://maatram.co.in/#webpage","url":"https://maatram.co.in/","name":"Maatram — Free Screen Time & Focus App for Students","description":"Maatram helps students cut screen time and stay focused with study timers, a social-media app gate, live study rooms, streaks and weekly screen-time reports. Free, open source, made by Gen Z for Gen Z.","inLanguage":"en","isPartOf":{"@id":"https://maatram.co.in/#website"},"about":{"@id":"https://maatram.co.in/#webapp"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://maatram.co.in/og-image.png"},"breadcrumb":{"@id":"https://maatram.co.in/#breadcrumb"},"datePublished":"2026-07-18","dateModified":"2026-09-17","author":{"@id":"https://maatram.co.in/#org"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","@id":"https://maatram.co.in/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://maatram.co.in/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","@id":"https://maatram.co.in/#faq","mainEntity":[{"@type":"Question","name":"Is Maatram free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Maatram is completely free and open source. There are no ads, no paid tier and no subscription."}},{"@type":"Question","name":"How does Maatram reduce screen time?","acceptedAnswer":{"@type":"Answer","text":"Maatram puts friction between you and distracting apps. The App Gate makes you wait and pay a points toll before opening social media, Hard Lock blocks chosen apps for 5 to 90 minutes, and focus timers plus study rooms reward the time you spend off your phone."}},{"@type":"Question","name":"Do I need to create an account?","acceptedAnswer":{"@type":"Answer","text":"For the focus tools, yes. Timers, App Gate, Study Room, Screen Stats, Leaderboard and the Sports corner open after a Google sign-in and a one-tap student, teacher or parent choice, because points and classes sync to that account. The home page, Wellness, Socials, Updates and the Android download page work without signing in."}},{"@type":"Question","name":"Where is my screen-time data stored?","acceptedAnswer":{"@type":"Answer","text":"Day-by-day usage data is stored locally in your own browser. Only your productivity points and profile are synced when you choose to sign in."}},{"@type":"Question","name":"Who built Maatram?","acceptedAnswer":{"@type":"Answer","text":"Maatram was built by a team of class 10 students at SSVM School of Excellence as an open-source school venture — inspired by Gen Z, made by Gen Z, made for Gen Z."}}]}</script>
 <!-- ═════════════ end SEO block ═════════════ -->
-<style>
-@font-face{font-family:'Inter Fallback';src:local('Arial');size-adjust:107.12%;ascent-override:90.20%;descent-override:22.48%;line-gap-override:0%}
-
-  :root{
-    --bg:#02090c;--ink:#eafff6;--dim:#7da99b;
-    --green:#2fe38f;--blue:#37b6ff;--gold:#ffd166;--pink:#ff6ec7;
-    --font-display:'Orbitron',sans-serif;--font-body:'Inter','Inter Fallback',system-ui,sans-serif;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%;overflow:hidden}
-  /* the story below the hero is static markup now, so the page must scroll
-     even before theme.js runs — otherwise that content is unreachable with
-     JS disabled */
-  html.m-index,html.m-index body{height:auto;overflow-y:auto;overflow-x:hidden}
-  body{background:#000;color:var(--ink);font-family:var(--font-body);cursor:none}
-
-  canvas{position:fixed;inset:0}
-  #stars{z-index:2}#swarm{z-index:3}#fx{z-index:8;pointer-events:none}
-
-  /* custom cursor */
-  #cursor{position:fixed;z-index:100;width:22px;height:22px;border-radius:50%;
-    border:1.5px solid rgba(47,227,143,.85);pointer-events:none;
-    transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;mix-blend-mode:screen}
-  #cursor::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--green)}
-  body.hovering #cursor{width:56px;height:56px;border-color:rgba(55,182,255,.95)}
-
-  /* orbit rings */
-  .rings{position:fixed;inset:0;z-index:4;display:grid;place-items:center;pointer-events:none}
-  .ring{position:absolute;border-radius:50%;border:1px solid rgba(55,182,255,.10);animation:spin linear infinite}
-  .ring.r1{width:58vmin;height:58vmin;animation-duration:24s;border-color:rgba(47,227,143,.14);border-style:dashed}
-  .ring.r2{width:76vmin;height:76vmin;animation-duration:42s;animation-direction:reverse}
-  .ring.r3{width:96vmin;height:96vmin;animation-duration:66s;border-color:rgba(255,209,102,.08)}
-  .ring .sat{position:absolute;top:-5px;left:50%;width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 18px var(--green)}
-  .ring.r2 .sat{background:var(--blue);box-shadow:0 0 18px var(--blue)}
-  .ring.r3 .sat{background:var(--gold);box-shadow:0 0 16px var(--gold)}
-  @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* ── CENTER STACK ── */
-  .stack{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;pointer-events:none;text-align:center;padding:0 16px;gap:0}
-
-  /* pre-title */
-  .pre{font-size:clamp(10px,1.4vw,13px);letter-spacing:6px;text-transform:uppercase;
-    color:var(--dim);font-weight:600;margin-bottom:18px;opacity:0}
-  .pre.show{animation:riseIn .9s cubic-bezier(.2,1.3,.3,1) forwards}
-
-  /* NEON WORDMARK */
-  h1.neon{
-    font-family:var(--font-display);font-weight:900;
-    font-size:clamp(44px,11vw,138px);letter-spacing:.06em;line-height:1;
-    display:flex;justify-content:center;
-  }
-  h1.neon .L{
-    display:inline-block;color:var(--ink);
-    /* painted in final position: this is the LCP element, and the old
-       fly-in held it at opacity 0 until ~1.9s */
-    text-shadow:
-      0 0 6px rgba(234,255,246,.9),
-      0 0 20px rgba(47,227,143,.8),
-      0 0 60px rgba(55,182,255,.45);
-  }
-  h1.neon .L.in{
-    animation:neonPulse 3.2s ease-in-out 1.2s infinite alternate;
-  }
-  /* occasional flicker on two letters, like a real neon sign */
-  h1.neon .L:nth-child(3).in{animation:flicker 4.5s linear 2.2s infinite}
-  h1.neon .L:nth-child(6).in{animation:flicker 6.2s linear 3.1s infinite}
-  @keyframes neonPulse{
-    from{text-shadow:0 0 6px rgba(234,255,246,.9),0 0 20px rgba(47,227,143,.8),0 0 60px rgba(55,182,255,.45)}
-    to  {text-shadow:0 0 8px rgba(234,255,246,1),0 0 30px rgba(47,227,143,1),0 0 90px rgba(255,110,199,.5)}
-  }
-  @keyframes flicker{
-    0%,7.8%,8.2%,9.8%,10.2%,100%{opacity:1}
-    8%,10%{opacity:.35}
-    46%,46.6%{opacity:.5}
-    46.3%,47%{opacity:1}
-  }
-  /* glow slab under wordmark */
-  .under-glow{width:min(64vw,620px);height:5px;border-radius:100px;margin:26px auto 0;
-    background:linear-gradient(90deg,transparent,var(--green),var(--blue),var(--pink),transparent);
-    filter:blur(1px);opacity:0;transform:scaleX(0);box-shadow:0 0 30px rgba(47,227,143,.7)}
-  .under-glow.show{animation:slabIn 1s cubic-bezier(.2,1.2,.3,1) forwards,slabHue 6s linear 1s infinite}
-  @keyframes slabIn{to{opacity:1;transform:scaleX(1)}}
-  @keyframes slabHue{50%{filter:blur(1px) hue-rotate(40deg)}}
-
-  /* slogan */
-  .slogan{margin-top:30px;font-family:var(--font-body);font-weight:600;
-    font-size:clamp(17px,3vw,29px);letter-spacing:.4px;
-    display:flex;gap:.34em;flex-wrap:wrap;justify-content:center}
-  .slogan .w{display:inline-block;opacity:0;transform:translateY(34px) rotate(7deg) scale(.75);filter:blur(8px)}
-  .slogan .w.show{opacity:1;transform:none;filter:blur(0);transition:all .75s cubic-bezier(.2,1.45,.3,1)}
-  .slogan .hl{font-weight:700;background:linear-gradient(90deg,var(--green),var(--blue),var(--pink),var(--green));
-    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 5s linear infinite}
-  @keyframes flow{to{background-position:300% 0}}
-
-  /* jingle */
-  .jingle{margin-top:20px;font-size:clamp(10.5px,1.5vw,14px);letter-spacing:3.4px;text-transform:uppercase;
-    font-weight:600;color:var(--dim);opacity:0;transform:translateY(18px);
-    display:flex;align-items:center;gap:13px;flex-wrap:wrap;justify-content:center;transition:all 1s ease}
-  .jingle.show{opacity:1;transform:none}
-  .jingle b{color:transparent;background:linear-gradient(90deg,var(--gold),var(--pink));-webkit-background-clip:text;background-clip:text;font-weight:700}
-  .jingle .dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.6s infinite}
-  @keyframes blink{50%{opacity:.25}}
-
-  /* enter */
-  #enter{pointer-events:auto;margin-top:46px;
-    font-family:var(--font-display);font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;
-    color:var(--ink);background:transparent;border:1.5px solid rgba(47,227,143,.5);
-    padding:17px 54px;border-radius:100px;cursor:none;position:relative;overflow:hidden;
-    opacity:0;transform:translateY(22px);
-    transition:opacity .9s ease,transform .9s ease,border-color .3s,box-shadow .3s,color .3s}
-  #enter.show{opacity:1;transform:none}
-  #enter::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--green),var(--blue));
-    transform:translateX(-101%);transition:transform .45s cubic-bezier(.7,0,.2,1);z-index:-1}
-  #enter:hover{color:#03120c;border-color:transparent;box-shadow:0 0 70px -8px rgba(47,227,143,.9)}
-  #enter:hover::before{transform:translateX(0)}
-  #enter span{position:relative;z-index:1}
-
-  .corner{position:fixed;z-index:6;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
-    color:var(--dim);opacity:0;animation:fadeIn 2s ease 3.6s forwards;pointer-events:none}
-  .corner.tl{top:66px;left:30px}.corner.tr{top:66px;right:30px}
-  .corner.bl{bottom:24px;left:30px}.corner.br{bottom:24px;right:30px}
-  .corner b{color:var(--green)}
-  @keyframes fadeIn{to{opacity:.85}}
-  @keyframes riseIn{from{opacity:0;transform:translateY(20px)}to{opacity:.9;transform:none}}
-
-  .hint{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:6;
-    font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);
-    opacity:0;animation:hintIn 2s ease 5.2s forwards;pointer-events:none}
-  @keyframes hintIn{to{opacity:.5}}
-
-  /* cinematic bars that open like curtains */
-  .bar{position:fixed;left:0;right:0;height:50vh;background:#010507;z-index:550;pointer-events:none;
-    transition:transform 1.4s cubic-bezier(.8,0,.2,1) .15s}
-  #barT{top:0;transform-origin:top}
-  #barB{bottom:0;transform-origin:bottom}
-  body.open #barT{transform:translateY(-101%)}
-  body.open #barB{transform:translateY(101%)}
-
-  @media (prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
-    body{cursor:auto}#cursor{display:none}
-    h1.neon .L,.slogan .w,#enter,.jingle,.pre,.under-glow{opacity:1!important;transform:none!important;filter:none!important}
-    .bar{display:none}
-  }
-
-  /* ══ FEATURE MENU (after Enter) ══ */
-  #menu{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:20px;
-    background:rgba(0,0,0,.55);backdrop-filter:blur(10px);
-    overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
-    opacity:0;pointer-events:none;transition:opacity .6s ease}
-  @media(max-width:640px),(max-height:640px){
-    #menu{place-items:start center;padding:72px 16px 110px}
-  }
-  #menu.show{opacity:1;pointer-events:auto}
-  .menu-in{max-width:860px;width:100%;text-align:center}
-  .menu-in h2{font-family:var(--font-display);font-weight:900;font-size:clamp(22px,4vw,36px);
-    letter-spacing:1px;margin-bottom:6px;
-    text-shadow:0 0 20px rgba(47,227,143,.8),0 0 50px rgba(55,182,255,.4)}
-  .menu-in p{color:var(--dim);font-size:13px;letter-spacing:1px;margin-bottom:30px}
-  .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
-  .fcard{display:block;text-decoration:none;color:var(--ink);cursor:none;
-    background:rgba(10,26,22,.75);border:1px solid rgba(47,227,143,.2);border-radius:20px;
-    padding:26px 16px 22px;transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;
-    opacity:0;transform:translateY(26px)}
-  #menu.show .fcard{opacity:1;transform:none;transition:transform .55s cubic-bezier(.2,1.3,.3,1),opacity .55s,border-color .3s,box-shadow .3s}
-  #menu.show .fcard:nth-child(1){transition-delay:.05s}
-  #menu.show .fcard:nth-child(2){transition-delay:.14s}
-  #menu.show .fcard:nth-child(3){transition-delay:.23s}
-  #menu.show .fcard:nth-child(4){transition-delay:.32s}
-  #menu.show .fcard:nth-child(5){transition-delay:.41s}
-  .fcard:hover{transform:translateY(-6px) scale(1.03)!important;border-color:rgba(55,182,255,.55);
-    box-shadow:0 18px 44px -16px rgba(55,182,255,.4)}
-  .fcard .fi{font-size:34px;margin-bottom:12px}
-  .fcard b{font-family:var(--font-display);font-size:15px;display:block;margin-bottom:5px;letter-spacing:.5px}
-  .fcard span{font-size:11.5px;color:var(--dim);line-height:1.5;display:block}
-
-
-
-/* ══ MAATRAM UNIVERSAL NAV ══ */
-#mnav{position:fixed;top:0;left:0;right:0;height:52px;z-index:600;display:flex;align-items:center;gap:5px;
-  padding:0 14px;background:rgba(2,10,8,.82);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter','Inter Fallback',system-ui,sans-serif;cursor:auto}
-#mnav *{cursor:pointer}
-#mnav .mn-logo{display:flex;align-items:center;gap:8px;margin-right:10px;text-decoration:none;color:#eafff6}
-#mnav .mn-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#2fe38f,#37b6ff);
-  display:grid;place-items:center;font-weight:800;color:#04120f;font-size:14px}
-#mnav .mn-logo b{font-size:13px;font-weight:700;letter-spacing:.4px}
-#mnav .mn-spacer{flex:1}
-#mnav a.mn-link{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  color:#7da99b;text-decoration:none;padding:7px 11px;border-radius:100px;transition:all .25s;white-space:nowrap}
-#mnav a.mn-link:hover{color:#eafff6;background:rgba(55,182,255,.1)}
-#mnav a.mn-link.active{color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff)}
-#mnavAuth{display:flex;align-items:center;gap:8px;margin-left:6px}
-#mnavIn{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#04120f;
-  text-decoration:none;padding:8px 16px;border-radius:100px;background:linear-gradient(90deg,#2fe38f,#37b6ff);white-space:nowrap}
-#mnavChip{display:none;align-items:center;gap:8px;padding:4px 6px;border-radius:100px;
-  border:1px solid rgba(47,227,143,.3);background:rgba(47,227,143,.06);position:relative}
-#mnavChip img{width:28px;height:28px;border-radius:50%;border:1px solid #2fe38f}
-#mnavChip .nm{font-size:12px;font-weight:700;color:#eafff6;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#mnavChip .pt{font-size:10px;font-weight:800;color:#ffd166;letter-spacing:.5px;padding:3px 8px;border-radius:100px;
-  border:1px solid rgba(255,209,102,.35);background:rgba(255,209,102,.08);white-space:nowrap}
-#mnavMenu{display:none;position:absolute;top:44px;right:0;min-width:180px;z-index:700;
-  background:rgba(6,18,14,.97);border:1px solid rgba(47,227,143,.25);border-radius:14px;padding:8px;
-  box-shadow:0 18px 50px -12px rgba(0,0,0,.8)}
-#mnavMenu.open{display:block}
-#mnavMenu button,#mnavMenu a{display:block;width:100%;text-align:left;padding:10px 13px;border-radius:9px;
-  background:transparent;border:none;color:#eafff6;font-family:inherit;font-size:12px;font-weight:600;text-decoration:none;transition:background .2s}
-#mnavMenu button:hover,#mnavMenu a:hover{background:rgba(55,182,255,.12)}
-#mnavMenu .out{color:#ff5d73}
-@media(max-width:860px){#mnav{overflow-x:auto;scrollbar-width:none}#mnav::-webkit-scrollbar{display:none}
-  #mnav .mn-logo b{display:none}#mnavChip .nm{display:none}}
-body{padding-top:52px!important}
-
-
-
-  /* ══ mobile / touch adjustments ══ */
-  @media(pointer:coarse){
-    #cursor{display:none!important}
-    body,#enter,.fcard{cursor:auto!important}
-  }
-  /* ══ performance-mode toggle button (all pages) ══ */
-  #perfBtn{position:fixed;bottom:18px;left:18px;z-index:900;display:flex;align-items:center;gap:8px;
-    padding:8px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.18);cursor:pointer;
-    background:rgba(6,18,15,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#cfe9dd;
-    font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
-    transition:border-color .25s,color .25s}
-  #perfBtn:hover{border-color:rgba(47,227,143,.55);color:#eafff6}
-  #perfBtn .pf-ic{font-size:13px;line-height:1}
-  #perfBtn .pf-sw{width:28px;height:15px;border-radius:100px;border:1px solid rgba(255,255,255,.3);position:relative;transition:all .25s;flex-shrink:0}
-  #perfBtn .pf-sw::after{content:"";position:absolute;top:1.5px;left:2px;width:10px;height:10px;border-radius:50%;background:#cfe9dd;transition:all .25s}
-  html.perf #perfBtn .pf-sw{background:linear-gradient(90deg,#2fe38f,#37b6ff);border-color:transparent}
-  html.perf #perfBtn .pf-sw::after{left:14px;background:#04120f}
-  html.perf #perfBtn{border-color:rgba(47,227,143,.4)}
-  @media(pointer:coarse){#perfBtn{bottom:12px;left:12px}}
-
-
-  html.perf #cursor{display:none!important}
-  html.perf body,html.perf #enter,html.perf .fcard{cursor:auto!important}
-
-  #menuBack{position:fixed;top:18px;left:20px;z-index:80;display:flex;align-items:center;gap:7px;
-    padding:9px 16px 9px 13px;border-radius:100px;border:1px solid rgba(255,255,255,.22);cursor:pointer;
-    background:rgba(6,18,15,.82);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#eafff6;
-    font-family:inherit;font-size:13px;font-weight:800;letter-spacing:1px;opacity:0;pointer-events:none;
-    transition:opacity .4s,border-color .25s,transform .25s}
-  #menu.show #menuBack{opacity:1;pointer-events:auto}
-  #menuBack:hover{border-color:rgba(47,227,143,.6);transform:translateX(-3px)}
-  #menuBack span{font-weight:700}
-  #menu{cursor:pointer}          /* backdrop is clickable to go home */
-  .menu-in{cursor:auto}
-  html.perf #menuBack{cursor:pointer}
-</style>
+<link rel="stylesheet" href="index.css?v=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=optional">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=optional" media="print" onload="this.media='all';this.onload=null">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=optional"></noscript>
-<script>/* Skin class + the few tokens that must exist at first paint, so
-   theme.js itself no longer has to block rendering. */
-(function(){var m=null;try{m=localStorage.getItem('maatram_theme');}catch(_){}if(m!=='minimal')return;document.documentElement.classList.add('minimal');var s=document.createElement("style");s.textContent="html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:\"Plus Jakarta Sans\",\"Sora\",sans-serif;--font-body:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}";document.head.appendChild(s);})();</script>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap" media="print" onload="this.media='all';this.onload=null">
+<script>!function(){var a=null;try{a=localStorage.getItem("maatram_theme")}catch(a){}if("minimal"===a){document.documentElement.classList.add("minimal");var t=document.createElement("style");t.textContent='html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:"Plus Jakarta Sans","Sora",sans-serif;--font-body:"Plus Jakarta Sans","Inter",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:"Plus Jakarta Sans","Inter",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}',document.head.appendChild(t)}}();</script>
+<script defer src="index.js?v=1"></script>
 <script defer src="theme.js?v=2"></script>
 
-<style id="mstoryCSS">/* story + index layout: static because the markup is static.
-   Lived in theme.js before, which made that script render-blocking. */
-html.m-index,html.m-index body{height:auto!important;overflow-x:hidden!important;overflow-y:auto!important}html.m-index .stack{position:relative!important;left:auto!important;top:auto!important;transform:none!important;margin:0 auto;min-height:100svh;display:flex;justify-content:center}html.m-index .hint{position:absolute}html.minimal.m-index .hint{display:none}html.m-index .corner.bl,html.m-index .corner.br{position:absolute}.m-story{display:none}html.m-index .m-story{display:block;position:relative;z-index:6;max-width:1080px;margin:0 auto;padding:0 20px 120px}html.m-index .m-sec{content-visibility:auto;contain-intrinsic-size:auto 600px;padding:96px 0 24px}html.m-index .m-eyebrow{font-size:10.5px;letter-spacing:3.4px;text-transform:uppercase;color:var(--dim,#8A928E);font-weight:700;margin-bottom:14px}html.m-index .m-sec h2{font-family:var(--font-display,"Fredoka"),sans-serif;font-weight:600;font-size:clamp(28px,5vw,50px);line-height:1.08;letter-spacing:-.01em;color:var(--ink,#ECEFEE);margin-bottom:14px}html.m-index .m-sec h2 em{font-style:normal;color:var(--green,#9CC0B2)}html.m-index .m-lead{color:var(--dim,#8A928E);font-size:clamp(14px,1.6vw,16.5px);line-height:1.65;max-width:620px}html.m-index .m-grid{display:grid;gap:18px;margin-top:34px;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))}html.m-index .m-card{position:relative;overflow:hidden;border-radius:26px;padding:22px 22px 26px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);opacity:0;transform:translate3d(0,34px,0);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),border-color .35s,box-shadow .35s}html.m-index .m-card.in{opacity:1;transform:none}html.m-index .m-card:nth-child(2){transition-delay:.09s}html.m-index .m-card:nth-child(3){transition-delay:.18s}html.m-index .m-card:nth-child(4){transition-delay:.27s}html.m-index .m-card:nth-child(5){transition-delay:.36s}html.m-index .m-card:hover{border-color:rgba(156,192,178,.42);box-shadow:0 26px 56px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.11);transform:translate3d(0,-6px,0)}html.m-index .m-card::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.09) 50%,transparent 62%);transform:translateX(-110%);transition:transform .9s cubic-bezier(.16,1,.3,1)}html.m-index .m-card:hover::after{transform:translateX(110%)}html.m-index .m-card h3{font-family:var(--font-display,"Fredoka"),sans-serif;font-weight:600;font-size:18px;color:var(--ink,#ECEFEE);margin:16px 0 6px}html.m-index .m-card p{color:var(--dim,#8A928E);font-size:13.5px;line-height:1.6}html.m-index .m-tag{display:inline-block;margin-top:14px;font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;color:var(--green,#9CC0B2);padding:6px 12px;border-radius:100px;border:1px solid rgba(156,192,178,.3);background:rgba(156,192,178,.07)}html.m-index .m-fig{position:relative;height:172px;border-radius:20px;overflow:hidden;background:radial-gradient(120% 100% at 70% 15%,rgba(175,206,193,.16),rgba(11,12,11,0) 62%),rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.09);display:grid;place-items:center}html.m-index .m-fig svg{width:100%;height:100%;display:block}html.m-index .m-fig .p{transition:transform .75s cubic-bezier(.16,1,.3,1),opacity .6s}html.m-index .m-card:hover .m-fig .p1{transform:translate(0,-9px) rotate(-4deg)}html.m-index .m-card:hover .m-fig .p2{transform:translate(11px,7px) rotate(6deg)}html.m-index .m-card:hover .m-fig .p3{transform:translate(-12px,6px) rotate(-6deg)}html.m-index .m-card:hover .m-fig .p4{transform:scale(1.08)}html.m-index .m-fig .spin{transform-origin:50% 50%;transition:transform 1.1s cubic-bezier(.16,1,.3,1)}html.m-index .m-card:hover .m-fig .spin{transform:rotate(38deg)}html.m-index .m-fig .grow{transition:transform .8s cubic-bezier(.16,1,.3,1);transform-origin:50% 100%}html.m-index .m-card:hover .m-fig .grow{transform:scaleY(1.22)}html.m-index .m-fig .dash{stroke-dasharray:5 7;transition:stroke-dashoffset 1.4s linear,opacity .5s}html.m-index .m-card:hover .m-fig .dash{stroke-dashoffset:-96}html.m-index .m-metrics{display:grid;gap:14px;margin-top:30px;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}html.m-index .m-metric{border-radius:20px;padding:18px 18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.11);backdrop-filter:blur(18px);opacity:0;transform:translate3d(0,26px,0);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}html.m-index .m-metric.in{opacity:1;transform:none}html.m-index .m-metric b{display:block;font-family:var(--font-display,"Fredoka"),sans-serif;font-size:26px;font-weight:600;color:var(--ink,#ECEFEE)}html.m-index .m-metric span{display:block;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim,#8A928E);margin-top:5px}html.m-index .m-rev{opacity:0;transform:translate3d(0,28px,0);transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1)}html.m-index .m-rev.in{opacity:1;transform:none}html.m-index .m-cta{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap}html.m-index .m-cta a{text-decoration:none;font-weight:700;font-size:13px;letter-spacing:.4px;padding:14px 26px;border-radius:100px;transition:transform .2s,box-shadow .25s,background .25s}html.m-index .m-cta a.pri{background:rgba(255,255,255,.94);color:#0B0C0B;border:1px solid rgba(255,255,255,.55);box-shadow:0 10px 26px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.9)}html.m-index .m-cta a.pri:hover{background:#fff;transform:translateY(-2px)}html.m-index .m-cta a.sec{background:rgba(255,255,255,.06);color:var(--ink,#ECEFEE);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(16px)}html.m-index .m-cta a.sec:hover{border-color:rgba(156,192,178,.5);transform:translateY(-2px)}html.m-index .m-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:7;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--dim,#8A928E);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}html.m-index .m-cue .cue-bar{display:block;width:1px;height:34px;text-decoration:none;background:linear-gradient(180deg,rgba(156,192,178,.7),transparent);animation:mCue 2.4s ease-in-out infinite}@keyframes mCue{0%,100%{opacity:.25;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}@media(prefers-reduced-motion:reduce){.m-cue .cue-bar{animation:none!important}}html.perf .m-cue .cue-bar{animation:none}@media(max-width:640px){html.m-index .m-sec{padding:72px 0 18px}html.m-index .m-fig{height:150px}}.corner.br{bottom:62px!important}</style>
 
-<style id="mfootCSS">
-.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
-#mfoot{position:relative;z-index:6;max-width:1080px;margin:0 auto;padding:56px 22px 130px;
-  font-family:Inter,'Inter Fallback',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#8b9698;
-  border-top:1px solid rgba(255,255,255,.08);line-height:1.65;font-size:14.5px}
-#mfoot h2{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#cfd8d7;margin:0 0 14px;font-weight:700}
-#mfoot h3{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#7f8b8d;margin:0 0 12px;font-weight:700}
-#mfoot p{margin:0 0 16px;max-width:70ch}
-#mfoot a{color:#a9bdb8;text-decoration:none;border-bottom:1px solid rgba(169,189,184,.24)}
-#mfoot a:hover{color:#34D399;border-bottom-color:#34D399}
-#mfoot .fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:30px 26px;margin:30px 0 8px}
-#mfoot ul{list-style:none;margin:0;padding:0}
-#mfoot li{margin:0 0 9px}
-#mfoot .fbot{margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);
-  display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between;font-size:13px;color:#6c7779}
-@media(max-width:560px){#mfoot{padding:44px 18px 120px}}
-#mfaq{position:relative;z-index:6;max-width:1080px;margin:0 auto;padding:56px 22px 0;
-  font-family:Inter,'Inter Fallback',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  color:#8b9698;line-height:1.65;font-size:14.5px;
-  content-visibility:auto;contain-intrinsic-size:auto 520px}
-#mfaq h2{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#cfd8d7;margin:0 0 22px;font-weight:700}
-#mfaq .faq-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px 30px}
-#mfaq h3{font-size:14.5px;letter-spacing:0;text-transform:none;color:#cfd8d7;margin:0 0 8px;font-weight:700;line-height:1.45}
-#mfaq p{margin:0;max-width:62ch}
-@media(max-width:560px){#mfaq{padding:44px 18px 0}}
-</style>
-<style id="a11yCSS">
-.skip-link{position:absolute;left:-9999px;top:0;z-index:100000;padding:12px 18px;border-radius:0 0 12px 0;
-  background:#34D399;color:#04120F;font:600 14px/1 Inter,system-ui,sans-serif;text-decoration:none}
-.skip-link:focus{left:0}
-:focus-visible{outline:2px solid #34D399;outline-offset:2px}
-#mfoot{content-visibility:auto;contain-intrinsic-size:auto 620px}
-</style>
-<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script defer src="/speed-insights.js"></script>
 </head>
 <body>
@@ -389,7 +88,7 @@ html.m-index,html.m-index body{height:auto!important;overflow-x:hidden!important
   <div id="mnavAuth">
     <a id="mnavIn" href="login.html">Sign in</a>
     <div id="mnavChip">
-      <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" loading="lazy" decoding="async" width="28" height="28">
+      <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" fetchpriority="high" decoding="async" width="28" height="28">
       <span class="nm" id="mnavNm"></span>
       <span class="pt" id="mnavPts">0 PTS</span>
       <div id="mnavMenu">
@@ -410,7 +109,7 @@ html.m-index,html.m-index body{height:auto!important;overflow-x:hidden!important
 
 <div class="stack" id="main" role="main" tabindex="-1">
   <div class="pre" id="pre">SSVM School of Excellence presents</div>
-  <h1 class="neon" id="wordmark"><span class="sr-only">Maatram — free screen time and focus app for students</span><span class="L">M</span><span class="L">A</span><span class="L">A</span><span class="L">T</span><span class="L">R</span><span class="L">A</span><span class="L">M</span></h1>
+  <h1 class="neon" id="wordmark"><span class="sr-only">Maatram — free screen time and focus app for students.</span> <span class="L" aria-hidden="true">M</span><span class="L" aria-hidden="true">A</span><span class="L" aria-hidden="true">A</span><span class="L" aria-hidden="true">T</span><span class="L" aria-hidden="true">R</span><span class="L" aria-hidden="true">A</span><span class="L" aria-hidden="true">M</span></h1>
   <div class="under-glow" id="slab"></div>
   <div class="slogan" id="slogan">
     <span class="w">Bringing</span><span class="w">a</span><span class="w hl">change</span><span class="w">in</span><span class="w hl">you.</span>
@@ -444,7 +143,7 @@ html.m-index,html.m-index body{height:auto!important;overflow-x:hidden!important
       <a class="fcard" href="timers.html"><div class="fi">⏱️</div><b>Focus Timers</b><span>Pomodoro &amp; Deep Work sessions with power-ups</span></a>
       <a class="fcard" href="app-gate.html"><div class="fi">🔒</div><b>App Gate</b><span>Hard-lock your social apps for 5–90 minutes</span></a>
       <a class="fcard" href="study-room.html"><div class="fi">🧑‍💻</div><b>Study Room</b><span>Study live with 4 friends — strikes, timers &amp; chat</span></a>
-      <a class="fcard" href="stats.html"><div class="fi">📊</div><b>Screen Stats</b><span>OCR your screen-time screenshot &amp; track trends</span></a>
+      <a class="fcard" href="stats.html"><div class="fi">📊</div><b>Screen Stats</b><span>Log daily screen time per app &amp; track trends</span></a>
       <a class="fcard" href="leaderboard.html"><div class="fi">🏆</div><b>Leaderboard</b><span>Hall of Focus — rank up as you earn points</span></a>
        <a class="fcard" href="wellness/wellness.html"><div class="fi">🌿</div><b>Wellness</b><span>Stay active, healthy, and consistent every day</span></a>
     </div>
@@ -455,347 +154,33 @@ html.m-index,html.m-index body{height:auto!important;overflow-x:hidden!important
 
 
 
-<script>
-/* ═════════ FX state FIRST (so nothing can touch it before it exists) ═════════ */
-let trail=[],waves=[],confetti=[];
-function shockwave(x,y){
-  waves.push({x,y,r:0,life:1});
-  for(let i=0;i<22;i++){const a=Math.random()*6.283,s=1.5+Math.random()*4;
-    confetti.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.5,life:1,
-      hue:[152,200,45,320][Math.floor(Math.random()*4)],rot:Math.random()*6.283,vr:(Math.random()-.5)*.3});}
-}
 
-/* ═════════ canvases ══════��══ */
-const LITE=(window.MAATRAM_PERF!==undefined)?window.MAATRAM_PERF:(matchMedia('(pointer:coarse)').matches||innerWidth<820||(navigator.hardwareConcurrency||8)<=4);
-const DPR=LITE?1:Math.min(devicePixelRatio||1,1.5);
-let W=0,H=0;
-const cvs={stars:document.getElementById('stars'),
-  swarm:document.getElementById('swarm'),fx:document.getElementById('fx')};
-function fitAll(){
-  W=Math.max(1,innerWidth);H=Math.max(1,innerHeight);
-  for(const cv of Object.values(cvs)){
-    cv.width=W*DPR;cv.height=H*DPR;
-    cv.style.width=W+'px';cv.style.height=H+'px';
-    cv.getContext('2d').setTransform(DPR,0,0,DPR,0,0);
-  }
-}
-fitAll();
-const S=cvs.stars.getContext('2d'),
-      P=cvs.swarm.getContext('2d'),F=cvs.fx.getContext('2d');
-const reduced=(window.MAATRAM_PERF===true) || matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const mouse={x:W/2,y:H/2,down:false};
-addEventListener('pointermove',e=>{
-  mouse.x=e.clientX;mouse.y=e.clientY;
-  if(reduced&&cur){cur.style.left=mouse.x+'px';cur.style.top=mouse.y+'px';}  /* loop is off in perf mode → move cursor here */
-});
-addEventListener('pointerdown',e=>{mouse.down=true;shockwave(e.clientX,e.clientY);});
-addEventListener('pointerup',()=>mouse.down=false);
-
-const cur=document.getElementById('cursor');
-
-/* ═════════ SWARM: free-flying sprites that orbit the wordmark ═════════ */
-const SRGB={152:'rgb(47,227,143)',200:'rgb(55,182,255)',45:'rgb(255,209,102)',320:'rgb(255,110,199)',160:'rgb(120,235,190)',205:'rgb(140,205,255)'};
-const NS=Math.min(LITE?26:70,Math.floor(W/18));
-const sw=[];
-for(let i=0;i<NS;i++){
-  sw.push({a:Math.random()*6.283, rad:(0.18+Math.random()*0.42)*Math.min(W,H),
-    sp:(Math.random()<.5?-1:1)*(0.002+Math.random()*0.006),
-    wob:Math.random()*6.283, hue:[152,200,45,320][i%4], size:1+Math.random()*2});
-}
-function drawSwarm(t){
-  P.clearRect(0,0,W,H);
-  const cx=W/2, cy=H*0.46;
-  for(const s of sw){
-    s.a+=s.sp; s.wob+=.03;
-    let x=cx+Math.cos(s.a)*s.rad*(1+.06*Math.sin(s.wob));
-    let y=cy+Math.sin(s.a)*s.rad*.62*(1+.06*Math.cos(s.wob));
-    /* cursor repulsion */
-    const dx=x-mouse.x,dy=y-mouse.y,d2=dx*dx+dy*dy,R=mouse.down?190:100;
-    if(d2<R*R){const d=Math.sqrt(d2)||1,f=(R-d)/R;x+=(dx/d)*f*46;y+=(dy/d)*f*46;}
-    const glow=.45+.35*Math.sin(s.wob*2);
-    P.globalAlpha=glow;
-    P.fillStyle=SRGB[s.hue];
-    P.beginPath();P.arc(x,y,s.size,0,6.283);P.fill();
-    s._x=x;s._y=y;
-  }
-  P.globalAlpha=1;
-  /* constellation threads — sample only nearby indices, single stroke style */
-  P.lineWidth=.5;P.strokeStyle='rgba(55,182,255,.14)';P.beginPath();
-  for(let i=0;i<sw.length;i++){
-    const a=sw[i];if(a._x==null)continue;
-    for(let k=1;k<=3;k++){
-      const b=sw[(i+k)%sw.length];if(b._x==null)continue;
-      const dx=a._x-b._x,dy=a._y-b._y;
-      if(dx*dx+dy*dy<90*90){P.moveTo(a._x,a._y);P.lineTo(b._x,b._y);}
-    }
-  }
-  P.stroke();
-}
-
-/* ═════════ STARFIELD ═════════ */
-const stars=[];
-for(let i=0;i<(LITE?32:80);i++)stars.push({x:Math.random(),y:Math.random(),
-  z:.3+Math.random()*.7,tw:Math.random()*7,hue:Math.random()<.5?160:205});
-function drawStars(){
-  S.clearRect(0,0,W,H);
-  const ox=(mouse.x-W/2)*.015,oy=(mouse.y-H/2)*.015;
-  for(const st of stars){
-    st.tw+=.03;
-    S.globalAlpha=.15+.25*Math.abs(Math.sin(st.tw))*st.z;
-    S.fillStyle=SRGB[st.hue];
-    S.beginPath();
-    S.arc(st.x*W-ox*st.z*8,st.y*H-oy*st.z*8,st.z*1.4,0,6.283);S.fill();
-  }
-  S.globalAlpha=1;
-}
-
-/* ═════════ FX: comet trail, shockwaves, confetti ═════════ */
-function drawFX(){
-  F.clearRect(0,0,W,H);
-  trail.push({x:mouse.x,y:mouse.y});
-  if(trail.length>26)trail.shift();
-  for(let i=0;i<trail.length;i++){
-    const tp=trail[i],k=i/trail.length;
-    F.globalAlpha=k*.32;
-    F.fillStyle=k<.5?SRGB[160]:SRGB[205];
-    F.beginPath();F.arc(tp.x,tp.y,k*5,0,6.283);F.fill();
-  }
-  F.globalAlpha=1;
-  waves=waves.filter(w=>w.life>0);
-  for(const w of waves){w.r+=7;w.life-=.03;
-    F.strokeStyle=`rgba(47,227,143,${w.life*.6})`;F.lineWidth=2.2;
-    F.beginPath();F.arc(w.x,w.y,w.r,0,6.283);F.stroke();
-    F.strokeStyle=`rgba(55,182,255,${w.life*.35})`;F.lineWidth=1.2;
-    F.beginPath();F.arc(w.x,w.y,w.r*.66,0,6.283);F.stroke();}
-  confetti=confetti.filter(c=>c.life>0);
-  for(const c of confetti){c.x+=c.vx;c.y+=c.vy;c.vy+=.08;c.life-=.014;c.rot+=c.vr;
-    F.save();F.translate(c.x,c.y);F.rotate(c.rot);
-    F.globalAlpha=c.life;F.fillStyle=SRGB[c.hue];
-    F.fillRect(-2.5,-1.2,5,2.4);F.restore();}
-  F.globalAlpha=1;
-}
-
-/* ═════════ master loop ═════════ */
-function loop(t){
-  drawStars();drawSwarm(t);drawFX();
-  cur.style.left=mouse.x+'px';cur.style.top=mouse.y+'px';
-  if(!reduced)requestAnimationFrame(loop);
-}
-
-/* ═════════ build neon wordmark letters ═════════ */
-const WORD='MAATRAM';
-const wm=document.getElementById('wordmark');
-/* letters ship in the HTML so the LCP element paints without waiting on JS;
-   only build them here if the markup ever loses them */
-if(!wm.querySelector('.L')){
-  WORD.split('').forEach(ch=>{
-    const sp=document.createElement('span');
-    sp.className='L';sp.textContent=ch;wm.appendChild(sp);
-  });
-}
-const letters=[...wm.querySelectorAll('.L')];
-
-/* ═════════ choreography — starts after fonts are ready ═════════ */
-function start(){
-  fitAll();                       // re-fit now that layout is final
-  document.body.classList.add('open');       // cinematic bars slide away
-  if(!reduced)requestAnimationFrame(loop);
-  else{drawStars();drawSwarm(0);}
-
-  setTimeout(()=>document.getElementById('pre').classList.add('show'),300);
-  letters.forEach((L,i)=>setTimeout(()=>L.classList.add('in'),350+i*70));
-  setTimeout(()=>document.getElementById('slab').classList.add('show'),350+letters.length*70+150);
-  const words=[...document.querySelectorAll('.slogan .w')];
-  words.forEach((w,i)=>setTimeout(()=>w.classList.add('show'),1050+i*90));
-  setTimeout(()=>document.getElementById('jingle').classList.add('show'),1550);
-  setTimeout(()=>document.getElementById('enter').classList.add('show'),1850);
-  setTimeout(()=>{if(!reduced){shockwave(W*.28,H*.3);shockwave(W*.72,H*.32);}},1150);
-}
-
-/* wait for fonts (with a safety timeout so we never hang) */
-
-  Promise.race([
-    (document.fonts&&document.fonts.ready)||Promise.resolve(),
-    new Promise(r=>setTimeout(r,400))
-  ]).then(()=>requestAnimationFrame(()=>requestAnimationFrame(start)));
-
-
-/* enter hover cursor */
-const enterBtn=document.getElementById('enter');
-enterBtn.addEventListener('pointerenter',()=>document.body.classList.add('hovering'));
-enterBtn.addEventListener('pointerleave',()=>document.body.classList.remove('hovering'));
-document.addEventListener('pointerover',e=>{if(e.target.closest('.fcard'))document.body.classList.add('hovering');});
-document.addEventListener('pointerout',e=>{if(e.target.closest('.fcard'))document.body.classList.remove('hovering');});
-
-/* Enter → burst + hook for redirect */
-enterBtn.addEventListener('click',()=>{
-  for(let i=0;i<6;i++)setTimeout(()=>shockwave(Math.random()*W,Math.random()*H),i*110);
-  letters.forEach((L,i)=>{
-    L.style.transition='all .8s cubic-bezier(.6,-.3,.3,1)';
-    L.style.transform=`translateY(${-120-Math.random()*160}px) rotate(${(Math.random()-.5)*70}deg) scale(.3)`;
-    L.style.opacity='0';L.style.filter='blur(10px)';
-  });
-  setTimeout(()=>document.getElementById('menu').classList.add('show'),900);
-});
-
-
-/* ══ leave menu → back to home start screen ══ */
-(function(){
-  const menu=document.getElementById('menu');
-  function goHome(){ location.reload(); }   /* replay intro from the top */
-  document.getElementById('menuBack').addEventListener('click',goHome);
-  menu.addEventListener('click',e=>{        /* click backdrop, not a card/back btn */
-    if(e.target.closest('.fcard')||e.target.closest('.menu-in')||e.target.closest('#menuBack'))return;
-    goHome();
-  });
-  addEventListener('keydown',e=>{ if(e.key==='Escape'&&menu.classList.contains('show'))goHome(); });
-})();
-
-addEventListener('resize',fitAll);
-</script>
-
-<script>
-/* ═�� universal nav auth (Firebase session shared across all pages) ══ */
-(async()=>{
-  const chip=document.getElementById('mnavChip'),inBtn=document.getElementById('mnavIn'),
-        menu=document.getElementById('mnavMenu');
-  if(!chip)return;
-  chip.addEventListener('click',e=>{ if(!e.target.closest('#mnavMenu')) menu.classList.toggle('open'); });
-  document.addEventListener('click',e=>{ if(!e.target.closest('#mnavChip')) menu.classList.remove('open'); });
-  if(!(location.protocol==='http:'||location.protocol==='https:'))return;  // file:// → nav stays simple
-  try{
-    const [{initializeApp,getApps,getApp},{getAuth,onAuthStateChanged,signOut}]=await Promise.all([
-      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
-    ]);
-    const app=getApps().length?getApp():initializeApp({apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",authDomain:"maatram-859f4.firebaseapp.com",projectId:"maatram-859f4",storageBucket:"maatram-859f4.firebasestorage.app",messagingSenderId:"770970784123",appId:"1:770970784123:web:7c73c74ddb2179b69dedde"});
-    const auth=getAuth(app);
-    /* Firestore is only ever touched once somebody is signed in, so it loads on
-       demand instead of up front. Signed-out visitors — and page-speed tests —
-       never download it. */
-    let db=null,doc=null,onSnapshot=null,runTransaction=null,fsReady=null;
-    const loadFs=()=>fsReady||(fsReady=import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
-      .then(m=>{ doc=m.doc; onSnapshot=m.onSnapshot; runTransaction=m.runTransaction; db=m.getFirestore(app); }));
-    let unsub=null;
-    /* ══ Maatram points engine (all pages) ══ */
-    let __mtUser=null;
-    window.maatramAward=async function(pts,reason){
-      pts=Math.round(pts); if(!pts) return;
-      /* local bank (works offline / signed-out) */
-      try{
-        const cur=+localStorage.getItem('maatram_points')||0;
-        localStorage.setItem('maatram_points',Math.max(0,cur+pts));
-      }catch(_){}
-      try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
-      try{ parent.postMessage({maatramRelay:{type:'points',pts}},'*'); }catch(_){}
-      mtToast(pts,reason);
-      /* cloud write (clamped to security rules: floor 0, max +200 / −100 per write) */
-      if(__mtUser){
-        const uid=__mtUser.uid;
-        try{
-          await loadFs();
-          await runTransaction(db,async t=>{
-            const r=doc(db,'users',uid);
-            const s=await t.get(r);
-            const cur=(s.exists()&&s.data().points)||0;
-            let nx=cur+pts;
-            nx=Math.max(0,Math.max(cur-100,Math.min(cur+200,nx)));
-            t.set(r,{points:nx},{merge:true});
-          });
-        }catch(e){ console.warn('points write',e); }
-      }
-    };
-    function mtToast(pts,reason){
-      const t=document.createElement('div');
-      t.textContent=(pts>0?'+':'')+pts+' PTS'+(reason?' · '+reason:'');
-      t.style.cssText='position:fixed;top:64px;right:16px;z-index:900;font-family:Sora,Inter,sans-serif;'
-        +'font-weight:800;font-size:13px;letter-spacing:1px;padding:11px 20px;border-radius:100px;'
-        +'backdrop-filter:blur(10px);transition:all .5s cubic-bezier(.2,1.3,.3,1);opacity:0;transform:translateY(-14px);'
-        +(pts>0?'color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff);box-shadow:0 8px 30px -8px rgba(47,227,143,.7);'
-               :'color:#fff;background:linear-gradient(90deg,#ff5d73,#ff9a5d);box-shadow:0 8px 30px -8px rgba(255,93,115,.7);');
-      document.body.appendChild(t);
-      requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='none';});
-      setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(-14px)';},2600);
-      setTimeout(()=>t.remove(),3200);
-    }
-
-    onAuthStateChanged(auth,async u=>{
-      __mtUser=u;
-      if(unsub){unsub();unsub=null;}
-      if(u){
-        inBtn.style.display='none';chip.style.display='flex';
-        document.getElementById('mnavPic').src=u.photoURL||'';
-        document.getElementById('mnavNm').textContent=(u.displayName||'You').split(' ')[0];
-        await loadFs();
-        if(__mtUser!==u) return;               /* signed out again while loading */
-        unsub=onSnapshot(doc(db,'users',u.uid),s=>{
-          document.getElementById('mnavPts').textContent=((s.exists()&&s.data().points)||0)+' PTS';
-        },()=>{});
-      }else{
-        inBtn.style.display='inline-block';chip.style.display='none';
-      }
-    });
-    document.getElementById('mnavOut').onclick=()=>{menu.classList.remove('open');signOut(auth);};
-  }catch(e){console.warn('nav auth',e);}
-})();
-</script>
 <button id="perfBtn" type="button" aria-pressed="false" aria-label="Toggle performance mode" title="Toggle performance mode (less animation, zero lag)">
   <span class="pf-ic">⚡</span><span class="pf-sw"></span><span id="perfLbl">Performance</span>
 </button>
-<script>
-/* ══ performance toggle behavior ══ */
-(function(){
-  var KEY='maatram_perf', btn=document.getElementById('perfBtn'), lbl=document.getElementById('perfLbl');
-  function paint(on){
-    document.documentElement.classList.toggle('perf',on);
-    btn.setAttribute('aria-pressed',String(on));
-    lbl.textContent = on ? 'Performance: On' : 'Performance';
-  }
-  paint(!!window.MAATRAM_PERF);
-  btn.addEventListener('click',function(){
-    var on=!(localStorage.getItem(KEY)==='1');
-    try{localStorage.setItem(KEY,on?'1':'0');}catch(_){}
-    /* reload so canvases rebuild at the new detail level — clean + reliable */
-    location.reload();
-  });
-})();
-</script>
 
 <section id="proof" aria-label="Maatram, verified">
   <div class="proof-in">
     <p class="proof-kick">Built in the open, not just claimed</p>
     <div class="proof-row">
       <a href="https://github.com/MaatramReelsBlocking/maatram" target="_blank" rel="noopener" class="proof-badge">
-        <img loading="lazy" decoding="async" src="https://img.shields.io/github/stars/MaatramReelsBlocking/maatram?style=flat-square&color=2fe38f&labelColor=0a1c16" width="94" height="20" alt="Maatram GitHub stars">
+        <img loading="lazy" decoding="async" src="https://img.shields.io/github/stars/MaatramReelsBlocking/maatram?style=flat-square&color=2fe38f&labelColor=0a1c16" srcset="https://img.shields.io/github/stars/MaatramReelsBlocking/maatram?style=flat-square&color=2fe38f&labelColor=0a1c16 1x" width="94" height="20" alt="Maatram GitHub stars"><span class="sr-only"> — Maatram GitHub stars on GitHub</span>
       </a>
       <a href="https://github.com/MaatramReelsBlocking/maatram" target="_blank" rel="noopener" class="proof-badge">
-        <img loading="lazy" decoding="async" src="https://img.shields.io/github/forks/MaatramReelsBlocking/maatram?style=flat-square&color=37b6ff&labelColor=0a1c16" width="94" height="20" alt="Maatram GitHub forks">
+        <img loading="lazy" decoding="async" src="https://img.shields.io/github/forks/MaatramReelsBlocking/maatram?style=flat-square&color=37b6ff&labelColor=0a1c16" srcset="https://img.shields.io/github/forks/MaatramReelsBlocking/maatram?style=flat-square&color=37b6ff&labelColor=0a1c16 1x" width="94" height="20" alt="Maatram GitHub forks"><span class="sr-only"> — Maatram GitHub forks on GitHub</span>
       </a>
       <a href="https://github.com/MaatramReelsBlocking/maatram/blob/main/LICENSE" target="_blank" rel="noopener" class="proof-badge">
-        <img loading="lazy" decoding="async" src="https://img.shields.io/badge/license-MIT-2fe38f?style=flat-square&labelColor=0a1c16" width="106" height="20" alt="MIT License">
+        <img loading="lazy" decoding="async" src="https://img.shields.io/badge/license-MIT-2fe38f?style=flat-square&labelColor=0a1c16" srcset="https://img.shields.io/badge/license-MIT-2fe38f?style=flat-square&labelColor=0a1c16 1x" width="106" height="20" alt="MIT License"><span class="sr-only"> — MIT License on GitHub</span>
       </a>
       <a href="leaderboard.html" class="proof-badge proof-cta">See real students on the live leaderboard →</a>
     </div>
     <p class="proof-sub">Maatram is built and used daily by Team Maatram at SSVM School of Excellence — every line of it is public on GitHub, so you never have to take our word for it.</p>
   </div>
 </section>
-<style>
-#proof{position:relative;z-index:6;max-width:1080px;margin:0 auto;padding:0 22px}
-.proof-in{border-top:1px solid rgba(255,255,255,.08);padding:40px 0 0;text-align:center}
-.proof-kick{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#7f8b8d;margin:0 0 16px;font-weight:700}
-.proof-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-bottom:14px}
-.proof-badge{display:inline-flex;align-items:center;text-decoration:none;border-radius:100px}
-.proof-badge img{display:block;height:20px;width:auto;min-width:88px}
-.proof-cta{padding:9px 18px;font-size:12.5px;font-weight:700;color:#eafff6;border:1px solid rgba(47,227,143,.3);
-  background:rgba(47,227,143,.06);transition:all .25s}
-.proof-cta:hover{border-color:rgba(47,227,143,.6);background:rgba(47,227,143,.12)}
-.proof-sub{color:#8b9698;font-size:13px;max-width:60ch;margin:0 auto;line-height:1.6}
-</style>
 
 <!-- Homepage story. Was built at runtime by theme.js; static so crawlers and
      LLMs read it without executing JS. theme.js now only animates it. -->
-<main class="m-story"><section class="m-sec" id="m-why"><div class="m-rev"><div class="m-eyebrow">The problem</div><h2>Hours disappear <em>ten minutes</em> at a time.</h2><p class="m-lead">Nobody decides to lose an evening to a feed. It goes one unlock at a time, and the app is built so you never feel it happen. Maatram puts the cost back where you can see it.</p></div><div class="m-metrics"><div class="m-metric"><b>5-90</b><span>Minute hard locks</span></div><div class="m-metric"><b>5</b><span>People per study room</span></div><div class="m-metric"><b>3</b><span>Strikes and you are out</span></div><div class="m-metric"><b>0</b><span>Fake users on the board</span></div></div></section><section class="m-sec" id="m-what"><div class="m-rev"><div class="m-eyebrow">What is inside</div><h2>Six tools. <em>One mission.</em></h2><p class="m-lead">Every feature pays out or charges you in points, so focus and distraction both show up on the same scoreboard.</p></div><div class="m-grid"><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><defs><linearGradient id="mgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#AFCEC1"></stop><stop offset="100%" stop-color="#6F9384"></stop></linearGradient></defs><g class="spin"><circle cx="150" cy="86" r="52" fill="none" stroke="url(#mgA)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="200 127"></circle></g><circle cx="150" cy="86" r="52" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2.5"></circle><circle cx="150" cy="86" r="34" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.2" class="p4"></circle><g class="p p1"><rect x="139" y="60" width="7" height="20" rx="3.5" fill="#ECEFEE" opacity=".85"></rect><rect x="154" y="60" width="7" height="20" rx="3.5" fill="#ECEFEE" opacity=".85"></rect></g><g class="p p2"><rect x="232" y="46" width="34" height="34" rx="11" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.13)"></rect></g><g class="p p3"><rect x="36" y="96" width="34" height="34" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)"></rect></g><path class="dash" d="M70 118 C110 150 190 150 232 80" fill="none" stroke="#9CC0B2" stroke-width="1.4" opacity=".55"></path></svg></div><h3>Focus Timers</h3><p>Pomodoro 25/5 and Deep Work 90/15. Finish a session, collect the points, watch the streak build.</p><span class="m-tag">+25 / +100 PTS</span></article><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><g class="p p2"><rect x="34" y="34" width="40" height="40" rx="13" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)"></rect></g><g class="p p3"><rect x="226" y="40" width="40" height="40" rx="13" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)"></rect></g><g class="p p1"><rect x="52" y="104" width="34" height="34" rx="11" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)"></rect><rect x="214" y="106" width="34" height="34" rx="11" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)"></rect></g><g class="p4"><path d="M150 22 L196 42 V92 C196 122 174 142 150 152 C126 142 104 122 104 92 V42 Z" fill="rgba(175,206,193,.13)" stroke="#9CC0B2" stroke-width="1.6" stroke-linejoin="round"></path><rect x="136" y="80" width="28" height="24" rx="6" fill="none" stroke="#ECEFEE" stroke-width="1.8" opacity=".9"></rect><path d="M141 80 V72 a9 9 0 0 1 18 0 v8" fill="none" stroke="#ECEFEE" stroke-width="1.8" opacity=".9"></path></g></svg></div><h3>App Gate</h3><p>Hard-lock Instagram, YouTube, Snapchat and the rest for 5 to 90 minutes. Open one anyway and it costs you.</p><span class="m-tag">-10 PTS to break</span></article><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><path class="dash" d="M70 60 L150 40 L230 60 L196 128 L104 128 Z" fill="none" stroke="#9CC0B2" stroke-width="1.3" opacity=".5"></path><g class="p p1"><circle cx="150" cy="40" r="16" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.16)"></circle></g><g class="p p2"><circle cx="230" cy="60" r="14" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.14)"></circle><circle cx="196" cy="128" r="12" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.13)"></circle></g><g class="p p3"><circle cx="70" cy="60" r="14" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.14)"></circle><circle cx="104" cy="128" r="12" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.13)"></circle></g><circle cx="150" cy="88" r="5" fill="#9CC0B2" class="p4"></circle></svg></div><h3>Study Room</h3><p>Five people, one room code, synced timers. Everyone sees who opened what — three strikes and you are out.</p><span class="m-tag">+10 PTS at 10 min</span></article><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><line x1="40" y1="140" x2="262" y2="140" stroke="rgba(255,255,255,.12)" stroke-width="1"></line><g class="grow"><rect x="58" y="98" width="26" height="42" rx="8" fill="rgba(255,255,255,.09)"></rect><rect x="100" y="76" width="26" height="64" rx="8" fill="rgba(255,255,255,.12)"></rect><rect x="142" y="54" width="26" height="86" rx="8" fill="rgba(175,206,193,.35)"></rect><rect x="184" y="86" width="26" height="54" rx="8" fill="rgba(255,255,255,.11)"></rect><rect x="226" y="110" width="26" height="30" rx="8" fill="rgba(255,255,255,.08)"></rect></g><path class="dash" d="M71 92 L113 70 L155 48 L197 80 L239 104" fill="none" stroke="#9CC0B2" stroke-width="1.6" stroke-linecap="round"></path><g class="p p1"><circle cx="155" cy="48" r="5" fill="#ECEFEE"></circle></g></svg></div><h3>Screen Stats</h3><p>Log your daily screen time per app, see the week take shape, and get a bonus when you land under your average.</p><span class="m-tag">Weekly bonus</span></article><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><g class="grow"><rect x="112" y="62" width="76" height="82" rx="14" fill="rgba(175,206,193,.28)"></rect><rect x="34" y="92" width="72" height="52" rx="14" fill="rgba(255,255,255,.09)"></rect><rect x="194" y="104" width="72" height="40" rx="14" fill="rgba(255,255,255,.07)"></rect></g><g class="p p1"><path d="M150 20 l7.4 15.4 16.6 2.4-12 11.9 2.9 16.9-14.9-8-14.9 8 2.9-16.9-12-11.9 16.6-2.4z" fill="#9CC0B2" opacity=".9"></path></g><g class="p p2"><circle cx="70" cy="74" r="11" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.16)"></circle></g><g class="p p3"><circle cx="230" cy="86" r="11" fill="rgba(255,255,255,.09)" stroke="rgba(255,255,255,.15)"></circle></g></svg></div><h3>Leaderboard</h3><p>Every point from every feature lands here. Real students only — the list fills as your friends join.</p><span class="m-tag">Live ranking</span></article></div></section><section class="m-sec" id="m-how"><div class="m-rev"><div class="m-eyebrow">How it works</div><h2>Sign in. Lock up. <em>Keep score.</em></h2><p class="m-lead">Sign in with Google, pick a tool, and start earning. Points sync live across every page and every device you use.</p><div class="m-cta"><a class="pri" href="login.html">Sign in with Google</a><a class="sec" href="socials.html">Find us everywhere</a></div></div></section><section class="m-sec" id="m-who"><div class="m-rev"><div class="m-eyebrow">Who built it</div><h2>Five students, <em>class 10B</em>.</h2><p class="m-lead">Maatram is a school venture from SSVM School of Excellence. Inspired by Gen Z, made by Gen Z, made for Gen Z. Action gives value.</p></div></section><section class="m-sec" id="m-detail"><div class="m-rev"><div class="m-eyebrow">In detail</div><h2>Cutting <em>screen time</em> without going cold turkey</h2><p class="m-lead">Deleting the apps works for about two days. Maatram takes the other route: it keeps the apps where they are and puts a cost, a pause and an audience between you and the feed. Every tool on this site feeds one points balance, so a focused hour and a lost hour both show up in the same number.</p></div><div class="m-rev"><h3>App Gate blocks the apps that eat the evening</h3><p class="m-lead">App Gate is the hard-lock screen. Pick a window between 5 and 90 minutes and Instagram, YouTube, Snapchat, TikTok and the rest stay shut for the whole run. Break the lock early and the points come off your balance instead of a lecture appearing. On the Android build the same lock is enforced outside the browser by Maatram Shield, so switching apps does not switch off the rule.</p></div><div class="m-rev"><h3>Study Room turns focus into something four other people can see</h3><p class="m-lead">A Study Room holds five students on one room code with their timers synced live. Everyone in the room sees who opened which app, and three strikes puts you out of the session. There is a chat in the room so people can say something before the third strike lands. Rooms survive a page change, so walking to App Gate and back does not drop your seat.</p></div><div class="m-rev"><h3>Focus Timers and Screen Stats keep the score honest</h3><p class="m-lead">Focus Timers run Pomodoro at 25 and 5 minutes and Deep Work at 90 and 15. Finishing a session pays points and extends the streak. Screen Stats is where you log daily per-app screen time by hand and watch the week take shape as a chart; land under your own weekly average and the bonus lands automatically. The Leaderboard ranks real signed-in students only, so the list starts empty and fills as your friends join.</p></div><div class="m-rev"><h3>Built by students at SSVM School of Excellence</h3><p class="m-lead">Maatram is a class 10B school venture from SSVM School of Excellence, built by a team of five. The tagline is Action gives value, and the site says what it does in plain terms: inspired by Gen Z, made by Gen Z, made for Gen Z. Everything runs free, and the whole thing is reachable from a browser or the Android build.</p></div></section><section class="m-sec" id="m-more"><div class="m-rev"><div class="m-eyebrow">Getting started</div><h2>Who it is for, and how to <em>start</em></h2><p class="m-lead">Maatram opens with a Google sign-in, and the first thing it asks is who you are: student, teacher or parent. A teacher creates a class and gets a six-character code. Students join with that code. A parent joins with the same code and then picks their child off the class roster, so the three views stay connected without anyone hunting for accounts. Nothing on the site needs an install to try — the Android build is there for people who want the lock enforced outside the browser.</p></div><div class="m-rev"><h3>One points balance, no separate scores</h3><p class="m-lead">There is a single number behind everything. Finishing a Pomodoro pays 25 and a Deep Work block pays 100. Ten minutes in a Study Room pays 10. Breaking an App Gate lock takes points off. Come in under your own weekly screen-time average and the weekly bonus lands on the same balance. That balance is what the Leaderboard sorts on, so the ranking reflects work done rather than time logged in.</p></div><div class="m-rev"><h3>What is stored, and what is not</h3><p class="m-lead">Screen-time entries on the Stats page are yours to type in, and your daily numbers stay with your account. The Leaderboard shows points, not hours, so nobody else sees what you use your phone for. Full detail lives on the privacy page, and the terms page covers the rest.</p></div><div class="m-rev"><h3>Beyond focus: the Sports corner</h3><p class="m-lead">Screen time is not only a study problem, so the site also carries a Sports corner for what happens once the phone is down. It sits alongside the focus tools rather than replacing them, and it uses the same account.</p></div></section></main>
+<main class="m-story"><section class="m-sec" id="m-why"><div class="m-rev"><div class="m-eyebrow">The problem</div><h2>Hours disappear <em>ten minutes</em> at a time.</h2><p class="m-lead">Nobody decides to lose an evening to a feed. It goes one unlock at a time, and the app is built so you never feel it happen. Maatram puts the cost back where you can see it.</p></div><div class="m-metrics"><div class="m-metric"><b>5-90</b><span>Minute hard locks</span></div><div class="m-metric"><b>5</b><span>People per study room</span></div><div class="m-metric"><b>3</b><span>Strikes and you are out</span></div><div class="m-metric"><b>0</b><span>Fake users on the board</span></div></div></section><section class="m-sec" id="m-what"><div class="m-rev"><div class="m-eyebrow">What is inside</div><h2>Six tools. <em>One mission.</em></h2><p class="m-lead">Every feature pays out or charges you in points, so focus and distraction both show up on the same scoreboard.</p></div><div class="m-grid"><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><defs><linearGradient id="mgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#AFCEC1"></stop><stop offset="100%" stop-color="#6F9384"></stop></linearGradient></defs><g class="spin"><circle cx="150" cy="86" r="52" fill="none" stroke="url(#mgA)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="200 127"></circle></g><circle cx="150" cy="86" r="52" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2.5"></circle><circle cx="150" cy="86" r="34" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.2" class="p4"></circle><g class="p p1"><rect x="139" y="60" width="7" height="20" rx="3.5" fill="#ECEFEE" opacity=".85"></rect><rect x="154" y="60" width="7" height="20" rx="3.5" fill="#ECEFEE" opacity=".85"></rect></g><g class="p p2"><rect x="232" y="46" width="34" height="34" rx="11" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.13)"></rect></g><g class="p p3"><rect x="36" y="96" width="34" height="34" rx="11" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)"></rect></g><path class="dash" d="M70 118 C110 150 190 150 232 80" fill="none" stroke="#9CC0B2" stroke-width="1.4" opacity=".55"></path></svg></div><h3>Focus Timers</h3><p>Pomodoro 25/5 and Deep Work 90/15. Finish a session, collect the points, watch the streak build.</p><span class="m-tag">+25 / +100 PTS</span></article><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><g class="p p2"><rect x="34" y="34" width="40" height="40" rx="13" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)"></rect></g><g class="p p3"><rect x="226" y="40" width="40" height="40" rx="13" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)"></rect></g><g class="p p1"><rect x="52" y="104" width="34" height="34" rx="11" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)"></rect><rect x="214" y="106" width="34" height="34" rx="11" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)"></rect></g><g class="p4"><path d="M150 22 L196 42 V92 C196 122 174 142 150 152 C126 142 104 122 104 92 V42 Z" fill="rgba(175,206,193,.13)" stroke="#9CC0B2" stroke-width="1.6" stroke-linejoin="round"></path><rect x="136" y="80" width="28" height="24" rx="6" fill="none" stroke="#ECEFEE" stroke-width="1.8" opacity=".9"></rect><path d="M141 80 V72 a9 9 0 0 1 18 0 v8" fill="none" stroke="#ECEFEE" stroke-width="1.8" opacity=".9"></path></g></svg></div><h3>App Gate</h3><p>Hard-lock Instagram, YouTube, Snapchat and the rest for 5 to 90 minutes. Open one anyway and it costs you.</p><span class="m-tag">-10 PTS to break</span></article><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><path class="dash" d="M70 60 L150 40 L230 60 L196 128 L104 128 Z" fill="none" stroke="#9CC0B2" stroke-width="1.3" opacity=".5"></path><g class="p p1"><circle cx="150" cy="40" r="16" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.16)"></circle></g><g class="p p2"><circle cx="230" cy="60" r="14" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.14)"></circle><circle cx="196" cy="128" r="12" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.13)"></circle></g><g class="p p3"><circle cx="70" cy="60" r="14" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.14)"></circle><circle cx="104" cy="128" r="12" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.13)"></circle></g><circle cx="150" cy="88" r="5" fill="#9CC0B2" class="p4"></circle></svg></div><h3>Study Room</h3><p>Five people, one room code, synced timers. Everyone sees who opened what — three strikes and you are out.</p><span class="m-tag">+10 PTS at 10 min</span></article><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><line x1="40" y1="140" x2="262" y2="140" stroke="rgba(255,255,255,.12)" stroke-width="1"></line><g class="grow"><rect x="58" y="98" width="26" height="42" rx="8" fill="rgba(255,255,255,.09)"></rect><rect x="100" y="76" width="26" height="64" rx="8" fill="rgba(255,255,255,.12)"></rect><rect x="142" y="54" width="26" height="86" rx="8" fill="rgba(175,206,193,.35)"></rect><rect x="184" y="86" width="26" height="54" rx="8" fill="rgba(255,255,255,.11)"></rect><rect x="226" y="110" width="26" height="30" rx="8" fill="rgba(255,255,255,.08)"></rect></g><path class="dash" d="M71 92 L113 70 L155 48 L197 80 L239 104" fill="none" stroke="#9CC0B2" stroke-width="1.6" stroke-linecap="round"></path><g class="p p1"><circle cx="155" cy="48" r="5" fill="#ECEFEE"></circle></g></svg></div><h3>Screen Stats</h3><p>Log your daily screen time per app, see the week take shape, and get a bonus when you land under your average.</p><span class="m-tag">Weekly bonus</span></article><article class="m-card"><div class="m-fig"><svg viewBox="0 0 300 172" aria-hidden="true"><g class="grow"><rect x="112" y="62" width="76" height="82" rx="14" fill="rgba(175,206,193,.28)"></rect><rect x="34" y="92" width="72" height="52" rx="14" fill="rgba(255,255,255,.09)"></rect><rect x="194" y="104" width="72" height="40" rx="14" fill="rgba(255,255,255,.07)"></rect></g><g class="p p1"><path d="M150 20 l7.4 15.4 16.6 2.4-12 11.9 2.9 16.9-14.9-8-14.9 8 2.9-16.9-12-11.9 16.6-2.4z" fill="#9CC0B2" opacity=".9"></path></g><g class="p p2"><circle cx="70" cy="74" r="11" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.16)"></circle></g><g class="p p3"><circle cx="230" cy="86" r="11" fill="rgba(255,255,255,.09)" stroke="rgba(255,255,255,.15)"></circle></g></svg></div><h3>Leaderboard</h3><p>Every point from every feature lands here. Real students only — the list fills as your friends join.</p><span class="m-tag">Live ranking</span></article></div></section><section class="m-sec" id="m-how"><div class="m-rev"><div class="m-eyebrow">How it works</div><h2>Sign in. Lock up. <em>Keep score.</em></h2><p class="m-lead">Sign in with Google, pick a tool, and start earning. Points sync live across every page and every device you use.</p><div class="m-cta"><a class="pri" href="login.html">Sign in with Google</a><a class="sec" href="socials.html">Find us everywhere</a></div></div></section><section class="m-sec" id="m-who"><div class="m-rev"><div class="m-eyebrow">Who built it</div><h2>Five students, <em>class 10B</em>.</h2><p class="m-lead">Maatram is a school venture from SSVM School of Excellence. Inspired by Gen Z, made by Gen Z, made for Gen Z. Action gives value.</p></div></section><section class="m-sec" id="m-detail"><div class="m-rev"><div class="m-eyebrow">In detail</div><h2>Cutting <em>screen time</em> without going cold turkey</h2><p class="m-byline">By <a rel="author" href="about.html">Team Maatram</a>, the five class 10B students at SSVM School of Excellence who build and use Maatram · Updated <time datetime="2026-09-17">17 September 2026</time></p><p class="m-lead"><strong>Maatram is a free screen-time and focus web app for students.</strong> Five class 10B students at SSVM School of Excellence in Coimbatore, India built it. It puts six tools on one points balance: Focus Timers, App Gate, Study Room, Screen Stats, Leaderboard and Wellness.</p><p class="m-lead">Deleting the apps works for about two days. Maatram takes the other route: it keeps the apps where they are and puts a cost, a pause and an audience between you and the feed. Every tool on this site feeds one points balance, so a focused hour and a lost hour both show up in the same number.</p></div><div class="m-rev"><h3>App Gate blocks the apps that eat the evening</h3><p class="m-lead">App Gate is the hard-lock screen. Pick a window between 5 and 90 minutes and Instagram, YouTube, Snapchat, TikTok and the rest stay shut for the whole run. Break the lock early and the points come off your balance instead of a lecture appearing. On the Android build the same lock is enforced outside the browser by Maatram Shield, so switching apps does not switch off the rule.</p></div><div class="m-rev"><h3>Study Room turns focus into something four other people can see</h3><p class="m-lead">A Study Room holds five students on one room code with their timers synced live. Everyone in the room sees who opened which app, and three strikes puts you out of the session. There is a chat in the room so people can say something before the third strike lands. Rooms survive a page change, so walking to App Gate and back does not drop your seat.</p></div><div class="m-rev"><h3>Focus Timers and Screen Stats keep the score honest</h3><p class="m-lead">Focus Timers run Pomodoro at 25 and 5 minutes and Deep Work at 90 and 15. Finishing a session pays points and extends the streak. Screen Stats is where you log daily per-app screen time by hand and watch the week take shape as a chart; land under your own weekly average and the bonus lands automatically. The Leaderboard ranks real signed-in students only, so the list starts empty and fills as your friends join.</p></div><div class="m-rev"><h3>Built by students at SSVM School of Excellence</h3><p class="m-lead">Maatram is a class 10B school venture from SSVM School of Excellence, built by a team of five. The tagline is Action gives value, and the site says what it does in plain terms: inspired by Gen Z, made by Gen Z, made for Gen Z. Everything runs free, and the whole thing is reachable from a browser or the Android build.</p></div></section><section class="m-sec" id="m-more"><div class="m-rev"><div class="m-eyebrow">Getting started</div><h2>Who it is for, and how to <em>start</em></h2><p class="m-lead">Maatram opens with a Google sign-in, and the first thing it asks is who you are: student, teacher or parent. A teacher creates a class and gets a six-character code. Students join with that code. A parent joins with the same code and then picks their child off the class roster, so the three views stay connected without anyone hunting for accounts. Nothing on the site needs an install to try — the Android build is there for people who want the lock enforced outside the browser.</p></div><div class="m-rev"><h3>One points balance, no separate scores</h3><p class="m-lead">There is a single number behind everything. Finishing a Pomodoro pays 25 and a Deep Work block pays 100. Ten minutes in a Study Room pays 10. Breaking an App Gate lock takes points off. Come in under your own weekly screen-time average and the weekly bonus lands on the same balance. That balance is what the Leaderboard sorts on, so the ranking reflects work done rather than time logged in.</p><div class="m-tablewrap"><table class="m-table"><caption>How the main tools pay out</caption><thead><tr><th scope="col">Tool</th><th scope="col">Session</th><th scope="col">Points</th></tr></thead><tbody><tr><td>Pomodoro timer</td><td>25 min focus, 5 min break</td><td>+25</td></tr><tr><td>Deep Work timer</td><td>90 min focus, 15 min break</td><td>+100</td></tr><tr><td>Study Room</td><td>10 minutes, up to 5 people</td><td>+10</td></tr><tr><td>App Gate Hard Lock</td><td>5 to 90 minutes</td><td>Points off if broken early</td></tr><tr><td>Screen Stats</td><td>One week</td><td>Bonus under your weekly average</td></tr></tbody></table></div></div><div class="m-rev"><h3>What is stored, and what is not</h3><p class="m-lead">Screen-time entries on the Stats page are yours to type in, and your daily numbers stay in that browser. The Leaderboard shows points, not hours, so nobody else sees what you use your phone for. Full detail lives on the privacy page, and the terms page covers the rest.</p></div><div class="m-rev"><h3>Beyond focus: the Sports corner</h3><p class="m-lead">Screen time is not only a study problem, so the site also carries a Sports corner for what happens once the phone is down. It sits alongside the focus tools rather than replacing them, and it uses the same account.</p></div></section></main>
 
 <section id="mfaq" aria-labelledby="mfaq-h">
   <h2 id="mfaq-h">Frequently asked questions</h2>
@@ -810,7 +195,7 @@ addEventListener('resize',fitAll);
     </div>
     <div class="faq-q">
       <h3>Do I need to create an account?</h3>
-      <p>No. You can use the timers, App Gate and screen-time stats without signing in. Signing in with Google only syncs your points and streaks across devices and puts you on the leaderboard.</p>
+      <p>For the focus tools, yes. Timers, App Gate, Study Room, Screen Stats, Leaderboard and the Sports corner open after a Google sign-in and a one-tap student, teacher or parent choice, because points and classes sync to that account. The home page, Wellness, Socials, Updates and the Android download page work without signing in.</p>
     </div>
     <div class="faq-q">
       <h3>Where is my screen-time data stored?</h3>
@@ -853,13 +238,29 @@ addEventListener('resize',fitAll);
     <div>
       <h3>Project</h3>
       <ul>
-        <li><a href="socials.html">Socials &amp; contact</a></li>
+        <li><a href="about.html">About Maatram</a></li>
+        <li><a href="socials.html#contact">Contact the team</a></li>
+        <li><a href="socials.html">Socials</a></li>
+        <li><a href="about.html#editorial">Editorial policy</a></li>
         <li><a href="download.html">Download the Android app</a></li>
         <li><a href="blog.html">Updates</a></li>
         <li><a href="https://github.com/MaatramReelsBlocking/maatram" target="_blank" rel="noopener">Source code on GitHub</a></li>
         <li><a class="eml" data-u="maatram97" data-d="gmail.com" href="#contact">maatram97 (at) gmail.com</a></li>
         <li><a href="privacy.html">Privacy Policy</a></li>
         <li><a href="terms.html">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Follow and share</h3>
+      <ul>
+        <li><a href="https://www.instagram.com/maatram_360/" target="_blank" rel="me noopener">Maatram on Instagram</a></li>
+        <li><a href="https://x.com/Maatram_360" target="_blank" rel="me noopener">Maatram on X</a></li>
+        <li><a href="https://www.linkedin.com/in/maatram-exe-10b295423/" target="_blank" rel="me noopener">Maatram on LinkedIn</a></li>
+        <li><a href="https://discord.gg/qdbK2VgjV" target="_blank" rel="me noopener">Join the Maatram Discord</a></li>
+        <li><a class="share" href="https://x.com/intent/post?url=https%3A%2F%2Fmaatram.co.in%2F&amp;text=Maatram%20%E2%80%94%20free%20screen-time%20and%20focus%20app%20for%20students" target="_blank" rel="noopener noreferrer">Share on X</a></li>
+        <li><a class="share" href="https://wa.me/?text=Maatram%20%E2%80%94%20free%20screen-time%20and%20focus%20app%20for%20students%20https%3A%2F%2Fmaatram.co.in%2F" target="_blank" rel="noopener noreferrer">Share on WhatsApp</a></li>
+        <li><a class="share" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fmaatram.co.in%2F" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a></li>
+        <li><a class="share" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmaatram.co.in%2F" target="_blank" rel="noopener noreferrer">Share on Facebook</a></li>
       </ul>
     </div>
     <div>
@@ -874,9 +275,11 @@ addEventListener('resize',fitAll);
     </div>
   </div>
 
+  <p class="fdisc">Maatram is a student-built tool for focus habits. It does not give medical, mental-health or nutrition advice. If screen time, sleep, mood or eating is worrying you, talk to a doctor, a school counsellor or a trusted adult.</p>
   <div class="fbot">
     <span>&copy; 2026 Maatram · Action &rArr; Value · Free &amp; open source</span>
-    <span>Built by students, in Coimbatore, India.</span>
+    <span>Last updated <time datetime="2026-09-17">17 September 2026</time></span>
+    <address>Built by students at SSVM School of Excellence, Coimbatore, Tamil Nadu, India</address>
   </div>
 </footer>
 

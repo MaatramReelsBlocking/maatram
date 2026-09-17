@@ -17,6 +17,7 @@ Everything on the site runs on one points balance: finishing focus sessions and 
 
 ## About
 
+- [About and editorial policy](https://maatram.co.in/about.html): who builds Maatram and how the site is written.
 - [Blog](https://maatram.co.in/blog.html)
 - [Socials and contact](https://maatram.co.in/socials.html)
 - [Privacy policy](https://maatram.co.in/privacy.html)
