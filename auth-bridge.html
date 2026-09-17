@@ -31,6 +31,7 @@
 </style>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script defer src="/speed-insights.js"></script>
+<script src="/firebase-config.js"></script>
 </head>
 <body>
 <div class="card">
@@ -57,14 +58,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
 const $  = id => document.getElementById(id);
 const msg = (t, cls='') => { $('msg').className = cls; $('msg').textContent = t; };
 
-const app  = initializeApp({
-  apiKey: "AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",
-  authDomain: "maatram-859f4.firebaseapp.com",
-  projectId: "maatram-859f4",
-  storageBucket: "maatram-859f4.firebasestorage.app",
-  messagingSenderId: "770970784123",
-  appId: "1:770970784123:web:7c73c74ddb2179b69dedde"
-});
+const app  = initializeApp(window.MAATRAM_FB);
 const auth = getAuth(app);
 
 /* Where to send the token back to. Kept in sessionStorage so it survives the

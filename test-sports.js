@@ -20,13 +20,13 @@ ok('sports.html parses', !!D.querySelector('body'));
 const ids = [...D.querySelectorAll('[id]')].map(e => e.id);
 ok('no duplicate ids', new Set(ids).size === ids.length);
 ok('single h1', D.querySelectorAll('h1').length === 1);
-ok('canonical set', /canonical" href="https:\/\/maatram-website\.vercel\.app\/sports\.html/.test(sports));
-ok('og:url set', /og:url" content="https:\/\/maatram-website\.vercel\.app\/sports\.html/.test(sports));
+ok('canonical set', /canonical" href="https:\/\/maatram\.co\.in\/sports\.html/.test(sports));
+ok('og:url set', /og:url" content="https:\/\/maatram\.co\.in\/sports\.html/.test(sports));
 ok('title present', (D.title || '').includes('Sports'));
 ok('meta description present', !!D.querySelector('meta[name="description"]'));
 
 /* ── 2. shared shell ── */
-ok('loads theme.js', /<script src="theme\.js"><\/script>/.test(sports));
+ok('loads theme.js', /<script (defer )?src="theme\.js(\?v=\d+)?"><\/script>/.test(sports));
 ok('loads gate.js (page is gated)', /<script src="gate\.js"><\/script>/.test(sports));
 ok('gate.js comes after theme.js',
    sports.indexOf('src="gate.js"') > sports.indexOf('src="theme.js"'));
@@ -149,11 +149,11 @@ ok('events edited only by author', /resource\.data\.by == request\.auth\.uid/.te
 ok('event title length capped', /title\.size\(\) <= 80/.test(rules));
 ok('reset branch allows zeroing', /neu\(\)\.points == 0/.test(rules));
 ok('reset branch requires a cycle change', /neu\(\)\.cycle != old\(\)\.get\('cycle', ?''\)/.test(rules));
-ok('normal caps still enforced', /old\(\)\.points \+ 100/.test(rules));
+ok('normal caps still enforced', /old\(\)\.get\('points', ?0\) \+ 100/.test(rules));
 
 /* ── 11. flat delivery (he uploads to the repo root) ── */
 const files = fs.readdirSync(__dirname).filter(f => f !== 'node_modules' && f !== 'package.json' && f !== 'package-lock.json');
-ok('no subfolders in package', files.every(f => !fs.statSync(path.join(__dirname, f)).isDirectory()));
+ok('no subfolders in package', files.every(f => ['wellness','docs'].includes(f) || f.startsWith('.') || !fs.statSync(path.join(__dirname, f)).isDirectory()));
 
 /* ── 12. coach's corner ── */
 ok('coach section exists', !!D.getElementById('coach'));

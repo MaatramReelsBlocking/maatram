@@ -152,8 +152,8 @@ dialog#pick::backdrop{background:rgba(3,6,8,.82);backdrop-filter:blur(6px)}
 .links a:hover{color:var(--ink)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
-<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script defer src="/speed-insights.js"></script>
+<script src="/firebase-config.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
@@ -188,7 +188,7 @@ dialog#pick::backdrop{background:rgba(3,6,8,.82);backdrop-filter:blur(6px)}
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
     ]);
-    const app=getApps().length?getApp():initializeApp({apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",authDomain:"maatram-859f4.firebaseapp.com",projectId:"maatram-859f4",storageBucket:"maatram-859f4.firebasestorage.app",messagingSenderId:"770970784123",appId:"1:770970784123:web:7c73c74ddb2179b69dedde"});
+    const app=getApps().length?getApp():initializeApp(window.MAATRAM_FB);
     const auth=getAuth(app);
     /* Firestore is only ever touched once somebody is signed in, so it loads on
        demand instead of up front. Signed-out visitors — and page-speed tests —
@@ -209,22 +209,38 @@ dialog#pick::backdrop{background:rgba(3,6,8,.82);backdrop-filter:blur(6px)}
       try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
       try{ parent.postMessage({maatramRelay:{type:'points',pts}},'*'); }catch(_){}
       mtToast(pts,reason);
-      /* cloud write (clamped to security rules: floor 0, max +200 / −100 per write) */
+      /* cloud write: queued per account, paced to match firestore.rules
+         (gains: at most 1 point per 6 s since the last gain, 100 per write) */
       if(__mtUser){
-        const uid=__mtUser.uid;
-        try{
-          await loadFs();
-          await runTransaction(db,async t=>{
-            const r=doc(db,'users',uid);
-            const s=await t.get(r);
-            const cur=(s.exists()&&s.data().points)||0;
-            let nx=cur+pts;
-            nx=Math.max(0,Math.max(cur-100,Math.min(cur+200,nx)));
-            t.set(r,{points:nx},{merge:true});
-          });
-        }catch(e){ console.warn('points write',e); }
+        const K='maatram_pend_'+__mtUser.uid;
+        try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){}
+        mtFlush();
       }
     };
+    async function mtFlush(){
+      if(!__mtUser) return;
+      const uid=__mtUser.uid, K='maatram_pend_'+uid, pend=()=>+localStorage.getItem(K)||0;
+      const run=async()=>{
+        const p=pend(); if(!p) return 0;
+        if(typeof loadFs==='function') await loadFs();
+        const {serverTimestamp}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const res=await runTransaction(db,async t=>{
+          const r=doc(db,'users',uid), s=await t.get(r), d=s.exists()?s.data():{}, cur=d.points||0;
+          if(p<0){ const nx=Math.max(0,cur-100,cur+p); t.set(r,{points:nx},{merge:true}); return {used:nx===0?p:nx-cur,wait:0}; }
+          const since=(Date.now()-(d.awardAt?d.awardAt.toMillis():0))/1000-3, want=Math.min(100,p,3000-cur);
+          if(want<=0) return {used:p,wait:0};   /* monthly ceiling reached: drop the rest */
+          if(Math.floor(since/6)<want) return {used:0,wait:Math.ceil(want*6-since)};
+          t.set(r,{points:cur+want,awardAt:serverTimestamp()},{merge:true}); return {used:want,wait:0};
+        });
+        localStorage.setItem(K,String(pend()-res.used));
+        return res.wait||(pend()?1:0);
+      };
+      let wait=0;
+      const locked=()=>navigator.locks?navigator.locks.request('maatram_pts',run):run();
+      try{ wait=await (mtFlush.q=(mtFlush.q||Promise.resolve()).catch(()=>{}).then(locked)); }   /* one flush at a time, per tab and across tabs */
+      catch(e){ console.warn('points write',e); wait=60; }
+      clearTimeout(mtFlush.t); if(wait) mtFlush.t=setTimeout(mtFlush,wait*1000);
+    }
     function mtToast(pts,reason){
       const t=document.createElement('div');
       t.textContent=(pts>0?'+':'')+pts+' PTS'+(reason?' · '+reason:'');
@@ -241,6 +257,7 @@ dialog#pick::backdrop{background:rgba(3,6,8,.82);backdrop-filter:blur(6px)}
 
     onAuthStateChanged(auth,async u=>{
       __mtUser=u;
+      if(u) mtFlush();
       if(unsub){unsub();unsub=null;}
       if(u){
         inBtn.style.display='none';chip.style.display='flex';
@@ -513,7 +530,7 @@ dialog#pick::backdrop{background:rgba(3,6,8,.82);backdrop-filter:blur(6px)}
       return;
     }
     var A=m[0],U=m[1],F=m[2];
-    var app=A.getApps().length?A.getApp():A.initializeApp({apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",authDomain:"maatram-859f4.firebaseapp.com",projectId:"maatram-859f4",storageBucket:"maatram-859f4.firebasestorage.app",messagingSenderId:"770970784123",appId:"1:770970784123:web:7c73c74ddb2179b69dedde"});
+    var app=A.getApps().length?A.getApp():A.initializeApp(window.MAATRAM_FB);
     var auth=U.getAuth(app), db=F.getFirestore(app);
     var subs=[], me=null;
     function clearSubs(){ subs.forEach(function(f){try{f();}catch(e){}}); subs=[]; }

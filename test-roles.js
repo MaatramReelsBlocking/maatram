@@ -11,7 +11,7 @@ const group=n=>console.log('\n== '+n);
 /* ---------- 1. static file checks ---------- */
 group('file');
 ok('single <style>', (HTML.match(/<style>/g)||[]).length===1);
-ok('loads theme.js', /<script src="theme\.js"><\/script>/.test(HTML));
+ok('loads theme.js', /<script (defer )?src="theme\.js(\?v=\d+)?"><\/script>/.test(HTML));
 ok('no local asset refs beyond site files', !/src="https?:\/\/(?!www\.gstatic)/.test(HTML));
 ok('reduced-motion path present', /prefers-reduced-motion/.test(HTML));
 ok('skip link', /class="skip"/.test(HTML));

@@ -33,8 +33,8 @@ ok('no script errors on load', errors.length === 0, errors[0]);
 ok('has <h1>', doc.querySelectorAll('h1').length === 1);
 ok('one inline <style>', doc.querySelectorAll('style').length === 1);
 ok('inline scripts: behaviour + shared nav auth',
-  [...doc.querySelectorAll('script')].filter(s => !s.src && s.type !== 'application/ld+json').length === 2);
-ok('theme.js loaded', !!doc.querySelector('script[src="theme.js"]'));
+  [...doc.querySelectorAll('script')].filter(s => !s.src && s.type !== 'application/ld+json').length === 3);
+ok('theme.js loaded', !!doc.querySelector('script[src^="theme.js"]'));
 
 /* ---------- download wiring ---------- */
 const dl = doc.getElementById('dlBtn');

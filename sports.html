@@ -18,12 +18,14 @@
 </script>
 
 <meta charset="UTF-8">
+<script src="/firebase-config.js"></script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sports Corner — Local Tournaments & Training Camps | Maatram</title>
 
 <meta name="description" content="Find sports tournaments, training camps and physical events near your city, then register on the organiser's own site. Listed by the Maatram community.">
 <meta name="author" content="Maatram">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://maatram.co.in/sports.html">
 <link rel="alternate" hreflang="en" href="https://maatram.co.in/sports.html">
 <link rel="alternate" hreflang="x-default" href="https://maatram.co.in/sports.html">
@@ -195,9 +197,8 @@ body{padding-top:52px!important}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=optional">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=optional" media="print" onload="this.media='all';this.onload=null">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=optional"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all';this.onload=null">
 <script>/* Skin class + the few tokens that must exist at first paint, so
    theme.js itself no longer has to block rendering. */
 (function(){var m=null;try{m=localStorage.getItem('maatram_theme');}catch(_){}if(m!=='minimal')return;document.documentElement.classList.add('minimal');var s=document.createElement("style");s.textContent="html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:\"Plus Jakarta Sans\",\"Sora\",sans-serif;--font-body:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}";document.head.appendChild(s);})();</script>
@@ -210,14 +211,13 @@ body{padding-top:52px!important}
 .skip-link:focus{left:0}
 :focus-visible{outline:2px solid #34D399;outline-offset:2px}
 </style>
-<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script defer src="/speed-insights.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
-  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link active" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
+  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link active" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
     <a id="mnavIn" href="login.html">Sign in</a>
     <div id="mnavChip">
       <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" loading="lazy" decoding="async" width="28" height="28">
@@ -318,14 +318,7 @@ body{padding-top:52px!important}
    Listings live in Firestore `events`. Register buttons are plain outbound
    links to the organiser — nothing is registered or paid for on Maatram,
    and no points are awarded here. */
-const FB_CONFIG = {
-  apiKey: "AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",
-  authDomain: "maatram-859f4.firebaseapp.com",
-  projectId: "maatram-859f4",
-  storageBucket: "maatram-859f4.firebasestorage.app",
-  messagingSenderId: "770970784123",
-  appId: "1:770970784123:web:7c73c74ddb2179b69dedde"
-};
+const FB_CONFIG = window.MAATRAM_FB;
 const HOSTED = location.protocol==='http:'||location.protocol==='https:';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -718,7 +711,7 @@ if(!reduced)requestAnimationFrame(loop);else loop();
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
     ]);
-    const cfg={apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",authDomain:"maatram-859f4.firebaseapp.com",projectId:"maatram-859f4",storageBucket:"maatram-859f4.firebasestorage.app",messagingSenderId:"770970784123",appId:"1:770970784123:web:7c73c74ddb2179b69dedde"};
+    const cfg=window.MAATRAM_FB;
     const app=getApps().length?getApp():initializeApp(cfg);
     const auth=getAuth(app),db=getFirestore(app);
     let unsub=null;

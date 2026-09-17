@@ -6,7 +6,7 @@
 <title>Download the Maatram Android App | Maatram</title>
 <meta name="description" content="Download Maatram for Android — the free, open-source screen-time and focus app built by students. Version 1.1, 2.90 MB, Android 5.1 and above.">
 <link rel="canonical" href="https://maatram.co.in/download.html">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#06090B">
 <meta name="color-scheme" content="dark">
 <meta property="og:type" content="website">
@@ -207,15 +207,15 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
   dl.spec dt{padding-bottom:0;border-bottom:0}
 }
 </style>
-<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script defer src="/speed-insights.js"></script>
+<script src="/firebase-config.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
 
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
- <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link active" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
+ <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link active" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
   <div id="mnavAuth">
     <a id="mnavIn" href="login.html">Sign in</a>
     <div id="mnavChip">
@@ -243,7 +243,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
     ]);
-    const app=getApps().length?getApp():initializeApp({apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",authDomain:"maatram-859f4.firebaseapp.com",projectId:"maatram-859f4",storageBucket:"maatram-859f4.firebasestorage.app",messagingSenderId:"770970784123",appId:"1:770970784123:web:7c73c74ddb2179b69dedde"});
+    const app=getApps().length?getApp():initializeApp(window.MAATRAM_FB);
     const auth=getAuth(app);
     /* Firestore is only ever touched once somebody is signed in, so it loads on
        demand instead of up front. Signed-out visitors — and page-speed tests —
@@ -264,22 +264,38 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
       try{ parent.postMessage({maatramRelay:{type:'points',pts}},'*'); }catch(_){}
       mtToast(pts,reason);
-      /* cloud write (clamped to security rules: floor 0, max +200 / −100 per write) */
+      /* cloud write: queued per account, paced to match firestore.rules
+         (gains: at most 1 point per 6 s since the last gain, 100 per write) */
       if(__mtUser){
-        const uid=__mtUser.uid;
-        try{
-          await loadFs();
-          await runTransaction(db,async t=>{
-            const r=doc(db,'users',uid);
-            const s=await t.get(r);
-            const cur=(s.exists()&&s.data().points)||0;
-            let nx=cur+pts;
-            nx=Math.max(0,Math.max(cur-100,Math.min(cur+200,nx)));
-            t.set(r,{points:nx},{merge:true});
-          });
-        }catch(e){ console.warn('points write',e); }
+        const K='maatram_pend_'+__mtUser.uid;
+        try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){}
+        mtFlush();
       }
     };
+    async function mtFlush(){
+      if(!__mtUser) return;
+      const uid=__mtUser.uid, K='maatram_pend_'+uid, pend=()=>+localStorage.getItem(K)||0;
+      const run=async()=>{
+        const p=pend(); if(!p) return 0;
+        if(typeof loadFs==='function') await loadFs();
+        const {serverTimestamp}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const res=await runTransaction(db,async t=>{
+          const r=doc(db,'users',uid), s=await t.get(r), d=s.exists()?s.data():{}, cur=d.points||0;
+          if(p<0){ const nx=Math.max(0,cur-100,cur+p); t.set(r,{points:nx},{merge:true}); return {used:nx===0?p:nx-cur,wait:0}; }
+          const since=(Date.now()-(d.awardAt?d.awardAt.toMillis():0))/1000-3, want=Math.min(100,p,3000-cur);
+          if(want<=0) return {used:p,wait:0};   /* monthly ceiling reached: drop the rest */
+          if(Math.floor(since/6)<want) return {used:0,wait:Math.ceil(want*6-since)};
+          t.set(r,{points:cur+want,awardAt:serverTimestamp()},{merge:true}); return {used:want,wait:0};
+        });
+        localStorage.setItem(K,String(pend()-res.used));
+        return res.wait||(pend()?1:0);
+      };
+      let wait=0;
+      const locked=()=>navigator.locks?navigator.locks.request('maatram_pts',run):run();
+      try{ wait=await (mtFlush.q=(mtFlush.q||Promise.resolve()).catch(()=>{}).then(locked)); }   /* one flush at a time, per tab and across tabs */
+      catch(e){ console.warn('points write',e); wait=60; }
+      clearTimeout(mtFlush.t); if(wait) mtFlush.t=setTimeout(mtFlush,wait*1000);
+    }
     function mtToast(pts,reason){
       const t=document.createElement('div');
       t.textContent=(pts>0?'+':'')+pts+' PTS'+(reason?' · '+reason:'');
@@ -296,6 +312,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 
     onAuthStateChanged(auth,async u=>{
       __mtUser=u;
+      if(u) mtFlush();
       if(unsub){unsub();unsub=null;}
       if(u){
         inBtn.style.display='none';chip.style.display='flex';

@@ -48,7 +48,10 @@ ok('hash generator is gone',      !fs.existsSync(path.join(__dirname,'make-hash.
 console.log('\nfirestore.rules');
 ok('has an isAdmin() function',   /function isAdmin\(\)/.test(rules));
 ok('admin may update any user',   /allow update: if isAdmin\(\);/.test(rules));
-ok('per-write gain capped at 100',/points \+ 100|old\(\)\.points \+ 100/.test(rules));
+ok('per-write gain capped at 100',/old\(\)\.get\('points', ?0\) \+ 100/.test(rules));
+ok('gains must stamp server time', /neu\(\)\.awardAt == request\.time/.test(rules));
+ok('gains paced 1 point per 6 s', /gain\(\) \* 6 <= \(request\.time - old\(\)\.get\('awardAt'/.test(rules));
+ok('penalties cannot move awardAt', /gain\(\) <= 0 && !touched\(\['awardAt'\]\)/.test(rules));
 ok('hard ceiling on points',      /points <= 3000/.test(rules));
 ok('banned accounts frozen',      /old\(\)\.get\('banned', ?false\) != true/.test(rules));
 ok('moderation fields locked',    /!touched\(\['banned','kickAt','bannedReason','isAdmin'\]\)/.test(rules));

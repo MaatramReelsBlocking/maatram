@@ -16,6 +16,19 @@ service cloud.firestore {
       return neu().diff(old()).affectedKeys().hasAny(keys);
     }
 
+    /* ── points pacing ──
+       A gain must stamp awardAt with the server clock, and may be at most
+       1 point per 6 seconds since the previous gain (so +100 needs 10 min).
+       Penalties and profile edits never touch awardAt. A devtools loop can
+       now earn ~600 points an hour at most instead of 100 per write. */
+    function gain() { return neu().points - old().get('points', 0); }
+    function paced() {
+      return (gain() <= 0 && !touched(['awardAt']))
+          || (gain() > 0
+              && neu().awardAt == request.time
+              && gain() * 6 <= (request.time - old().get('awardAt', timestamp.value(0))).seconds());
+    }
+
     match /users/{uid} {
       allow read: if request.auth != null;
 
@@ -25,7 +38,8 @@ service cloud.firestore {
                     && request.resource.data.points <= 100
                     && !('banned'   in request.resource.data)
                     && !('kickAt'   in request.resource.data)
-                    && !('lifetime' in request.resource.data);
+                    && !('lifetime' in request.resource.data)
+                    && (!('awardAt' in request.resource.data) || request.resource.data.awardAt == request.time);
 
       /* ── admin can write anything on any user doc ── */
       allow update: if isAdmin();
@@ -41,12 +55,21 @@ service cloud.firestore {
                     && (
                          // normal play: one award or one penalty per write
                          (   !touched(['lifetime'])
-                          && neu().points >= old().points - 100
-                          && neu().points <= old().points + 100)
+                          && neu().points >= old().get('points', 0) - 100
+                          && neu().points <= old().get('points', 0) + 100
+                          && paced())
                          // monthly roll: archive this month, then zero
                       || (   neu().points == 0
                           && neu().cycle != old().get('cycle', '')
-                          && neu().lifetime == old().get('lifetime',0) + old().get('points',0))
+                          && neu().lifetime == old().get('lifetime',0) + old().get('points',0)
+                          && !touched(['awardAt']))
+                         // first-ever roll (gate.js): adopt lifetime, points untouched
+                      || (   old().get('cycle', '') == ''
+                          && neu().cycle is string
+                          && neu().points == old().get('points', 0)
+                          && !touched(['awardAt'])
+                          && (   (neu().lifetime == old().get('lifetime', 0) && old().get('lifetime', 0) >= old().get('points', 0))
+                              || (neu().lifetime == old().get('points', 0)   && old().get('points', 0) >  old().get('lifetime', 0))))
                        );
 
       allow delete: if isAdmin();

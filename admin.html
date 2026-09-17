@@ -55,6 +55,7 @@ dl.cmds dd{margin:2px 0 0;color:var(--dim);font-size:13px}
 </style>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script defer src="/speed-insights.js"></script>
+<script src="/firebase-config.js"></script>
 </head>
 <body>
 
@@ -159,13 +160,7 @@ import {getFirestore,collection,query,limit,orderBy,onSnapshot,doc,updateDoc,del
         addDoc,serverTimestamp}
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-const app = getApps().length ? getApp() : initializeApp({
-  apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",
-  authDomain:"maatram-859f4.firebaseapp.com",
-  projectId:"maatram-859f4",
-  storageBucket:"maatram-859f4.firebasestorage.app",
-  messagingSenderId:"770970784123",
-  appId:"1:770970784123:web:7c73c74ddb2179b69dedde"});
+const app = getApps().length ? getApp() : initializeApp(window.MAATRAM_FB);
 const auth = getAuth(app), db = getFirestore(app);
 
 const $  = s => document.querySelector(s);
