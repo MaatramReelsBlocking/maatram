@@ -9,7 +9,7 @@ they were about to open.
 It started as a school business project at SSVM School of Excellence (class 10B, team of
 five) and now runs as a live website and an Android app.
 
-- **Live:** https://maatram-website.vercel.app
+- **Live:** https://maatram.co.in
 - **Contact:** maatram97@gmail.com
 - **Discord:** https://discord.gg/qdbK2VgjV
 
