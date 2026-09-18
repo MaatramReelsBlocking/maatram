@@ -322,6 +322,13 @@ const FB_CONFIG = window.MAATRAM_FB;
 const HOSTED = location.protocol==='http:'||location.protocol==='https:';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* SECURITY: e.url comes from any signed-in user's event listing. esc() only
+   neutralises markup, not the URL scheme, so a stored "javascript:..." value
+   would run on click. Anything that is not plain http(s) becomes a dead link. */
+const safeUrl=u=>{ const v=String(u==null?'':u);
+  if(!/^https?:\/\//i.test(v)) return '#';                 /* absolute http(s) only */
+  try{ const p=new URL(v).protocol; return (p==='http:'||p==='https:') ? v : '#'; }
+  catch(_){ return '#'; } };
 
 /* Tamil Nadu + nearby cities. Used for the picker and for nearest-city lookup,
    so no map lookup service and no API key is needed. */
@@ -557,7 +564,7 @@ function render(){
       +(e.venue?'<br>'+esc(e.venue):'')
       +(e.org?'<br>By '+esc(e.org):'')+'</p>'
       +(safe
-        ? '<a class="go" href="'+esc(e.url)+'" target="_blank" rel="noopener noreferrer nofollow">Register on organiser site ↗</a>'
+        ? '<a class="go" href="'+esc(safeUrl(e.url))+'" target="_blank" rel="noopener noreferrer nofollow">Register on organiser site ↗</a>'
           +'<span class="why">Opens the organiser\u2019s own page</span>'
         : '<span class="go none">No official link given</span>');
     if(me&&db&&api&&(me.email||'').toLowerCase()===ADMIN_EMAIL){

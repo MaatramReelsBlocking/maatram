@@ -1,0 +1,22 @@
+# Repo housekeeping that must never be reachable on the live domain.
+# These all stay in the GitHub repo — they just stop being hosted files.
+# None of them appear in sitemap.xml, and none are indexed, so removing
+# them from the deployment cannot affect search rankings.
+
+# Firestore rules: publishing them tells an attacker exactly what to probe.
+firestore.rules
+
+# Unminified sources (theme.js / index.js are the shipped versions).
+*.src.js
+
+# Test suites and build helpers.
+test-*.js
+preflight.py
+package.json
+package-lock.json
+
+# Project documentation.
+*.md
+READ-ME.txt
+docs/
+.github/

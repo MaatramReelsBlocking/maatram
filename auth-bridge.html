@@ -64,7 +64,15 @@ const auth = getAuth(app);
 /* Where to send the token back to. Kept in sessionStorage so it survives the
    redirect fallback. */
 const qs = new URLSearchParams(location.search);
-const RT = qs.get('rt') || sessionStorage.getItem('mt_rt') || 'maatram://auth';
+
+/* SECURITY: the ID token is handed to RT. Only the app's own custom scheme is
+   ever allowed here. Without this check, ?rt=https://evil.tld turns this page
+   into a one-click account-takeover link: the victim signs in normally and
+   their Firebase ID token is delivered to the attacker in the query string. */
+const ALLOWED_RT = /^maatram:\/\/[a-z0-9/_-]*$/i;
+function safeRT(v){ return (typeof v === 'string' && ALLOWED_RT.test(v)) ? v : 'maatram://auth'; }
+
+const RT = safeRT(qs.get('rt') || sessionStorage.getItem('mt_rt'));
 sessionStorage.setItem('mt_rt', RT);
 
 function handOff(idToken){

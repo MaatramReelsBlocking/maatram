@@ -397,7 +397,10 @@ const avatars=['🧑‍💻','👩‍💻','🧑‍🎓','👨‍🎓','🧑‍�
 function randAvatar(){return avatars[Math.floor(Math.random()*avatars.length)]}
 function nowStr(){const d=new Date();return d.toTimeString().slice(0,5)}
 function fmtSec(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function randCode(){return Math.random().toString(36).slice(2,8).toUpperCase()}
+/* SECURITY: room contents ride a public broker, so the code is the only thing
+   standing between a room and a stranger. Use the CSPRNG and a bigger space. */
+function randCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',b=new Uint8Array(8);
+  crypto.getRandomValues(b);let o='';for(const n of b)o+=A[n%A.length];return o}
 
 /* ═══════════════════════════════════════════════
    STATE
@@ -415,7 +418,11 @@ function myElapsed(){return myStart?Math.floor((Date.now()-myStart)/1000):0}
 let client=null;
 const BROKERS=['wss://broker.emqx.io:8084/mqtt','wss://test.mosquitto.org:8081'];
 let brokerIdx=0;
-const topicFor=code=>'maatram/room/'+code;
+/* SECURITY: the code lands in an MQTT topic. MQTT treats '#' and '+' as
+   wildcards, so an unfiltered code of "#" would subscribe the joiner to every
+   room on the broker. Only A-Z and 0-9 ever reach the topic. */
+const cleanCode=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12);
+const topicFor=code=>'maatram/room/'+cleanCode(code);
 
 function connect(code){
   roomCode=code;
@@ -444,8 +451,22 @@ function sendMsg(obj){
   if(client && client.connected) client.publish(topicFor(roomCode),JSON.stringify(obj));
 }
 
+/* SECURITY: every field below arrives from wss://broker.emqx.io, which is an
+   open broker with no auth. Anyone who knows a room code can publish anything.
+   Clamp types and lengths here so nothing downstream ever sees a hostile shape;
+   escHtml() at render is the second layer. */
+function clean(v,max){ return String(v==null?'':v).replace(/[\u0000-\u001F\u007F]/g,'').slice(0,max); }
+
 function onMsg(d){
-  if(!d || !d._id) return;
+  if(!d || typeof d!=='object' || !d._id) return;
+  d._id=clean(d._id,40);
+  if(!/^[a-z0-9]+$/i.test(d._id)) return;          /* ids are base-36, nothing else */
+  if('name'   in d) d.name   = clean(d.name,24)   || 'Student';
+  if('avatar' in d) d.avatar = clean(d.avatar,8)  || '\u{1F9D1}\u200D\u{1F4BB}';
+  if('app'    in d) d.app    = clean(d.app,24);
+  if('text'   in d) d.text   = clean(d.text,280);
+  if('strikes' in d) d.strikes = Math.max(0,Math.min(3,Number(d.strikes)||0));
+  if('elapsed' in d) d.elapsed = Math.max(0,Math.min(86400,Number(d.elapsed)||0));
   const them=d._id;
   if(them===myId) return;           // own echo — ignore
 
@@ -499,7 +520,7 @@ setInterval(()=>{
 ═══════════════════════════════════════════════ */
 $('genBtn').onclick=()=>{ $('codeInput').value=randCode(); checkReady(); };
 $('nameInput').oninput=checkReady;
-$('codeInput').oninput=()=>{ $('codeInput').value=$('codeInput').value.toUpperCase(); checkReady(); };
+$('codeInput').oninput=()=>{ $('codeInput').value=cleanCode($('codeInput').value); checkReady(); };
 function checkReady(){
   $('joinBtn').disabled=!($('nameInput').value.trim() && $('codeInput').value.trim().length>=4);
 }
@@ -512,7 +533,7 @@ $('joinBtn').onclick=()=>{
   myName=$('nameInput').value.trim()||'Anon';
   myAvatar=randAvatar();
   myId=getUID();
-  const code=$('codeInput').value.trim().toUpperCase();
+  const code=cleanCode($('codeInput').value);
   joinRoom(code);
 };
 
@@ -578,9 +599,9 @@ function renderSeats(){
     seat.className='seat occupied'+(p.me?' me':'');
     seat.innerHTML=`
       ${p.me?'<div class="you-tag">You</div>':''}
-      <span class="avatar">${p.avatar}</span>
+      <span class="avatar">${escHtml(p.avatar)}</span>
       <div class="sname">${escHtml(p.name)}</div>
-      <div class="stime" id="stime_${p.id}">${fmtSec(Math.floor((Date.now()-(p.me?myStart:p.startAt||Date.now()))/1000))}</div>
+      <div class="stime" id="stime_${escHtml(p.id)}">${fmtSec(Math.floor((Date.now()-(p.me?myStart:p.startAt||Date.now()))/1000))}</div>
       <div class="sstrikes">${[0,1,2].map(n=>`<div class="strike-dot${n<p.strikes?' hit':''}">✕</div>`).join('')}</div>
     `;
   });
@@ -593,7 +614,7 @@ function renderTimes(){
   }
 }
 
-function escHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function escHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 /* ═══════════════════════════════════════════════
    LOG
@@ -611,7 +632,12 @@ function addLog(text,cls){
 ═══════════════════════════════════════════════ */
 const store=(()=>{try{localStorage.setItem('_t','1');localStorage.removeItem('_t');return{get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};}catch(e){const m={};return{get:k=>m[k]??null,set:(k,v)=>m[k]=v,del:k=>delete m[k]};}})();
 /* persistent identity + resumable session (so App Gate visits don't disconnect you) */
-function getUID(){let u=store.get('maatram_room_uid');if(!u){u=Math.random().toString(36).slice(2);store.set('maatram_room_uid',u);}return u;}
+function getUID(){let u=store.get('maatram_room_uid');
+  if(!u||!/^[a-z0-9]{16,}$/.test(u)){                 /* CSPRNG: ids are spoofable on an open broker */
+    const b=new Uint8Array(12);crypto.getRandomValues(b);
+    u=Array.from(b,n=>n.toString(36).padStart(2,'0')).join('').slice(0,24);
+    store.set('maatram_room_uid',u);}
+  return u;}
 const SKEY='maatram_room_session';
 function sessGet(){try{return JSON.parse(store.get(SKEY)||'null')}catch(_){return null}}
 function sessSet(o){try{store.set(SKEY,JSON.stringify(o))}catch(_){}}

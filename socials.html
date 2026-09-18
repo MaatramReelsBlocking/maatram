@@ -331,14 +331,28 @@ document.getElementById('fbSend').addEventListener('click',async()=>{
   const name=document.getElementById('fbName').value.trim();
   const msg=document.getElementById('fbMsg').value.trim();
   if(!msg){ document.getElementById('fbMsg').focus(); return; }
+
+  /* SECURITY: this endpoint delivers straight to a real inbox, so it is a spam
+     relay if left open. Three cheap brakes: a length cap, a 60-second
+     per-browser cooldown, and FormSubmit's own _honey honeypot field. */
+  if(msg.length>4000){ alert('Please keep the message under 4000 characters.'); return; }
+  const GAP=60000, lastSent=+(localStorage.getItem('maatram_fb_last')||0);
+  if(Date.now()-lastSent<GAP){
+    const wait=Math.ceil((GAP-(Date.now()-lastSent))/1000);
+    btn.textContent='Wait '+wait+'s';
+    setTimeout(()=>{btn.textContent='Send';},1500);
+    return;
+  }
+
   btn.disabled=true; const orig=btn.textContent; btn.textContent='Sending…';
   try{
     const res=await fetch('https://formsubmit.co/ajax/'+['maatram97','gmail.com'].join('@'),{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({name:name||'Anonymous',message:msg,_subject:'Maatram feedback'+(name?' — '+name:'')})
+      body:JSON.stringify({name:name||'Anonymous',message:msg,_honey:'',_template:'table',_subject:'Maatram feedback'+(name?' — '+name:'')})
     });
     if(!res.ok) throw new Error('send failed');
+    try{ localStorage.setItem('maatram_fb_last',String(Date.now())); }catch(_){}
     btn.textContent='Sent ✓';
     document.getElementById('fbMsg').value=''; document.getElementById('fbName').value='';
     setTimeout(()=>{btn.textContent=orig;btn.disabled=false;},2500);

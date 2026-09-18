@@ -529,7 +529,8 @@ const ROOM=(()=>{
     if(!s||!s.code||Date.now()-(s.last||0)>5*60*1000){ if(cli){try{cli.end(true)}catch(_){}cli=null;} return null; }
     if(roomTabAlive()){ if(cli){try{cli.end(true)}catch(_){}cli=null;} return s; }  // room tab open elsewhere — it handles sync
     if(!cli && window.mqtt){
-      topic='maatram/room/'+s.code;
+      /* SECURITY: same MQTT wildcard guard as study-room.html */
+      topic='maatram/room/'+String(s.code||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12);
       try{
         cli=mqtt.connect('wss://broker.emqx.io:8084/mqtt',{clientId:'maatram_'+uid()+'_g',keepalive:30,reconnectPeriod:4000,connectTimeout:8000});
         cli.on('error',()=>{});

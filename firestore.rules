@@ -2,11 +2,24 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /* ── the Maatram admin account ──
-       Add another address to this list to make someone else an admin.
-       Nothing else in the site grants admin rights. */
-    function isAdmin() {
+    /* ══ Maatram security model ══════════════════════════════════════════
+       There is no admin console on the site any more. The only privileged
+       address below can take a sports listing down; it can NOT write to
+       anyone's user document. Moderation (ban / delete a user) is done from
+       the Firebase console, which runs as the Admin SDK and bypasses rules.
+
+       Anything the client can write is pinned to an explicit key allowlist.
+       That is what stops an email address, a phone number, or any other
+       personal field ever landing in a document every signed-in student can
+       read. Adding a field means editing this file first — on purpose.
+       ════════════════════════════════════════════════════════════════════ */
+
+    function isOwner(uid) { return request.auth != null && request.auth.uid == uid; }
+
+    /* takedown rights for the public sports board only */
+    function isListingModerator() {
       return request.auth != null
+             && request.auth.token.email_verified == true
              && request.auth.token.email in ['maatram97@gmail.com'];
     }
 
@@ -15,12 +28,13 @@ service cloud.firestore {
     function touched(keys) {
       return neu().diff(old()).affectedKeys().hasAny(keys);
     }
+    function changed() { return neu().diff(old()).affectedKeys(); }
 
     /* ── points pacing ──
        A gain must stamp awardAt with the server clock, and may be at most
        1 point per 6 seconds since the previous gain (so +100 needs 10 min).
        Penalties and profile edits never touch awardAt. A devtools loop can
-       now earn ~600 points an hour at most instead of 100 per write. */
+       earn ~600 points an hour at most instead of 100 per write. */
     function gain() { return neu().points - old().get('points', 0); }
     function paced() {
       return (gain() <= 0 && !touched(['awardAt']))
@@ -29,42 +43,59 @@ service cloud.firestore {
               && gain() * 6 <= (request.time - old().get('awardAt', timestamp.value(0))).seconds());
     }
 
+    /* Everything a browser is ever allowed to write on a user document.
+       NOTE the absence of: email, phone, any contact field, any moderation
+       field. A key that is not on this list is rejected outright. */
+    function writableKeys() {
+      return ['name','photo','points','lifetime','lastLogin','cycle','awardAt'];
+    }
+    function safeText(v, max) {
+      return v is string && v.size() > 0 && v.size() <= max;
+    }
+
     match /users/{uid} {
+
+      /* The leaderboard lists every player, so any signed-in user can read
+         these documents. They are safe to read precisely because the write
+         allowlist above keeps personal data out of them. */
       allow read: if request.auth != null;
 
-      allow create: if request.auth != null && request.auth.uid == uid
-                    && request.resource.data.points is int
-                    && request.resource.data.points >= 0
-                    && request.resource.data.points <= 100
-                    && !('banned'   in request.resource.data)
-                    && !('kickAt'   in request.resource.data)
-                    && !('lifetime' in request.resource.data)
-                    && (!('awardAt' in request.resource.data) || request.resource.data.awardAt == request.time);
-
-      /* ── admin can write anything on any user doc ── */
-      allow update: if isAdmin();
-
-      /* ── a normal user editing their own doc ── */
-      allow update: if request.auth != null && request.auth.uid == uid
-                    && old().get('banned', false) != true   // banned accounts are frozen
+      allow create: if isOwner(uid)
+                    && neu().keys().hasOnly(writableKeys())
+                    && safeText(neu().name, 40)
                     && neu().points is int
                     && neu().points >= 0
-                    && neu().points <= 3000           // hard ceiling on a month
-                    // moderation fields are untouchable from the client
-                    && !touched(['banned','kickAt','bannedReason','isAdmin'])
+                    && neu().points <= 100
+                    && (!('photo' in neu()) || neu().photo is string)
+                    && (!('lifetime' in neu()) || neu().lifetime == 0)
+                    && (!('awardAt' in neu()) || neu().awardAt == request.time);
+
+      allow update: if isOwner(uid)
+                    && old().get('banned', false) != true   // a banned account is frozen
+                    && neu().points is int
+                    && neu().points >= 0
+                    && neu().points <= 3000                 // hard ceiling on a month
+                    && (!('name'  in changed()) || safeText(neu().name, 40))
+                    && (!('photo' in changed()) || neu().photo is string)
                     && (
                          // normal play: one award or one penalty per write
-                         (   !touched(['lifetime'])
+                         (   changed().hasOnly(writableKeys())
+                          && !touched(['lifetime'])
                           && neu().points >= old().get('points', 0) - 100
                           && neu().points <= old().get('points', 0) + 100
                           && paced())
+
                          // monthly roll: archive this month, then zero
-                      || (   neu().points == 0
+                      || (   changed().hasOnly(writableKeys()
+                                 .concat(['m_' + old().get('cycle', 'x')]))
+                          && neu().points == 0
                           && neu().cycle != old().get('cycle', '')
                           && neu().lifetime == old().get('lifetime',0) + old().get('points',0)
                           && !touched(['awardAt']))
+
                          // first-ever roll (gate.js): adopt lifetime, points untouched
-                      || (   old().get('cycle', '') == ''
+                      || (   changed().hasOnly(writableKeys())
+                          && old().get('cycle', '') == ''
                           && neu().cycle is string
                           && neu().points == old().get('points', 0)
                           && !touched(['awardAt'])
@@ -72,10 +103,15 @@ service cloud.firestore {
                               || (neu().lifetime == old().get('points', 0)   && old().get('points', 0) >  old().get('lifetime', 0))))
                        );
 
-      allow delete: if isAdmin();
+      /* Deleting an account is a console job, not a browser job. */
+      allow delete: if false;
     }
 
-    /* sports events: any signed-in user lists one, only an admin takes it down */
+    /* ── sports events ──
+       Any signed-in user lists one. The author can take their own listing
+       down; the moderator address can take any listing down.
+       url is scheme-checked here as well as in the page, so a stored
+       "javascript:" link can never reach the database in the first place. */
     match /events/{id} {
       allow read:   if request.auth != null;
       allow create: if request.auth != null
@@ -83,15 +119,23 @@ service cloud.firestore {
                     && request.resource.data.title is string
                     && request.resource.data.title.size() > 0
                     && request.resource.data.title.size() <= 80
-                    && request.resource.data.date is string;
-      allow update, delete: if isAdmin();
+                    && request.resource.data.date is string
+                    && request.resource.data.date.size() <= 40
+                    && (!('sport' in neu()) || safeText(neu().sport, 40))
+                    && (!('city'  in neu()) || safeText(neu().city, 60))
+                    && (!('venue' in neu()) || neu().venue is string && neu().venue.size() <= 120)
+                    && (!('org'   in neu()) || neu().org is string && neu().org.size() <= 80)
+                    && (!('url'   in neu()) || neu().url == ''
+                        || (neu().url is string && neu().url.size() <= 300
+                            && neu().url.matches('^https?://.*')));
+      allow update: if false;                       // a listing is never edited in place
+      allow delete: if isListingModerator()
+                    || (request.auth != null && resource.data.by == request.auth.uid);
     }
 
-    /* admin audit trail: every ban / kick / points edit is written here.
-       Readable and writable by admins only. */
-    match /admin_log/{id} {
-      allow read, create: if isAdmin();
-      allow update, delete: if false;
+    /* Nothing else is reachable from a browser. */
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
