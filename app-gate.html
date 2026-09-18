@@ -612,15 +612,135 @@ function update(){
   if(left<=0) release();
 }
 
-lockBtn.addEventListener('click', ()=>{
+   /* ============ Chrome Extension Hard Lock ============ */
+
+const MAATRAM_EXTENSION_ID =
+      "fnchjdjifpnkjdgcccjdlhphiffjefek";
+
+
+function sendToMaatramExtension(message) {
+
+  return new Promise((resolve, reject) => {
+
+    chrome.runtime.sendMessage(
+      MAATRAM_EXTENSION_ID,
+      message,
+      response => {
+
+        if (chrome.runtime.lastError) {
+
+          reject(
+            new Error(
+              chrome.runtime.lastError.message
+            )
+          );
+
+          return;
+        }
+
+        if (!response) {
+
+          reject(
+            new Error(
+              "No response from Maatram Hard Lock extension."
+            )
+          );
+
+          return;
+        }
+
+        resolve(response);
+
+      }
+    );
+
+  });
+
+}
+lockBtn.addEventListener('click', async ()=>{
+
   if(body.classList.contains('locked')){
-    // hard lock: no early exit — shake to say no
-    grid.classList.remove('deny'); void grid.offsetWidth; grid.classList.add('deny');
+
+    // Hard Lock: no early exit
+    grid.classList.remove('deny');
+
+    void grid.offsetWidth;
+
+    grid.classList.add('deny');
+
     return;
+
   }
-  const total=selMin*60, end=Date.now()+total*1000;
-  store.set('maatram_lock_end', end); store.set('maatram_lock_total', total);
-  engage(end,total);
+
+
+  const total =
+    selMin * 60;
+
+  const end =
+    Date.now() + total * 1000;
+
+
+  try {
+
+    /* Start Chrome extension blocking */
+
+    const response =
+      await sendToMaatramExtension({
+
+        action:
+          "START_HARD_LOCK",
+
+        durationMinutes:
+          selMin
+
+      });
+
+
+    if(!response.success){
+
+      throw new Error(
+        response.error ||
+        "Could not start Hard Lock."
+      );
+
+    }
+
+
+    /* Start the existing Maatram webpage lock */
+
+    store.set(
+      'maatram_lock_end',
+      end
+    );
+
+    store.set(
+      'maatram_lock_total',
+      total
+    );
+
+
+    engage(
+      end,
+      total
+    );
+
+
+  }
+  catch(error){
+
+    console.error(
+      "Maatram Hard Lock:",
+      error
+    );
+
+
+    alert(
+      "Maatram Hard Lock extension is not connected.\n\n" +
+      "Make sure the Maatram Hard Lock extension is installed and enabled."
+    );
+
+  }
+
 });
 
 /* block clicks on apps while locked (belt & suspenders) + shake feedback */
