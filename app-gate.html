@@ -225,6 +225,9 @@
   }
   .panel h3 svg{width:22px;height:22px;color:var(--green)}
   .panel .sub{color:var(--dim);font-size:14px;line-height:1.55;max-width:440px;margin-bottom:26px}
+  .ext-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;margin:-10px 0 22px;border-radius:999px;border:1px solid rgba(47,227,143,.35);color:var(--green);background:rgba(47,227,143,.06);font-size:14px;font-weight:600;text-decoration:none;transition:background .2s,border-color .2s}
+  .ext-link:hover{background:rgba(47,227,143,.12);border-color:var(--green)}
+  .ext-link svg{width:18px;height:18px}
 
   .chips{display:flex;flex-wrap:wrap;gap:10px}
   .chip{
@@ -462,6 +465,10 @@ window.maatramAward=window.maatramAward||function(pts,reason){
         Hard Lock Mode
       </h3>
       <p class="sub">Pick a focus window. Once armed, every app above goes grey and un-clickable until the timer runs out. No exits, no shortcuts — that's the point.</p>
+      <a class="ext-link" href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
+        Add Maatram Hard Lock to Chrome
+      </a>
       <div class="chips" id="chips">
         <button class="chip" data-min="5">5 min</button>
         <button class="chip" data-min="10">10 min</button>
@@ -743,10 +750,11 @@ lockBtn.addEventListener('click', async ()=>{
     );
 
 
-    alert(
+    if (confirm(
       "Maatram Hard Lock extension is not connected.\n\n" +
-      "Make sure the Maatram Hard Lock extension is installed and enabled."
-    );
+      "Make sure the Maatram Hard Lock extension is installed and enabled.\n\n" +
+      "Open the Chrome Web Store to install it?"
+    )) window.open("https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen", "_blank", "noopener");
 
   }
 
