@@ -1,0 +1,49 @@
+# Pings IndexNow (Bing, Yandex, Seznam, Naver) after each push to main.
+# Push: submits only the changed .html pages that are listed in sitemap.xml.
+# Manual run (Actions tab -> IndexNow -> Run workflow): submits every sitemap URL.
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths: ['**.html', 'sitemap.xml']
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Wait for Vercel deploy
+        run: sleep 90
+
+      - name: Submit URLs
+        env:
+          KEY: 152f5229021c4c0191ac948ca381afd3
+          HOST: maatram.co.in
+          BEFORE: ${{ github.event.before }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          all=$(grep -o '<loc>[^<]*' sitemap.xml | sed 's/<loc>//')
+          if [ "$EVENT" = push ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            urls=""
+            for f in $(git diff --name-only --diff-filter=AM "$BEFORE" HEAD -- '*.html'); do
+              u="https://$HOST/$f"; [ "$f" = index.html ] && u="https://$HOST/"
+              grep -qxF "$u" <<< "$all" && urls="$urls$u"$'\n'
+            done
+            git diff --name-only "$BEFORE" HEAD | grep -qx sitemap.xml && urls="$all"
+          else
+            urls="$all"
+          fi
+          urls=$(printf '%s' "$urls" | sed '/^$/d' | sort -u)
+          [ -z "$urls" ] && { echo "No sitemap pages changed."; exit 0; }
+          echo "Submitting:"; echo "$urls"
+          body=$(jq -n --arg h "$HOST" --arg k "$KEY" --arg u "$urls" \
+            '{host:$h, key:$k, keyLocation:"https://\($h)/\($k).txt", urlList:($u|split("\n"))}')
+          code=$(curl -s -o /dev/stderr -w '%{http_code}' -X POST https://api.indexnow.org/IndexNow \
+            -H 'Content-Type: application/json; charset=utf-8' -d "$body")
+          echo "IndexNow HTTP $code"
+          [ "$code" = 200 ] || [ "$code" = 202 ]
