@@ -1,6 +1,6 @@
 /* ══ Maatram · page gate ══
    One line per page:  <script src="gate.js"></script>  (right after theme.js)
-   Signed out -> login.html.
+   Signed out -> page shown + sign-in bar. Banned -> blocked. Kicked -> login.html.
    Never add this to login.html or auth-bridge.html (redirect loop). */
 (function(){
   var HOSTED = location.protocol==='http:'||location.protocol==='https:';
@@ -16,7 +16,11 @@
     +'html.mgate #mgate{visibility:visible!important}'
     +'#mgate{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;'
     +'background:#06090B;color:#8FA3A0;font:600 14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;'
-    +'letter-spacing:.04em;text-align:center;padding:24px;white-space:pre-line}';
+    +'letter-spacing:.04em;text-align:center;padding:24px;white-space:pre-line}'
+    +'#mguest{position:fixed;right:12px;bottom:12px;z-index:9998;max-width:calc(100vw - 24px);'
+    +'background:#0d1417;color:#cfe0dc;border:1px solid rgba(47,227,143,.4);border-radius:14px;'
+    +'padding:10px 14px;font:600 13px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}'
+    +'#mguest a{color:#2fe38f;margin-left:6px;display:inline-block;padding:6px 0}';
   (document.head||document.documentElement).appendChild(s);
   document.documentElement.classList.add('mgate');
 
@@ -28,6 +32,16 @@
   function reveal(){
     document.documentElement.classList.remove('mgate');
     var v=document.getElementById('mgate'); if(v) v.remove();
+  }
+  /* signed out: page stays readable (people and search engines), points bank
+     locally until they sign in. A small bar offers the sign-in instead of a redirect. */
+  function guest(){
+    reveal();
+    var b=document.createElement('div'); b.id='mguest'; b.setAttribute('role','region'); b.setAttribute('aria-label','Sign in');
+    b.textContent='Browsing as a guest. Sign in to save points and join rooms.';
+    var a=document.createElement('a'); a.href='login.html'; a.textContent='Sign in';
+    a.onclick=function(){ try{ sessionStorage.setItem('maatram_next',PAGE); }catch(e){} };
+    b.appendChild(a); document.body.appendChild(b);
   }
   function send(){
     try{ sessionStorage.setItem('maatram_next',PAGE); }catch(e){}
@@ -97,7 +111,7 @@
       var auth=U.getAuth(app), db=F.getFirestore(app), done=false;
       U.onAuthStateChanged(auth, async function(user){
         if(done) return; done=true;
-        if(!user){ send(); return; }
+        if(!user){ guest(); return; }
         var d={};
         try{ var snap=await F.getDoc(F.doc(db,'users',user.uid)); d=snap.exists()?snap.data():{}; }
         catch(e){ reveal(); return; }       /* read failed: let them work, do not trap them */
