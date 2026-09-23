@@ -38,6 +38,8 @@ ok('never gates login.html', /PAGE==='login\.html'/.test(G));
 ok('never gates auth-bridge.html', /auth-bridge\.html/.test(G));
 ok('remembers the page it bounced from', /sessionStorage\.setItem\('maatram_next'/.test(G));
 ok('uses replace, not push (no back-button trap)', /location\.replace\('login\.html'\)/.test(G));
+ok('signed out: shows page + sign-in bar, no redirect (crawlable)', /if\(!user\)\{ guest\(\); return; \}/.test(G));
+ok('guest bar links to login and remembers the page', /a\.href='login\.html'/.test(G) && /function guest\(\)\{\s*reveal\(\);/.test(G));
 ok('reveals on import failure (offline never locks out)', /catch\(e\)\{ reveal\(\); return; \}/.test(G));
 
 function run(url){
