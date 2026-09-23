@@ -614,47 +614,56 @@ function update(){
 
    /* ============ Chrome Extension Hard Lock ============ */
 
-const MAATRAM_EXTENSION_ID =
-      "fnchjdjifpnkjdgcccjdlhphiffjefek";
+/* Web Store ID first, then the unpacked dev copy */
+const MAATRAM_EXTENSION_IDS = [
+  "igcfbmdadjlibodcpaibklgeijdacmen",
+  "fnchjdjifpnkjdgcccjdlhphiffjefek"
+];
 
 
-function sendToMaatramExtension(message) {
+function sendToExtensionId(id, message) {
 
   return new Promise((resolve, reject) => {
 
-    chrome.runtime.sendMessage(
-      MAATRAM_EXTENSION_ID,
-      message,
-      response => {
+    if (!window.chrome || !chrome.runtime || !chrome.runtime.sendMessage) {
+      reject(new Error("Extension messaging not available."));
+      return;
+    }
 
-        if (chrome.runtime.lastError) {
+    chrome.runtime.sendMessage(id, message, response => {
 
-          reject(
-            new Error(
-              chrome.runtime.lastError.message
-            )
-          );
-
-          return;
-        }
-
-        if (!response) {
-
-          reject(
-            new Error(
-              "No response from Maatram Hard Lock extension."
-            )
-          );
-
-          return;
-        }
-
-        resolve(response);
-
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
       }
-    );
+
+      if (!response) {
+        reject(new Error("No response from Maatram Hard Lock extension."));
+        return;
+      }
+
+      resolve(response);
+
+    });
 
   });
+
+}
+
+
+async function sendToMaatramExtension(message) {
+
+  let lastError;
+
+  for (const id of MAATRAM_EXTENSION_IDS) {
+    try {
+      return await sendToExtensionId(id, message);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError;
 
 }
 lockBtn.addEventListener('click', async ()=>{
