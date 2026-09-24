@@ -82,7 +82,11 @@ ok('legacy /maatram.apk redirect present',
   (cfg.redirects || []).some(r => r.source === '/maatram.apk'));
 ok('/get short link present', (cfg.redirects || []).some(r => r.source === '/get'));
 ok('all redirects target the real file',
-  (cfg.redirects || []).every(r => fs.existsSync(path.join(ROOT, r.destination.slice(1)))));
+  (cfg.redirects || []).filter(r => r.destination.startsWith('/'))
+    .every(r => fs.existsSync(path.join(ROOT, r.destination.slice(1)))));
+ok('vercel.app host redirects to maatram.co.in (not /api)',
+  (cfg.redirects || []).some(r => (r.has || []).some(h => h.value === 'maatram-website.vercel.app')
+    && r.destination.startsWith('https://maatram.co.in/') && r.permanent && r.source.includes('?!api/')));
 
 /* ---- housekeeping ---- */
 ok('stale kit README removed from web root', !fs.existsSync(path.join(ROOT, 'READ-ME.txt')));

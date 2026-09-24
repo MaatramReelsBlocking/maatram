@@ -156,6 +156,12 @@
   ],
   "redirects": [
     {
+      "source": "/:path((?!api/).*)",
+      "has": [{ "type": "host", "value": "maatram-website.vercel.app" }],
+      "destination": "https://maatram.co.in/:path",
+      "permanent": true
+    },
+    {
       "source": "/get",
       "destination": "/maatram-v1.1.apk",
       "permanent": false
