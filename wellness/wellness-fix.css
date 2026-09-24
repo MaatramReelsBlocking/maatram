@@ -106,3 +106,15 @@ body::after { right: -13vw; bottom: -16vw; background: rgba(31, 190, 205, .12); 
 
 @media (max-width: 850px) { .habit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .daily-tracker { padding: 18px; }.habit-grid { grid-template-columns: 1fr; }.daily-tracker h3 { font-size: 22px; } }
+/* Minimal Glass skin (chosen via Customize UI, stored in localStorage maatram_theme) */
+html.minimal{--ink:#0B0C0B;--panel:rgba(255,255,255,.055);--line:rgba(255,255,255,.13);--mint:#C9CFC9;--muted:#8A928E;--green:#9CC0B2;--lime:#C9CFC9;--white:#ECEFEE}
+html.minimal body{background:#0B0C0B}
+html.minimal .stars,html.minimal .orb{display:none}
+html.minimal .nav{background:rgba(11,12,11,.85);border-bottom-color:rgba(255,255,255,.11)}
+html.minimal .brand span{background:#9CC0B2;color:#0B0C0B}
+html.minimal .points{border-color:rgba(156,192,178,.35)}
+html.minimal .primary,html.minimal .loader-mark{box-shadow:none}
+html.minimal .primary{color:#0B0C0B}
+html.minimal .primary:hover{background:#B4D1C6}
+html.minimal .hero-card,html.minimal .day-card,html.minimal .plan-side,html.minimal .track-card,html.minimal .achievement,html.minimal .streak-card,html.minimal .modal-inner{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.13);box-shadow:0 18px 40px rgba(0,0,0,.45)}
+html.minimal *{text-shadow:none}
