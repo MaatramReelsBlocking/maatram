@@ -228,6 +228,8 @@
   .ext-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;margin:-10px 0 22px;border-radius:999px;border:1px solid rgba(47,227,143,.35);color:var(--green);background:rgba(47,227,143,.06);font-size:14px;font-weight:600;text-decoration:none;transition:background .2s,border-color .2s}
   .ext-link:hover{background:rgba(47,227,143,.12);border-color:var(--green)}
   .ext-link svg{width:18px;height:18px}
+  .ext-link.need{background:linear-gradient(90deg,var(--green),var(--blue));color:#04130c;border-color:transparent}
+  .ext-link.on{pointer-events:none}
 
   .chips{display:flex;flex-wrap:wrap;gap:10px}
   .chip{
@@ -465,9 +467,9 @@ window.maatramAward=window.maatramAward||function(pts,reason){
         Hard Lock Mode
       </h3>
       <p class="sub">Pick a focus window. Once armed, every app above goes grey and un-clickable until the timer runs out. No exits, no shortcuts — that's the point.</p>
-      <a class="ext-link" href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
-        Add Maatram Hard Lock to Chrome
+      <a class="ext-link need" id="extLink" href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path id="extIcon" d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
+        <span id="extLabel">Step 1: Add Maatram Hard Lock to Chrome (desktop)</span>
       </a>
       <div class="chips" id="chips">
         <button class="chip" data-min="5">5 min</button>
@@ -673,6 +675,31 @@ async function sendToMaatramExtension(message) {
   throw lastError;
 
 }
+
+/* Install button: shown as "Step 1" until the extension answers a ping.
+   "Receiving end does not exist" = not installed; any other reply/error = installed. */
+function pingExtension(id){
+  return new Promise(res=>{
+    try{
+      chrome.runtime.sendMessage(id,{action:"PING"},()=>{
+        const e=chrome.runtime.lastError;
+        res(!e || !/receiving end|establish connection|invalid/i.test(e.message));
+      });
+    }catch(_){ res(false); }
+  });
+}
+async function checkExtension(){
+  let on=false;
+  if(window.chrome && chrome.runtime && chrome.runtime.sendMessage)
+    for(const id of MAATRAM_EXTENSION_IDS) if(await pingExtension(id)){ on=true; break; }
+  const link=document.getElementById('extLink');
+  link.classList.toggle('need',!on); link.classList.toggle('on',on);
+  link.setAttribute('aria-disabled',on);
+  document.getElementById('extIcon').setAttribute('d',on?'M5 12l5 5L20 7':'M12 3v12m0 0-4-4m4 4 4-4M5 21h14');
+  document.getElementById('extLabel').textContent=on?'Maatram Hard Lock extension connected':'Step 1: Add Maatram Hard Lock to Chrome (desktop)';
+}
+checkExtension();
+addEventListener('focus',checkExtension); /* re-check when user returns from the Web Store tab */
 lockBtn.addEventListener('click', async ()=>{
 
   if(body.classList.contains('locked')){
