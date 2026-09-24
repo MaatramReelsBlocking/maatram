@@ -135,6 +135,8 @@
   .stats-head{display:flex;align-items:baseline;justify-content:space-between;margin:36px 0 16px;flex-wrap:wrap;gap:8px}
   .stats-head h2{font-family:var(--font-display);font-size:22px;font-weight:800}
   .stats-head span{font-size:12px;color:var(--dim)}
+  .ext-note{font-size:12.5px;color:var(--dim);margin:-6px 0 14px;line-height:1.5}
+  .ext-note a{color:var(--green)}
   .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
   @media(max-width:640px){.kpis{grid-template-columns:1fr}}
   .kpi{background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:20px 22px}
@@ -294,6 +296,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     <h2>📊 Your statistics</h2>
     <span id="statsRange"></span>
   </div>
+  <p class="ext-note" id="extNote" role="status"></p>
 
   <div class="kpis">
     <div class="kpi bad"><div class="v" id="kToday">0m</div><div class="l">Today total</div></div>
@@ -338,6 +341,22 @@ function saveAll(d){store.set(KEY,JSON.stringify(d))}
 function dayKey(offset=0){const d=new Date(Date.now()-offset*864e5);
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
+/* ═══════ laptop time from the Maatram Hard Lock extension ═══════ */
+const WEB_KEY='maatram_web_v1';          // {day:{domain:minutes}} — copied from the extension, stays on this device
+const WEB_MAP={'instagram.com':'instagram','snapchat.com':'snapchat','tiktok.com':'tiktok',
+  'youtube.com':'youtube','x.com':'other','facebook.com':'other'};
+function loadWeb(){try{return JSON.parse(store.get(WEB_KEY))||{}}catch(_){return{}}}
+/* phone (typed) + laptop (extension) per day; typed entries are never overwritten */
+function merged(){
+  const all=loadAll(), web=loadWeb(), out={};
+  for(const k of new Set([...Object.keys(all),...Object.keys(web)])){
+    const d={...(all[k]||{})};
+    for(const [dom,m] of Object.entries(web[k]||{})){const id=WEB_MAP[dom];if(id&&m>0)d[id]=(d[id]||0)+m;}
+    out[k]=d;
+  }
+  return out;
+}
+
 /* ═══════ UI: today's entry rows ═══════ */
 const $=id=>document.getElementById(id);
 let today={};                            // {appId: minutes}
@@ -381,7 +400,7 @@ $('saveBtn').onclick=()=>{
 
 /* ═══════ STATS ═══════ */
 function renderStats(animate){
-  const all=loadAll();
+  const all=merged();
   const tKey=dayKey(), yKey=dayKey(1);
   const sum=d=>d?Object.values(d).reduce((a,b)=>a+b,0):0;
   const tSum=sum(all[tKey]);
@@ -439,8 +458,8 @@ function renderStats(animate){
 renderStats();
 
 /* ═══════ WEEKLY BONUS: +50 when last full week beats (is below) the week before ═══════ */
-(function weeklyBonus(){
-  const all=loadAll();
+function weeklyBonus(){
+  const all=merged();
   const sum=d=>d?Object.values(d).reduce((a,b)=>a+b,0):0;
   let last=0,lastDays=0,prev=0,prevDays=0;
   for(let i=1;i<=7;i++){const v=all[dayKey(i)];if(v){last+=sum(v);lastDays++;}}
@@ -453,6 +472,27 @@ renderStats();
     store.set(claimKey,weekId);
     window.maatramAward(50,'Weekly screen time down!');
   }
+}
+
+/* ask the extension for laptop usage, then draw + check the bonus once */
+const EXT_IDS=['igcfbmdadjlibodcpaibklgeijdacmen','fnchjdjifpnkjdgcccjdlhphiffjefek'];
+const STORE_URL='https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen';
+function askExt(id){return new Promise(ok=>{
+  try{chrome.runtime.sendMessage(id,{action:'GET_USAGE'},r=>{void chrome.runtime.lastError;ok(r&&r.success?r:null);});}
+  catch(_){ok(null);}
+});}
+(async function syncLaptop(){
+  const note=$('extNote');
+  let r=null;
+  if(window.chrome&&chrome.runtime&&chrome.runtime.sendMessage) for(const id of EXT_IDS){ if((r=await askExt(id))) break; }
+  if(r&&r.usage&&typeof r.usage==='object'){
+    store.set(WEB_KEY,JSON.stringify(r.usage));
+    note.textContent='💻 Laptop time on Instagram, Snapchat, TikTok, YouTube, X and Facebook is added automatically from the Maatram Hard Lock extension.';
+    renderStats();
+  }else{
+    note.innerHTML='💻 Add the <a href="'+STORE_URL+'" target="_blank" rel="noopener">Maatram Hard Lock</a> Chrome extension to count your laptop time automatically.';
+  }
+  weeklyBonus();
 })();
 
 /* ═══════ BACKGROUND: drifting gradient orbs + twinkles + shooting stars ═══════ */

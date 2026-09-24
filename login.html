@@ -129,6 +129,14 @@
     text-decoration:none;display:grid;place-items:center;transition:all .25s}
   #goApp{border:none;color:#04120f;background:linear-gradient(90deg,var(--green),var(--blue))}
   #goApp:hover{transform:translateY(-2px);box-shadow:0 10px 26px -10px rgba(47,227,143,.6)}
+  #nameForm{display:flex;gap:8px;margin:0 0 22px;text-align:left;flex-wrap:wrap}
+  #nameForm label{flex-basis:100%;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);font-weight:600}
+  #nameIn{flex:1;min-width:0;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--stroke);
+    background:rgba(255,255,255,.04);color:inherit;font:inherit;font-size:16px}
+  #nameIn:focus-visible,#nameSave:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+  #nameSave{min-height:44px;padding:0 18px;border-radius:12px;border:none;cursor:pointer;font-weight:700;
+    color:#04120f;background:linear-gradient(90deg,var(--green),var(--blue))}
+  #nameMsg{flex-basis:100%;font-size:12px;min-height:16px;color:var(--dim)}
   #signOut{background:transparent;border:1px solid var(--stroke);color:var(--dim)}
   #signOut:hover{color:var(--danger);border-color:rgba(255,93,115,.4)}
   footer{position:fixed;bottom:18px;left:0;right:0;text-align:center;z-index:2;
@@ -246,6 +254,12 @@ body{padding-top:52px!important}
     <img id="meImg" alt="you" referrerpolicy="no-referrer" loading="lazy" decoding="async" width="72" height="72">
     <div class="nm" id="meName"></div>
     <div class="em" id="meMail"></div>
+    <form id="nameForm">
+      <label for="nameIn">Your name on Maatram</label>
+      <input id="nameIn" maxlength="20" autocomplete="nickname" required>
+      <button id="nameSave" type="submit">Save</button>
+      <div id="nameMsg" role="status"></div>
+    </form>
     <div class="act">
       <button id="goApp" onclick="location.href='index.html'">Enter Maatram</button>
       <button id="signOut">Sign out</button>
@@ -271,7 +285,7 @@ async function boot(){
     return;
   }
   const [{initializeApp},
-         {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut},
+         {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut,updateProfile},
          {getFirestore,doc,getDoc,setDoc,serverTimestamp}] = await Promise.all([
     import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(m=>({initializeApp:c=>m.getApps().length?m.getApp():m.initializeApp(c)})),
     import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
@@ -284,8 +298,11 @@ async function boot(){
       try{
         const ref=doc(db,'users',user.uid);
         const snap=await getDoc(ref);
+        /* a name the user picked wins over the Google name on every login */
+        const picked=snap.exists()&&snap.data().name;
+        if(picked&&picked!==user.displayName) await updateProfile(user,{displayName:picked});
         await setDoc(ref,{
-          name:user.displayName||'Student',
+          name:picked||user.displayName||'Student',
           photo:user.photoURL||'',
           points:snap.exists()?(snap.data().points||0):0,
           lastLogin:serverTimestamp()
@@ -293,6 +310,7 @@ async function boot(){
       }catch(e){ console.warn('profile write',e); }
       $('meImg').src=user.photoURL||'';
       $('meName').textContent=user.displayName||'Student';
+      $('nameIn').value=user.displayName||'';
       $('meMail').textContent=user.email||'';
       $('signin').style.display='none';
       $('me').style.display='block';
@@ -317,6 +335,21 @@ async function boot(){
     $('gbtn').disabled=false;
   };
   $('signOut').onclick=()=>signOut(auth);
+  $('nameForm').onsubmit=async e=>{
+    e.preventDefault();
+    const name=$('nameIn').value.replace(/[<>]/g,'').replace(/\s+/g,' ').trim(), msg=$('nameMsg'), user=auth.currentUser;
+    if(!user) return;
+    if(name.length<2){ msg.textContent='Use 2–20 characters.'; return; }
+    $('nameSave').disabled=true; msg.textContent='Saving…';
+    try{
+      await updateProfile(user,{displayName:name});
+      await setDoc(doc(db,'users',user.uid),{name},{merge:true});
+      $('meName').textContent=name; $('nameIn').value=name;
+      const nm=document.getElementById('mnavNm'); if(nm) nm.textContent=name.split(' ')[0];
+      msg.textContent='Saved ✓';
+    }catch(err){ msg.textContent='Could not save: '+(err.code||err.message); }
+    $('nameSave').disabled=false;
+  };
 }
 boot();
 
