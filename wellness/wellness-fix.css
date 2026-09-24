@@ -106,15 +106,107 @@ body::after { right: -13vw; bottom: -16vw; background: rgba(31, 190, 205, .12); 
 
 @media (max-width: 850px) { .habit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .daily-tracker { padding: 18px; }.habit-grid { grid-template-columns: 1fr; }.daily-tracker h3 { font-size: 22px; } }
-/* Minimal Glass skin (chosen via Customize UI, stored in localStorage maatram_theme) */
-html.minimal{--ink:#0B0C0B;--panel:rgba(255,255,255,.055);--line:rgba(255,255,255,.13);--mint:#C9CFC9;--muted:#8A928E;--green:#9CC0B2;--lime:#C9CFC9;--white:#ECEFEE}
-html.minimal body{background:#0B0C0B}
-html.minimal .stars,html.minimal .orb{display:none}
-html.minimal .nav{background:rgba(11,12,11,.85);border-bottom-color:rgba(255,255,255,.11)}
-html.minimal .brand span{background:#9CC0B2;color:#0B0C0B}
-html.minimal .points{border-color:rgba(156,192,178,.35)}
-html.minimal .primary,html.minimal .loader-mark{box-shadow:none}
-html.minimal .primary{color:#0B0C0B}
-html.minimal .primary:hover{background:#B4D1C6}
-html.minimal .hero-card,html.minimal .day-card,html.minimal .plan-side,html.minimal .track-card,html.minimal .achievement,html.minimal .streak-card,html.minimal .modal-inner{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.13);box-shadow:0 18px 40px rgba(0,0,0,.45)}
-html.minimal *{text-shadow:none}
+/* Site fonts: Sora headings + Inter body (neon), Plus Jakarta Sans (minimal) — same as the other feature pages */
+:root{--display:'Sora','Inter',system-ui,sans-serif}
+.intro h1,.question h2,.loading h2,.plan h2,.modal-inner h2,.plan-side h3,.achievement h3,.daily-tracker h3,.streak-card strong{font-family:var(--display);letter-spacing:-.03em}
+.brand{font-family:var(--display)}
+
+/* Minimal Glass skin (Customize UI, localStorage maatram_theme) — same tokens as theme.js minimal */
+html.minimal{--ink:#0B0C0B;--panel:rgba(255,255,255,.055);--line:rgba(255,255,255,.13);--mint:#C9CFC9;--muted:#8A928E;--green:#9CC0B2;--lime:#C9CFC9;--white:#ECEFEE;--sans:"Plus Jakarta Sans","Inter",system-ui,sans-serif;--mono:"Plus Jakarta Sans","Inter",system-ui,sans-serif;--display:"Plus Jakarta Sans","Sora",sans-serif}
+html.minimal body{background:#0B0C0B!important;color:#ECEFEE}
+html.minimal .stars,html.minimal .orb,html.minimal body::before,html.minimal body::after{display:none!important}
+html.minimal .nav{border-bottom:1px solid rgba(255,255,255,.13)!important;background:rgba(255,255,255,.055)!important}
+html.minimal .brand span{background:#9CC0B2!important;color:#0B0C0B!important}
+html.minimal .points{border:1px solid rgba(255,255,255,.18)!important}
+html.minimal .eyebrow,html.minimal .kicker,html.minimal .card-label,html.minimal .wizard-top,html.minimal .wizard-bottom,html.minimal h3,html.minimal .day-top,html.minimal .points-copy{color:#8A928E!important}
+html.minimal .lede{color:#8A928E!important}
+html.minimal .primary{color:#0B0C0B!important;box-shadow:none!important}
+html.minimal .primary:hover{background:#9CC0B2!important}
+html.minimal .micro{color:#8A928E!important}
+html.minimal .orb{border:1px solid rgba(255,255,255,.18)!important;box-shadow:none!important}
+html.minimal .hero-card{background:rgba(255,255,255,.055)!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:none!important}
+html.minimal .hero-meter{border-top:1px solid rgba(255,255,255,.13)!important}
+html.minimal .hero-meter i,html.minimal .achievement>div{background:rgba(255,255,255,.055)!important}
+html.minimal .hero-meter b{background:#9CC0B2!important}
+html.minimal .hero-streak{background:rgba(255,255,255,.055)!important;color:#ECEFEE!important}
+html.minimal .wizard-top,html.minimal .wizard-bottom{border-bottom:1px solid rgba(255,255,255,.13)!important}
+html.minimal .wizard-bottom{border-top:1px solid rgba(255,255,255,.13)!important}
+html.minimal .progress{background:rgba(255,255,255,.055)!important}
+html.minimal .question-copy{color:#8A928E!important}
+html.minimal .input-grid label{color:#8A928E!important}
+html.minimal .input-grid label>div{border:1px solid rgba(255,255,255,.18)!important;background:rgba(255,255,255,.055)!important}
+html.minimal .input-grid span{color:#8A928E!important}
+html.minimal .validation{color:#ECEFEE!important}
+html.minimal .wizard-bottom>span{color:#8A928E!important}
+html.minimal .choice-grid button,html.minimal .choice-list button{background:rgba(255,255,255,.055)!important;border:1px solid rgba(255,255,255,.13)!important}
+html.minimal .choice-grid small,html.minimal .choice-list small{color:#8A928E!important}
+html.minimal .choice-grid button.selected,html.minimal .choice-list button.selected{background:rgba(255,255,255,.055)!important}
+html.minimal .question h3 span{color:#8A928E!important}
+html.minimal .chip-row button{border:1px solid rgba(255,255,255,.18)!important;background:rgba(255,255,255,.055)!important;color:#8A928E!important}
+html.minimal .chip-row button.selected{background:rgba(255,255,255,.055)!important}
+html.minimal .other-input{background:rgba(255,255,255,.055)!important;border:1px solid rgba(255,255,255,.13)!important}
+html.minimal .loader-mark{box-shadow:none!important}
+html.minimal .scan{background:rgba(255,255,255,.055)!important}
+html.minimal .loading>p:last-child{color:#8A928E!important}
+html.minimal .ghost{border:1px solid rgba(255,255,255,.18)!important;color:#ECEFEE!important}
+html.minimal .safety-note{border:1px solid rgba(255,255,255,.13)!important;background:rgba(255,255,255,.055)!important;color:#8A928E!important}
+html.minimal .day-tabs button{border:1px solid rgba(255,255,255,.13)!important;background:rgba(255,255,255,.055)!important;color:#8A928E!important}
+html.minimal .day-tabs button.selected{color:#0B0C0B!important}
+html.minimal .day-card,html.minimal .plan-side,html.minimal .track-card,html.minimal .achievement,html.minimal .streak-card{background:rgba(255,255,255,.055)!important;border:1px solid rgba(255,255,255,.13)!important}
+html.minimal .day-top{border-bottom:1px solid rgba(255,255,255,.13)!important}
+html.minimal .meal-row{border-bottom:1px solid rgba(255,255,255,.13)!important}
+html.minimal .meal-type{color:#8A928E!important}
+html.minimal .meal-row p{color:#8A928E!important}
+html.minimal .swap{border:1px solid rgba(255,255,255,.18)!important}
+html.minimal .hydration{color:#8A928E!important}
+html.minimal .plan-side h3{color:#ECEFEE!important}
+html.minimal .plan-side p:not(.card-label){color:#8A928E!important}
+html.minimal .mission-line{background:rgba(255,255,255,.055)!important}
+html.minimal .private-note{color:#8A928E!important}
+html.minimal .swap-modal{background:rgba(255,255,255,.055)!important}
+html.minimal .modal-inner{background:rgba(255,255,255,.055)!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:none!important}
+html.minimal .modal-close{color:#8A928E!important}
+html.minimal .swap-option{border:1px solid rgba(255,255,255,.13)!important;background:rgba(255,255,255,.055)!important}
+html.minimal .swap-option small{color:#8A928E!important}
+html.minimal .streak-card p{color:#8A928E!important}
+html.minimal .streak-card b{color:#ECEFEE!important}
+html.minimal .streak-card small{color:#8A928E!important}
+html.minimal .track-card button{border:1px solid rgba(255,255,255,.18)!important;background:rgba(255,255,255,.055)!important;color:#ECEFEE!important}
+html.minimal .achievement>p:last-child{color:#8A928E!important}
+html.minimal body::before{background:#9CC0B2!important}
+html.minimal body::after{background:#9CC0B2!important}
+html.minimal .day-card,html.minimal .plan-side,html.minimal .daily-tracker,html.minimal .safety-note,html.minimal .swap-option,html.minimal .modal-inner{background:rgba(255,255,255,.055)!important;border-color:rgba(255,255,255,.3)!important;box-shadow:0 18px 40px rgba(0,0,0,.45)!important}
+html.minimal .daily-tracker{border:1px solid rgba(255,255,255,.3)!important}
+html.minimal .daily-tracker > div > p:last-child{color:#8A928E!important}
+html.minimal .habit-card{border:1px solid rgba(255,255,255,.3)!important;background:rgba(255,255,255,.05)!important}
+html.minimal .habit-card small{color:#8A928E!important}
+html.minimal .habit-card button{border:1px solid rgba(255,255,255,.18)!important;color:#ECEFEE!important;background:rgba(255,255,255,.05)!important}
+html.minimal .habit-card button:disabled{background:rgba(255,255,255,.05)!important}
+html.minimal .reward-status{color:#8A928E!important}
+html.minimal .reward-status.unlocked{color:#ECEFEE!important}
+html.minimal .nav{background:rgba(11,12,11,.7)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom-color:rgba(255,255,255,.1)!important}
+html.minimal .brand span{background:rgba(255,255,255,.09)!important;color:#ECEFEE!important;border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+html.minimal .points{color:#9CC0B2!important;border-color:rgba(156,192,178,.35)!important;background:rgba(156,192,178,.08)}
+html.minimal .hero-card,html.minimal .day-card,html.minimal .plan-side,html.minimal .daily-tracker,html.minimal .safety-note,html.minimal .swap-option,html.minimal .modal-inner,html.minimal .habit-card,html.minimal .track-card,html.minimal .achievement,html.minimal .streak-card{background:rgba(255,255,255,.055)!important;border-color:rgba(255,255,255,.13)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07)!important}
+html.minimal .primary{background:linear-gradient(90deg,#9CC0B2,#7E9C8E)!important;color:#0B0C0B!important}
+html.minimal .primary:hover{background:#B4D1C6!important}
+html.minimal .choice-grid button.selected,html.minimal .choice-list button.selected,html.minimal .chip-row button.selected{background:rgba(156,192,178,.14)!important;border-color:#9CC0B2!important;color:#ECEFEE!important}
+html.minimal .choice-grid button.selected,html.minimal .choice-list button.selected{box-shadow:inset 3px 0 #9CC0B2!important}
+html.minimal .day-tabs button.selected{background:linear-gradient(90deg,#9CC0B2,#7E9C8E)!important;color:#0B0C0B!important;border-color:#9CC0B2!important}
+html.minimal .validation{color:#D98A94!important}
+html.minimal .streak-card strong{color:#ECEFEE!important}
+html.minimal .input-grid input{background:transparent!important;box-shadow:none!important}
+
+/* Top bar: same link style as the shared site nav (#mnav) */
+.intro h1{font-size:clamp(44px,6.2vw,86px)}
+.brand{font:700 15px 'Sora','Inter',system-ui,sans-serif}
+.brand span{background:linear-gradient(135deg,#2fe38f,#37b6ff);color:#04120f;font-weight:800}
+.nav nav{gap:4px;align-items:center}
+.nav a.mn-link{font:700 10.5px 'Sora','Inter',system-ui,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#7da99b;padding:7px 11px;border-radius:100px;transition:all .25s;white-space:nowrap}
+.nav a.mn-link:hover{color:#eafff6;background:rgba(55,182,255,.1)}
+.nav a.mn-link.active{color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff)}
+html.minimal .nav a.mn-link{color:#8A928E!important}
+html.minimal .nav a.mn-link:hover{background:rgba(255,255,255,.07)!important;color:#ECEFEE!important}
+html.minimal .nav a.mn-link.active{background:linear-gradient(90deg,#9CC0B2,#7E9C8E)!important;color:#0B0C0B!important}
+.points{white-space:nowrap}
+html.minimal .swap-modal{background:rgba(0,0,0,.7)!important}
