@@ -31,7 +31,7 @@
 </head>
 <body>
   <div class="stars"></div>
- <header class="nav"><button class="brand" id="homeOpen" aria-label="Return to Wellness home"><span>M</span> MAATRAM</button><nav aria-label="Main navigation"><a class="mn-link" href="/">Home</a><a class="mn-link" href="../timers.html">Timers</a><a class="mn-link" href="../app-gate.html">App Gate</a><a class="mn-link" href="../study-room.html">Study Room</a><a class="mn-link" href="../stats.html">Stats</a><a class="mn-link" href="../leaderboard.html">Leaderboard</a><a class="mn-link active" href="wellness.html">Wellness</a><a class="mn-link" href="../sports.html">Sports</a><a class="mn-link" href="../socials.html">Socials</a><a class="mn-link" href="../download.html">Get the app</a><a class="mn-link" href="../login.html">Account</a></nav><div class="points">✦ <span id="points">430</span> PTS</div></header>
+ <header class="nav"><button class="brand" id="homeOpen" aria-label="Return to Wellness home"><span>M</span> MAATRAM</button><nav aria-label="Main navigation"><a class="mn-link" href="/">Home</a><a class="mn-link" href="../timers.html">Timers</a><a class="mn-link" href="../app-gate.html">App Gate</a><a class="mn-link" href="../study-room.html">Study Room</a><a class="mn-link" href="../stats.html">Stats</a><a class="mn-link" href="../leaderboard.html">Leaderboard</a><a class="mn-link active" href="wellness.html">Wellness</a><a class="mn-link" href="../sports.html">Sports</a><a class="mn-link" href="../socials.html">Socials</a><a class="mn-link" href="../download.html">Get the app</a><a class="mn-link" href="../login.html">Account</a></nav></header>
     <section class="screen active intro" id="intro">
       <p class="eyebrow">WELLNESS · FOCUS FUEL</p>
       <div class="orb orb-one"></div><div class="orb orb-two"></div>
@@ -53,11 +53,65 @@
 
     <section class="screen loading" id="loading"><div class="loader-mark">M</div><p class="eyebrow">BUILDING YOUR ROUTINE</p><h2>Finding practical<br><em>focus fuel.</em></h2><div class="scan"><i></i></div><p id="loadingLine">Checking your preferences...</p></section>
 
-    <section class="screen plan" id="plan"><div class="plan-head"><div><p class="eyebrow">YOUR 7-DAY PLAN</p><h2>Built for your <em>rhythm.</em></h2><p id="planSummary" class="question-copy"></p></div><div class="plan-actions"><button class="ghost" id="editPlan">EDIT PROFILE</button></div></div><div class="safety-note" id="safetyNote"></div><div class="day-tabs" id="dayTabs"></div><div class="meal-layout"><article class="day-card"><div class="day-top"><span id="dayTitle">DAY 1</span><span class="goal-tag" id="goalTag"></span></div><div id="mealList"></div><p class="hydration">💧 <b>HYDRATION</b> &nbsp; Keep a bottle nearby. Small sips, all day.</p></article><aside class="plan-side"><p class="card-label">THIS WEEK'S MISSION</p><h3 id="missionTitle">Build your rhythm.</h3><p id="missionCopy"></p><div class="mission-line"></div><p class="points-copy">DAILY ROUTINE REWARD <b>+50 PTS</b></p><p>Finish meals, hydration, activity and sleep to unlock it.</p></aside></div><section class="daily-tracker" aria-labelledby="dailyTrackerTitle"><div><p class="eyebrow">TODAY'S CONSISTENCY</p><h3 id="dailyTrackerTitle">Complete your whole <em>routine.</em></h3><p>Points reward healthy consistency—not body size or food restriction.</p></div><div class="habit-grid"><article class="habit-card"><span>🥗</span><div><b>MEALS</b><small>All planned meals checked</small></div><strong id="mealsProgress">0 / 1</strong><button data-habit="meals">MARK COMPLETE</button></article><article class="habit-card"><span>💧</span><div><b>HYDRATION</b><small>Water glasses today</small></div><strong id="hydrationProgress">0 / 8</strong><button data-habit="hydration">+ 1 GLASS</button></article><article class="habit-card"><span>🏃</span><div><b>ACTIVITY</b><small>Moved your body</small></div><strong id="activityProgress">0 / 1</strong><button data-habit="activity">MARK COMPLETE</button></article><article class="habit-card"><span>😴</span><div><b>SLEEP</b><small>Rest and recovery</small></div><strong id="sleepProgress">0 / 1</strong><button data-habit="sleep">MARK COMPLETE</button></article></div><p class="reward-status" id="rewardStatus">Complete all four checks to unlock today’s <b>+50 PTS</b>.</p></section><p class="private-note">🔒 Your wellness details and meal plan are private. They never appear on leaderboards.</p></section>
+    <section class="screen plan" id="plan"><div class="plan-head"><div><p class="eyebrow">YOUR 7-DAY PLAN</p><h2>Built for your <em>rhythm.</em></h2><p id="planSummary" class="question-copy"></p></div><div class="plan-actions"><button class="ghost" id="editPlan">EDIT PROFILE</button></div></div><div class="safety-note" id="safetyNote"></div><div class="day-tabs" id="dayTabs"></div><div class="meal-layout"><article class="day-card"><div class="day-top"><span id="dayTitle">DAY 1</span><span class="goal-tag" id="goalTag"></span></div><div id="mealList"></div><p class="hydration">💧 <b>HYDRATION</b> &nbsp; Keep a bottle nearby. Small sips, all day.</p></article><aside class="plan-side"><p class="card-label">THIS WEEK'S MISSION</p><h3 id="missionTitle">Build your rhythm.</h3><p id="missionCopy"></p><div class="mission-line"></div><p class="points-copy">DAILY ROUTINE REWARD <b>UP TO +100 PTS</b></p><p>Each of meals, hydration, activity and sleep you finish adds +25 PTS to your leaderboard score.</p></aside></div><section class="daily-tracker" aria-labelledby="dailyTrackerTitle"><div><p class="eyebrow">TODAY'S CONSISTENCY</p><h3 id="dailyTrackerTitle">Complete your whole <em>routine.</em></h3><p>Points reward healthy consistency—not body size or food restriction.</p></div><div class="habit-grid"><article class="habit-card"><span>🥗</span><div><b>MEALS</b><small>All planned meals checked</small></div><strong id="mealsProgress">0 / 1</strong><button data-habit="meals">MARK COMPLETE</button></article><article class="habit-card"><span>💧</span><div><b>HYDRATION</b><small>Water glasses today</small></div><strong id="hydrationProgress">0 / 8</strong><button data-habit="hydration">+ 1 GLASS</button></article><article class="habit-card"><span>🏃</span><div><b>ACTIVITY</b><small>Moved your body</small></div><strong id="activityProgress">0 / 1</strong><button data-habit="activity">MARK COMPLETE</button></article><article class="habit-card"><span>😴</span><div><b>SLEEP</b><small>Rest and recovery</small></div><strong id="sleepProgress">0 / 1</strong><button data-habit="sleep">MARK COMPLETE</button></article></div><p class="reward-status" id="rewardStatus" aria-live="polite">Complete a check to earn <b>+25 PTS</b> — up to <b>+100 PTS</b> today.</p></section><p class="private-note">🔒 Your wellness details and meal plan are private. They never appear on leaderboards.</p></section>
 
     <section class="screen journey" id="journey"><div class="plan-head"><div><p class="eyebrow">YOUR WELLNESS JOURNEY</p><h2>Consistency is the <em>win.</em></h2><p class="question-copy">Small check-ins count. No body scores. No public comparison.</p></div><button class="ghost" id="backPlan">← BACK TO PLAN</button></div><div class="journey-grid"><article class="streak-card"><span>🔥</span><p>WELLNESS STREAK</p><strong id="streakValue">5</strong><b>DAYS IN A ROW</b><small>Two more days to unlock the 7-day badge.</small></article><article class="track-card" data-track="meals"><span>🥗</span><div><b>MEALS</b><small>Checked in today</small></div><strong>0 / 3</strong><button>CHECK IN</button></article><article class="track-card" data-track="hydration"><span>💧</span><div><b>HYDRATION</b><small>Glasses logged</small></div><strong>3 / 8</strong><button>+ 1 GLASS</button></article><article class="track-card" data-track="activity"><span>🏃</span><div><b>ACTIVITY</b><small>Moved your body</small></div><strong>0 / 1</strong><button>CHECK IN</button></article><article class="track-card" data-track="sleep"><span>😴</span><div><b>SLEEP</b><small>Rested well</small></div><strong>0 / 1</strong><button>CHECK IN</button></article></div><div class="achievement"><p class="eyebrow">NEXT ACHIEVEMENT</p><h3>First Wellness Plan <span>+50 PTS</span></h3><div><i></i></div><p>Generate your first plan to add this private achievement to your MAATRAM profile.</p></div></section>
   </main>
   <div class="swap-modal" id="swapModal" aria-hidden="true"><div class="modal-inner"><button class="modal-close" id="closeSwap">×</button><p class="eyebrow">SWAP THIS MEAL</p><h2>Keep the <em>rhythm.</em></h2><p class="question-copy">Alternatives still match your plan.</p><div id="swapOptions"></div></div></div>
+  <script src="../firebase-config.js"></script>
+  <script type="module">
+  /* Site-wide points engine (same as every other page): queues per signed-in
+     account in maatram_pend_<uid> and writes users/{uid}.points, paced to
+     match firestore.rules. Announces the account to wellness.js. */
+  const say=uid=>dispatchEvent(new CustomEvent('maatram:user',{detail:uid}));
+  if(location.protocol==='http:'||location.protocol==='https:'){try{
+    const [{initializeApp,getApps,getApp},{getAuth,onAuthStateChanged},{getFirestore,doc,runTransaction,serverTimestamp}]=await Promise.all([
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')]);
+    const app=getApps().length?getApp():initializeApp(window.MAATRAM_FB),auth=getAuth(app),db=getFirestore(app);
+    let user=null;
+    window.maatramAward=function(pts,reason){
+      pts=Math.round(pts); if(!pts) return;
+      try{ localStorage.setItem('maatram_points',Math.max(0,(+localStorage.getItem('maatram_points')||0)+pts)); }catch(_){}
+      try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
+      toast(pts,reason);
+      if(user){ const K='maatram_pend_'+user.uid; try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){} flush(); }
+    };
+    async function flush(){
+      if(!user) return;
+      const uid=user.uid,K='maatram_pend_'+uid,pend=()=>+localStorage.getItem(K)||0;
+      const run=async()=>{
+        const p=pend(); if(!p) return 0;
+        const res=await runTransaction(db,async t=>{
+          const r=doc(db,'users',uid),s=await t.get(r),d=s.exists()?s.data():{},cur=d.points||0;
+          if(p<0){ const nx=Math.max(0,cur-100,cur+p); t.set(r,{points:nx},{merge:true}); return {used:nx===0?p:nx-cur,wait:0}; }
+          const since=(Date.now()-(d.awardAt?d.awardAt.toMillis():0))/1000-3,want=Math.min(100,p,3000-cur);
+          if(want<=0) return {used:p,wait:0};
+          if(Math.floor(since/6)<want) return {used:0,wait:Math.ceil(want*6-since)};
+          t.set(r,{points:cur+want,awardAt:serverTimestamp()},{merge:true}); return {used:want,wait:0};
+        });
+        localStorage.setItem(K,String(pend()-res.used));
+        return res.wait||(pend()?1:0);
+      };
+      let wait=0;
+      const locked=()=>navigator.locks?navigator.locks.request('maatram_pts',run):run();
+      try{ wait=await (flush.q=(flush.q||Promise.resolve()).catch(()=>{}).then(locked)); }
+      catch(e){ console.warn('points write',e); wait=60; }
+      clearTimeout(flush.t); if(wait) flush.t=setTimeout(flush,wait*1000);
+    }
+    function toast(pts,reason){
+      const t=document.createElement('div');
+      t.textContent=(pts>0?'+':'')+pts+' PTS'+(reason?' · '+reason:'');
+      t.style.cssText='position:fixed;top:64px;right:16px;z-index:900;font-family:Sora,Inter,sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;padding:11px 20px;border-radius:100px;backdrop-filter:blur(10px);transition:all .5s cubic-bezier(.2,1.3,.3,1);opacity:0;transform:translateY(-14px);color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff);box-shadow:0 8px 30px -8px rgba(47,227,143,.7);';
+      document.body.appendChild(t);
+      requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='none';});
+      setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(-14px)';},2600);
+      setTimeout(()=>t.remove(),3200);
+    }
+    onAuthStateChanged(auth,u=>{ user=u; if(u) flush(); say(u?u.uid:null); });
+  }catch(e){ console.warn('wellness auth',e); }}
+  </script>
   <script src="wellness.js"></script>
   <script defer src="/speed-insights.js"></script>
 </body>

@@ -35,7 +35,7 @@ const swapMeals={
 const commonSwapMeta={diets:['vegetarian','eggs','nonveg','vegan','any'],allergens:[],goals:['gain','muscle','fitness','balanced','habits','manage']};
 const mealSwapOptions=(type,currentId)=>[...meals.filter(m=>m.type===type),...(swapMeals[type]||[]).map(([id,name,desc])=>({id,type,name,desc,...commonSwapMeta}))].filter(m=>m.id!==currentId&&m.diets.includes(profile.diet)&&!m.allergens.some(a=>profile.avoid.includes(a))).slice(0,5);
 const goalCopy={gain:['Nourish your momentum.','Energy-rich meals with regular snacks help you keep up with school, sport and life.'],muscle:['Fuel. Move. Recover.','Protein-containing meals, carbohydrates and rest work together.'],fitness:['Move with steady energy.','Balanced meals designed to support everyday activity.'],balanced:['A better plate rhythm.','Simple, familiar meals that help make balance repeatable.'],habits:['Keep it easy to repeat.','A reliable rhythm beats a perfect day.'],manage:['Feel steady and satisfied.','Balanced meals and consistent routines—never skipping meals.']};
-let day=0,plan=[],currentSwap=null,points=430,streak=5;
+let day=0,plan=[],currentSwap=null,streak=5;
 
 const savedProfile=localStorage.getItem('maatramWellnessProfile');
 const savedPlan=localStorage.getItem('maatramWellnessPlan');
@@ -47,7 +47,6 @@ if(savedProfile){
 if(savedPlan){
   plan=JSON.parse(savedPlan);
 }
-const wellnessTrack={meals:0,hydration:0,activity:0,sleep:0,rewarded:false};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function show(id){$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');$$('.nav-action').forEach(x=>x.classList.toggle('active',x.dataset.screen===id));window.scrollTo({top:0,behavior:'smooth'});}
 function eligible(type){let list=meals.filter(m=>m.type===type&&m.diets.includes(profile.diet)&&m.goals.includes(profile.goal)&&!m.allergens.some(a=>profile.avoid.includes(a)));if(!list.length)list=meals.filter(m=>m.type===type&&m.diets.includes(profile.diet)&&!m.allergens.some(a=>profile.avoid.includes(a)));return list;}
@@ -64,8 +63,30 @@ $('#dayTabs').onclick=e=>{if(e.target.dataset.day!==undefined){day=+e.target.dat
 $('#mealList').onclick=e=>{if(e.target.dataset.meal===undefined)return;currentSwap=+e.target.dataset.meal;const meal=plan[day][currentSwap];const options=mealSwapOptions(meal.type,meal.id);$('#swapOptions').innerHTML=options.map(x=>`<button class="swap-option" data-id="${x.id}"><b>${x.name}</b><small>${x.desc}</small></button>`).join('');$('#swapModal').classList.add('open');$('#swapModal').setAttribute('aria-hidden','false')};
 $('#swapOptions').onclick=e=>{const button=e.target.closest('[data-id]');if(!button)return;const replacement=[...meals,...Object.entries(swapMeals).flatMap(([type,items])=>items.map(([id,name,desc])=>({id,type,name,desc,...commonSwapMeta})))].find(m=>m.id===button.dataset.id);plan[day][currentSwap]=replacement;$('#closeSwap').click();renderPlan()};$('#closeSwap').onclick=()=>{$('#swapModal').classList.remove('open');$('#swapModal').setAttribute('aria-hidden','true')};
 $('#editPlan').onclick=()=>show('details');$('#backPlan').onclick=()=>show('plan');
-function updateDailyReward(){const targets={meals:1,hydration:8,activity:1,sleep:1};Object.entries(targets).forEach(([habit,max])=>{$('#'+habit+'Progress').textContent=`${wellnessTrack[habit]} / ${max}`;const button=$(`[data-habit="${habit}"]`);if(wellnessTrack[habit]===max){button.textContent='COMPLETE ✓';button.disabled=true;}});const allDone=Object.entries(targets).every(([habit,max])=>wellnessTrack[habit]===max);if(allDone&&!wellnessTrack.rewarded){wellnessTrack.rewarded=true;points+=50;$('#points').textContent=points;$('#rewardStatus').innerHTML='✨ Whole routine complete. <b>+50 PTS added.</b> Keep building the streak.';$('#rewardStatus').classList.add('unlocked');}}
-$$('.habit-card button').forEach(button=>button.onclick=()=>{const habit=button.dataset.habit;const max=habit==='hydration'?8:1;if(wellnessTrack[habit]<max)wellnessTrack[habit]++;updateDailyReward();});
+/* Wellness points: +25 per finished check, max +100 a day. Progress and the
+   amount already paid live per account per day in localStorage, so refresh or
+   reopen never pays twice. Payment goes through the site-wide maatramAward
+   queue into users/{uid}.points (the existing leaderboard score).
+   ponytail: device-local record, move to Firestore if rules ever allow a private wellness doc. */
+const WL_TARGETS={meals:1,hydration:8,activity:1,sleep:1};
+const wlKey=uid=>'maatram_wellness_'+(uid||'guest')+'_'+new Date().toLocaleDateString('en-CA');
+const wlLoad=uid=>{try{return JSON.parse(localStorage.getItem(wlKey(uid)))||{}}catch(_){return{}}};
+const wlFresh=s=>Object.assign({meals:0,hydration:0,activity:0,sleep:0,paid:0},s);
+let wlUid=null,wellnessTrack=wlFresh(wlLoad(null));
+const wlSave=()=>{try{localStorage.setItem(wlKey(wlUid),JSON.stringify(wellnessTrack))}catch(_){}};
+function updateDailyReward(){
+  Object.entries(WL_TARGETS).forEach(([habit,max])=>{const n=Math.min(wellnessTrack[habit],max),button=$(`[data-habit="${habit}"]`);$('#'+habit+'Progress').textContent=`${n} / ${max}`;button.disabled=n>=max;if(n>=max)button.textContent='COMPLETE ✓';button.closest('.habit-card').classList.toggle('done',n>=max);});
+  const done=Object.entries(WL_TARGETS).filter(([h,max])=>wellnessTrack[h]>=max).length,earned=done*25,owed=earned-wellnessTrack.paid,status=$('#rewardStatus');
+  if(wlUid&&owed>0&&window.maatramAward){wellnessTrack.paid=earned;wlSave();window.maatramAward(owed,`Wellness ${done}/4`);status.classList.remove('bump');void status.offsetWidth;status.classList.add('bump');}
+  status.classList.toggle('unlocked',done===4);
+  status.innerHTML=!wlUid?`<b>${done} of 4</b> done today. <a href="../login.html">Sign in</a> to earn <b>+25 PTS</b> per check on the leaderboard.`
+    :done===4?'✨ Whole routine complete. <b>+100 PTS</b> added to your score today.'
+    :done?`<b>${done} of 4</b> done · <b>+${earned} PTS</b> earned today. Next check adds <b>+25</b>.`
+    :'Complete a check to earn <b>+25 PTS</b> — up to <b>+100 PTS</b> today.';
+}
+$$('.habit-card button').forEach(button=>button.onclick=()=>{const habit=button.dataset.habit;if(wellnessTrack[habit]<WL_TARGETS[habit]){wellnessTrack[habit]++;wlSave();}updateDailyReward();});
+addEventListener('maatram:user',e=>{const uid=e.detail;if(uid===wlUid)return;let s=wlLoad(uid);if(uid){const g=wlLoad(null);for(const h in WL_TARGETS)s[h]=Math.max(s[h]||0,g[h]||0);try{localStorage.removeItem(wlKey(null))}catch(_){}}wlUid=uid;wellnessTrack=wlFresh(s);wlSave();updateDailyReward();});
+updateDailyReward();
 $$('.track-card button').forEach(b=>b.onclick=()=>{const card=b.closest('.track-card'),strong=card.querySelector('strong');let [n,max]=strong.textContent.split('/').map(x=>+x.trim());if(n<max)n++;strong.textContent=`${n} / ${max}`;if(n===max){b.textContent='COMPLETE ✓';b.disabled=true;}});
 /* Fragment links scroll without changing this single-feature state; buttons keep navigation clean. */
 $('#homeOpen').onclick=()=>show('intro');
