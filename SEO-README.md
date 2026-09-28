@@ -14,7 +14,7 @@ economy, Performance mode and the theme switcher are untouched.
 | Noindex | **critical** | `index, follow, max-image-preview:large` on every page + `X-Robots-Tag` header in `vercel.json` (only `login.html` is intentionally `noindex`) |
 | Canonical | missing | absolute self-canonical on every page |
 | Open Graph | missing | full OG set + real 1200×630 `og-image.png` |
-| Twitter card | missing | `summary_large_image` + `@Maatram_360` |
+| Twitter card | missing | `summary_large_image` + `@maatram_97` |
 | Schema | missing | JSON-LD `@graph`: Organization, WebSite, WebApplication/SoftwareApplication, WebPage, BreadcrumbList, FAQPage (home) |
 | Sitemap | missing | `sitemap.xml`, 7 URLs, image entry, login excluded |
 | robots.txt | missing | `Allow: /` + sitemap line + crawl-delay for scraper bots |
@@ -117,7 +117,7 @@ stats.html  leaderboard.html  socials.html  login.html  theme.js
 | Tall footer repainted on every frame | `content-visibility:auto` + `contain-intrinsic-size` |
 | `favicon.ico` was 32 KB | rebuilt at 16/32/48 only — **5.4 KB** |
 | No language targeting | self-referencing `hreflang="en"` + `x-default` |
-| Owned social profiles unlinked as identity | `rel="me"` on Instagram, X, LinkedIn, GitHub, Discord |
+| Owned social profiles unlinked as identity | `rel="me"` on Instagram, X, LinkedIn, GitHub |
 | `theme.src.js`, `SEO-README.md`, `firestore.rules` were crawlable | `Disallow`d in `robots.txt` |
 | No visible focus ring | `:focus-visible` outline in brand green |
 

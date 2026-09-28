@@ -55,10 +55,17 @@ ok('file://: page untouched (dev/offline)',
 
 let d2=run('http://localhost/timers.html');
 ok('http: veil style injected', !!d2.window.document.getElementById('maatramGateCSS'));
-ok('http: html.mgate set synchronously', d2.window.document.documentElement.classList.contains('mgate'));
-ok('http: veil element shown', !!d2.window.document.getElementById('mgate'));
-ok('http: page content hidden by CSS rule',
+ok('http: page paints at once (no html.mgate while checking)', !d2.window.document.documentElement.classList.contains('mgate'));
+ok('http: no "checking" veil for ordinary visitors', !d2.window.document.getElementById('mgate'));
+ok('http: ban veil CSS still hides the page when set',
    /html\.mgate body>\*\{visibility:hidden!important\}/.test(d2.window.document.getElementById('maatramGateCSS').textContent));
+ok('ban still veils the page', /classList\.add\('mgate'\);\s*veil\('This account is suspended/.test(G));
+ok('kickAt compared with this sign-in, not a per-browser marker',
+   /metadata\.lastSignInTime/.test(G) && !/maatram_kick_seen/.test(G));
+ok('guest bar clears the perf button on phones', /@media\(max-width:640px\)\{#mguest\{[^}]*bottom:60px/.test(G));
+ok('guest bar has a labelled dismiss, remembered for the session',
+   /aria-label','Dismiss the sign-in bar'/.test(G) && /sessionStorage\.setItem\('maatram_guest_x','1'\)/.test(G)
+   && /sessionStorage\.getItem\('maatram_guest_x'\)==='1'/.test(G));
 
 setTimeout(()=>{
   ok('http: reveals when Firebase cannot load (offline)',

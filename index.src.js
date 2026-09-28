@@ -219,7 +219,7 @@ addEventListener('resize',fitAll);
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
     ]);
-    const app=getApps().length?getApp():initializeApp({apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",authDomain:"maatram-859f4.firebaseapp.com",projectId:"maatram-859f4",storageBucket:"maatram-859f4.firebasestorage.app",messagingSenderId:"770970784123",appId:"1:770970784123:web:7c73c74ddb2179b69dedde"});
+    const app=getApps().length?getApp():initializeApp(window.MAATRAM_FB||{apiKey:"AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ",authDomain:"maatram-859f4.firebaseapp.com",projectId:"maatram-859f4",storageBucket:"maatram-859f4.firebasestorage.app",messagingSenderId:"770970784123",appId:"1:770970784123:web:7c73c74ddb2179b69dedde"});
     const auth=getAuth(app);
     /* Firestore is only ever touched once somebody is signed in, so it loads on
        demand instead of up front. Signed-out visitors — and page-speed tests —
@@ -319,7 +319,9 @@ addEventListener('resize',fitAll);
   }
   paint(!!window.MAATRAM_PERF);
   btn.addEventListener('click',function(){
-    var on=!(localStorage.getItem(KEY)==='1');
+    var cur=false;
+    try{cur=localStorage.getItem(KEY)==='1';}catch(_){}
+    var on=!cur;
     try{localStorage.setItem(KEY,on?'1':'0');}catch(_){}
     /* reload so canvases rebuild at the new detail level — clean + reliable */
     location.reload();

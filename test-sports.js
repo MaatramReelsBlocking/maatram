@@ -88,6 +88,7 @@ ok('roll archives to m_<cycle>', /patch\['m_'\+d\.cycle\] = pts/.test(gate));
 ok('roll zeroes points', /patch\.points\s*=\s*0/.test(gate));
 ok('roll accumulates lifetime', /patch\.lifetime = life\+pts/.test(gate));
 ok('first run adopts instead of wiping', /first ever run: adopt/.test(gate));
+ok('first run never copies points into lifetime', !/patch\.lifetime = life>pts/.test(gate) && /if\(d\.lifetime===undefined\) patch\.lifetime = 0;/.test(gate));
 ok('roll skipped when cycle current', /if\(d\.cycle===now\) return;/.test(gate));
 ok('roll never blocks the page', /catch\(e\)\{ \}\s*\/\* never block/.test(gate));
 ok('no cron / no server key in gate', !/firebase-admin|serviceAccount/i.test(gate));
@@ -98,7 +99,7 @@ ok('no cron / no server key in gate', !/firebase-admin|serviceAccount/i.test(gat
   function rollCalc(d, now) {
     if (d.cycle === now) return null;
     const pts = d.points || 0, life = d.lifetime || 0, patch = { cycle: now };
-    if (!d.cycle) { patch.lifetime = life > pts ? life : pts; }
+    if (!d.cycle) { if (d.lifetime === undefined) patch.lifetime = 0; }
     else { patch.lifetime = life + pts; patch.points = 0; patch['m_' + d.cycle] = pts; }
     return patch;
   }
@@ -110,8 +111,18 @@ ok('no cron / no server key in gate', !/firebase-admin|serviceAccount/i.test(gat
 
   const first = rollCalc({ points: 120 }, '2026-08');
   ok('migration keeps points', first.points === undefined);
-  ok('migration seeds lifetime', first.lifetime === 120);
+  ok('migration leaves lifetime at archived months only (0)', first.lifetime === 0);
   ok('migration sets cycle', first.cycle === '2026-08');
+  const firstL = rollCalc({ points: 120, lifetime: 40 }, '2026-08');
+  ok('migration never rewrites an existing lifetime', !('lifetime' in firstL));
+
+  /* all time = lifetime + points must not change across first run + a month roll */
+  const allTime = d => (d.lifetime || 0) + (d.points || 0);
+  let u = { points: 120, lifetime: 40 }; const before = allTime(u);
+  u = { ...u, ...rollCalc(u, '2026-09') };
+  ok('first run: all-time total unchanged (no double count)', allTime(u) === before);
+  u = { ...u, ...rollCalc(u, '2026-10') };
+  ok('next roll: all-time total still unchanged', allTime(u) === before && u.points === 0 && u['m_2026-09'] === 120);
 
   const rolled = rollCalc({ cycle: '2026-07', points: 90, lifetime: 300 }, '2026-08');
   ok('new month zeroes points', rolled.points === 0);
@@ -131,9 +142,37 @@ ok('cycleNote exists', !!L.getElementById('cycleNote'));
 ok('tablist role', !!L.querySelector('.tabs[role="tablist"]'));
 ok('month tab selected by default', L.getElementById('tabMonth').getAttribute('aria-selected') === 'true');
 ok('tabs are 44px+ targets', /\.tabs button\{min-height:44px/.test(lb));
-ok('one read feeds both boards', (lb.match(/onSnapshot\(query\(collection\(db,'users'\)/g) || []).length === 1);
+ok('boards read with single-field orders (no composite index)',
+   /orderBy\(field,'desc'\),limit\(100\)/.test(lb) && /listen\('points',byPoints\)/.test(lb) && /listen\('lifetime',byLife\)/.test(lb)
+   && !/where\(/.test(lb));
 ok('all time = lifetime + this month', /lifetime\|\|0\)\+\(v\.points\|\|0\)/.test(lb));
-ok('month board is raw points', /cloudUsers\.push\(\{\.\.\.base,points:v\.points\|\|0\}\)/.test(lb));
+ok('month board counts points only for the current cycle', /points:v\.cycle===cur\?\(v\.points\|\|0\):0/.test(lb));
+/* behavioural: lift rebuild() out of the page and feed it docs */
+(function () {
+  const m = lb.match(/function rebuild\(\)\{[\s\S]*?\n    \}/);
+  ok('rebuild() found', !!m);
+  if (!m) return;
+  const run = new Function('cycleId', 'competes', 'byPoints', 'byLife', m[0] +
+    '; let cloudUsers=[],cloudLife=[]; function render(){}; rebuild(); return {cloudUsers,cloudLife};');
+  const cid = () => '2026-10';
+  const comp = v => !!v && v.banned !== true;
+  const bp = new Map([['a', { name: 'A', points: 300, cycle: '2026-09', lifetime: 500 }],   // not back since the 1st
+                      ['b', { name: 'B', points: 40, cycle: '2026-10', lifetime: 100 }],
+                      ['x', { name: 'X', points: 999, cycle: '2026-10', banned: true }]]);
+  const bl = new Map([['c', { name: 'C', points: 0, cycle: '2026-10', lifetime: 900 }], ['a', bp.get('a')]]);
+  const r = run(cid, comp, bp, bl);
+  const mon = Object.fromEntries(r.cloudUsers.map(u => [u.id, u.points]));
+  const life = Object.fromEntries(r.cloudLife.map(u => [u.id, u.points]));
+  ok('stale month points count 0 on the monthly board', mon.a === 0 && mon.b === 40 && r.cloudUsers[0].id === 'b');
+  ok('stale points still count once on all time', life.a === 800 && life.b === 140 && life.c === 900);
+  ok('union of both reads, banned dropped', !('x' in life) && Object.keys(life).length === 3);
+})();
+ok('only Google photo URLs render', /PHOTO_RE=\/\^https:\\\/\\\/\[a-z0-9\.-\]\+\\\.googleusercontent\\\.com\\\//.test(lb)
+   && (lb.match(/photoOk\(u\.photo\)\?/g) || []).length === 2);
+ok('board listens only while signed in', /unsubs\.forEach\(f=>f\(\)\)/.test(lb) && /Sign in to view/.test(lb));
+ok('signed-out empty state links to login', /<a href="login\.html">Sign in<\/a> to see who is on top/.test(lb));
+ok('rows animate once, live updates keep them visible', /const shown=new Set\(\)/.test(lb) && /if\(seen\('r'\+u\.id\)\) r\.classList\.add\('in'\)/.test(lb));
+ok('dead leaderboard code removed', !/fbUser|fbApi|updateDoc|increment|maatramAddPoints|mePill|signInLink/.test(lb));
 ok('both boards sorted client-side', /cloudUsers\.sort\(/.test(lb) && /cloudLife\s*\.sort\(/.test(lb));
 ok('render picks source by tab', /TAB==='month'\?cloudUsers:cloudLife/.test(lb));
 ok('setTab wired to buttons', /\$\('tabLife'\)\.onclick=\(\)=>setTab\('life'\)/.test(lb));
@@ -150,10 +189,32 @@ ok('event title length capped', /title\.size\(\) <= 80/.test(rules));
 ok('reset branch allows zeroing', /neu\(\)\.points == 0/.test(rules));
 ok('reset branch requires a cycle change', /neu\(\)\.cycle != old\(\)\.get\('cycle', ?''\)/.test(rules));
 ok('normal caps still enforced', /old\(\)\.get\('points', ?0\) \+ 100/.test(rules));
+ok('normal play cannot touch cycle or lifetime', /!touched\(\['lifetime', 'cycle'\]\)/.test(rules));
+ok('a cycle is always YYYY-MM', /cycleOk\(v\) \{ return v is string && v\.matches\('\^\[0-9\]\{4\}-\[0-9\]\{2\}\$'\)/.test(rules)
+   && (rules.match(/cycleOk\(neu\(\)\.cycle\)/g) || []).length === 3);
+ok('first-ever roll only stamps the cycle', /changed\(\)\.hasOnly\(\['cycle', 'lifetime'\]\)[\s\S]{0,200}neu\(\)\.get\('lifetime', 0\) == old\(\)\.get\('lifetime', 0\)/.test(rules));
+ok('archived month must equal the old points', /neu\(\)\.get\('m_' \+ old\(\)\.get\('cycle', 'x'\), -1\) == old\(\)\.get\('points', 0\)/.test(rules));
+ok('photo pinned to Google avatars', /googleusercontent/.test(rules) && /v\.size\(\) <= 500/.test(rules));
+ok('lastLogin must be a timestamp', (rules.match(/neu\(\)\.lastLogin is timestamp/g) || []).length === 2);
+/* events: the allowlist must be exactly what sports.html writes */
+(function () {
+  const m = rules.match(/match \/events\/\{id\}[\s\S]*?keys\(\)\.hasOnly\(\[([^\]]*)\]\)/);
+  ok('events have a key allowlist', !!m);
+  const allowed = m ? m[1].split(',').map(x => x.trim().replace(/'/g, '')).sort() : [];
+  const ev = (sports.match(/const ev=\{([\s\S]*?)\};/) || [, ''])[1];
+  const written = [...ev.matchAll(/(\w+):\$\(/g)].map(x => x[1]);
+  (sports.match(/ev\.by=me\.uid; ev\.createdAt=Date\.now\(\);/) ? ['by', 'createdAt'] : []).forEach(k => written.push(k));
+  ok('event allowlist == keys the page writes', JSON.stringify(allowed) === JSON.stringify(written.sort()));
+  ok('byName no longer written', !/byName/.test(sports) && !/byName/.test(rules));
+})();
+ok('event date must be YYYY-MM-DD', /date\.matches\('\^\[0-9\]\{4\}-\[0-9\]\{2\}-\[0-9\]\{2\}\$'\)/.test(rules));
+ok('page validates the same date shape', /if\(!\/\^\\d\{4\}-\\d\{2\}-\\d\{2\}\$\/\.test\(ev\.date\)\)/.test(sports));
+ok('events read skips old listings', /F\.where\('date','>=',isoDay\(from\)\),F\.orderBy\('date'\),F\.limit\(200\)/.test(sports)
+   && /from\.setDate\(from\.getDate\(\)-60\)/.test(sports));
 
 /* ── 11. flat delivery (he uploads to the repo root) ── */
 const files = fs.readdirSync(__dirname).filter(f => f !== 'node_modules' && f !== 'package.json' && f !== 'package-lock.json');
-ok('no subfolders in package', files.every(f => ['wellness','docs'].includes(f) || f.startsWith('.') || !fs.statSync(path.join(__dirname, f)).isDirectory()));
+ok('no unexpected subfolders in package', files.every(f => ['wellness','docs','chrome-extension'].includes(f) || f.startsWith('.') || !fs.statSync(path.join(__dirname, f)).isDirectory()));
 
 /* ── 12. coach's corner ── */
 ok('coach section exists', !!D.getElementById('coach'));
@@ -182,13 +243,17 @@ ok('notes are inserted as text, not HTML', /li\.textContent=t/.test(sports));
 ok('competes() helper exists', /function competes\(v\)/.test(lb));
 ok('board read filters banned', /if\(!competes\(v\)\)return;[\s\S]{0,200}cloudUsers\.push/.test(lb));
 ok('same filter covers the all-time board', /if\(!competes\(v\)\)return;[\s\S]{0,200}cloudLife\s*\.push/.test(lb));
-ok('fetch window widened past the 50 shown', /limit\(300\)/.test(lb));
+ok('fetch window (top 100 per board) wider than the 50 shown', /limit\(100\)/.test(lb));
 ok('still shows only 50', /cloudUsers=cloudUsers\.slice\(0,50\)/.test(lb) && /cloudLife\s*=cloudLife\s*\.slice\(0,50\)/.test(lb));
 /* -- 14. author/admin removal + sticky filters (Aug 7 round) -- */
 ok('remove button styled', /\.ev \.rm\{/.test(sports));
 ok('author uid carried into the list', /by:v\.by\|\|''/.test(sports));
-ok('board re-renders when auth resolves', /onAuthStateChanged\(U\.getAuth\(app\),u=>\{me=u;render\(\);\}\)/.test(sports));
-ok('remove shown only to the Maatram account', /me&&db&&api&&\(me\.email\|\|''\)\.toLowerCase\(\)===ADMIN_EMAIL/.test(sports));
+ok('board re-renders when auth resolves', /onAuthStateChanged\(U\.getAuth\(app\),u=>\{\s*me=u; authed=!!u;/.test(sports));
+ok('listings listen only while signed in', /if\(unsub\)\{unsub\(\);unsub=null;\}/.test(sports) && /Sign in to view/.test(sports)
+   && /<a href="login\.html">Sign in<\/a> to browse them/.test(sports));
+ok('remove shown to the Maatram account and the author', /me&&db&&api&&\(\(me\.email\|\|''\)\.toLowerCase\(\)===ADMIN_EMAIL\|\|me\.uid===e\.by\)/.test(sports));
+ok('add-event fields are labelled', ['aTitle','aSport','aCity','aDate','aVenue','aOrg','aUrl'].every(id => D.getElementById(id).getAttribute('aria-label')));
+ok('nav auth wrapper balanced', !!D.querySelector('#mnav #mnavAuth #mnavChip'));
 ok('admin address is the Maatram inbox', /ADMIN_EMAIL='maatram97@gmail\.com'/.test(sports));
 ok('removal needs a second tap', /Tap again to remove/.test(sports));
 ok('removal calls deleteDoc on the doc id', /api\.deleteDoc\(api\.doc\(db,'events',e\.id\)\)/.test(sports));

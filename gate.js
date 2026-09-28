@@ -1,6 +1,7 @@
 /* ══ Maatram · page gate ══
    One line per page:  <script src="gate.js"></script>  (right after theme.js)
-   Signed out -> page shown + sign-in bar. Banned -> blocked. Kicked -> login.html.
+   The page always paints straight away. Signed out -> sign-in bar.
+   Banned -> page covered. Kicked -> login.html.
    Never add this to login.html or auth-bridge.html (redirect loop). */
 (function(){
   var HOSTED = location.protocol==='http:'||location.protocol==='https:';
@@ -9,7 +10,7 @@
   var PAGE=(location.pathname.split('/').pop()||'index.html');
   if(PAGE==='login.html'||PAGE==='auth-bridge.html') return;
 
-  /* hide the page before anything paints, so signed-out content never flashes */
+  /* html.mgate (page hidden, veil shown) is only ever set for a banned account */
   var s=document.createElement('style');
   s.id='maatramGateCSS';
   s.textContent='html.mgate body>*{visibility:hidden!important}'
@@ -20,9 +21,12 @@
     +'#mguest{position:fixed;right:12px;bottom:12px;z-index:9998;max-width:calc(100vw - 24px);'
     +'background:#0d1417;color:#cfe0dc;border:1px solid rgba(47,227,143,.4);border-radius:14px;'
     +'padding:10px 14px;font:600 13px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}'
-    +'#mguest a{color:#2fe38f;margin-left:6px;display:inline-block;padding:6px 0}';
+    +'#mguest a{color:#2fe38f;margin-left:6px;display:inline-block;padding:6px 0}'
+    +'#mguest button{margin-left:8px;background:none;border:0;color:#8FA3A0;font:700 18px/1 system-ui,sans-serif;'
+    +'cursor:pointer;padding:6px 8px;vertical-align:middle}'
+    /* phones: sit above the performance button (bottom-left) instead of over it */
+    +'@media(max-width:640px){#mguest{left:12px;right:12px;bottom:60px}}';
   (document.head||document.documentElement).appendChild(s);
-  document.documentElement.classList.add('mgate');
 
   function veil(text){
     var v=document.getElementById('mgate');
@@ -37,11 +41,15 @@
      locally until they sign in. A small bar offers the sign-in instead of a redirect. */
   function guest(){
     reveal();
+    try{ if(sessionStorage.getItem('maatram_guest_x')==='1') return; }catch(e){}
     var b=document.createElement('div'); b.id='mguest'; b.setAttribute('role','region'); b.setAttribute('aria-label','Sign in');
     b.textContent='Browsing as a guest. Sign in to save points and join rooms.';
     var a=document.createElement('a'); a.href='login.html'; a.textContent='Sign in';
     a.onclick=function(){ try{ sessionStorage.setItem('maatram_next',PAGE); }catch(e){} };
-    b.appendChild(a); document.body.appendChild(b);
+    var x=document.createElement('button'); x.type='button'; x.textContent='\u00d7';
+    x.setAttribute('aria-label','Dismiss the sign-in bar');
+    x.onclick=function(){ try{ sessionStorage.setItem('maatram_guest_x','1'); }catch(e){} b.remove(); };
+    b.appendChild(a); b.appendChild(x); document.body.appendChild(b);
   }
   function send(){
     try{ sessionStorage.setItem('maatram_next',PAGE); }catch(e){}
@@ -62,8 +70,11 @@
     var now=cycleId();
     if(d.cycle===now) return;
     var pts=d.points||0, life=d.lifetime||0, patch={cycle:now};
-    if(!d.cycle){                       /* first ever run: adopt, do not wipe */
-      patch.lifetime = life>pts ? life : pts;
+    if(!d.cycle){                       /* first ever run: adopt the cycle only, do not wipe.
+                                           lifetime = archived past months, so this month's
+                                           points must NOT be copied into it (all-time would
+                                           count them twice). 0 only fills a missing field. */
+      if(d.lifetime===undefined) patch.lifetime = 0;
     }else{                              /* new month: archive, then zero */
       patch.lifetime = life+pts;
       patch.points   = 0;
@@ -74,8 +85,11 @@
 
   /* ══ moderation ══
      banned  : account frozen, every gated page refuses to open
-     kickAt  : one-shot force sign-out (admin "kick"); the value is a number,
-               the browser remembers the last one it has already acted on. */
+     kickAt  : force sign-out, set by hand in the Firebase console (a number in ms
+               or a timestamp). It signs out every session that began before it;
+               signing in again afterwards is not affected, on any device. */
+  function ms(v){ return v==null ? NaN : typeof v==='number' ? v
+                  : typeof v.toMillis==='function' ? v.toMillis() : Date.parse(v); }
   function enforce(U,auth,d){
     if(d && d.banned===true){
       document.documentElement.classList.add('mgate');
@@ -85,9 +99,9 @@
       return true;
     }
     if(d && d.kickAt){
-      var seen=''; try{ seen=localStorage.getItem('maatram_kick_seen')||''; }catch(e){}
-      if(seen!==String(d.kickAt)){
-        try{ localStorage.setItem('maatram_kick_seen',String(d.kickAt)); }catch(e){}
+      var u=auth.currentUser, kick=ms(d.kickAt),
+          since=ms(u && u.metadata && u.metadata.lastSignInTime);
+      if(!isNaN(kick) && !isNaN(since) && kick>since){
         try{ U.signOut(auth); }catch(e){}
         send(); return true;
       }
@@ -96,7 +110,6 @@
   }
 
   function start(){
-    veil('Checking your sign-in…');
     (async function(){
       var m;
       try{

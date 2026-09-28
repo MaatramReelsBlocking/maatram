@@ -18,11 +18,11 @@ this repository are minors. Act like it.
 - Sexual language or imagery, anywhere in the project or its channels.
 - Contacting maintainers privately after being asked not to.
 - Publishing anyone's personal information — school, address, phone number, or photographs.
-- Sustained disruption of issues, pull requests or the Discord.
+- Sustained disruption of issues, pull requests or the social channels.
 
 ## Scope
 
-This applies to the repository, the issue tracker, pull requests, the Discord server and
+This applies to the repository, the issue tracker, pull requests and
 any public space where someone is representing Maatram.
 
 ## Reporting

@@ -20,13 +20,15 @@
     "student-app"
   ],
   "author": "Maatram",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/MaatramReelsBlocking/maatram/issues"
   },
   "homepage": "https://github.com/MaatramReelsBlocking/maatram#readme",
   "dependencies": {
-    "@vercel/speed-insights": "^2.0.0",
+    "@vercel/speed-insights": "^2.0.0"
+  },
+  "devDependencies": {
     "jsdom": "^30.1.0"
   }
 }

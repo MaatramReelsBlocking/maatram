@@ -5,11 +5,6 @@
 
 User-agent: *
 Allow: /
-Disallow: /login.html
-Disallow: /theme.src.js
-Disallow: /index.src.js
-Disallow: /SEO-README.md
-Disallow: /firestore.rules
 
 # Big AI/answer engines — explicitly welcome (helps AI-search visibility)
 User-agent: Googlebot

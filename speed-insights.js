@@ -15,6 +15,17 @@
   
   // Inject the Speed Insights script
   function injectScript() {
+    // Vercel Web Analytics, same first-party path theme.js uses
+    // (pages without theme.js, e.g. 404.html and auth-bridge.html, rely on this)
+    window.va = window.va || function() { (window.vaq = window.vaq || []).push(arguments); };
+    var vaSrc = '/_vercel/insights/script.js';
+    if (!document.head.querySelector('script[src*="' + vaSrc + '"]')) {
+      var va = document.createElement('script');
+      va.src = vaSrc;
+      va.defer = true;
+      document.head.appendChild(va);
+    }
+
     // Check if script is already added
     var scriptSrc = '/_vercel/speed-insights/script.js';
     if (document.head.querySelector('script[src*="' + scriptSrc + '"]')) {
@@ -27,11 +38,6 @@
     script.defer = true;
     script.dataset.sdkn = '@vercel/speed-insights';
     script.dataset.sdkv = '2.0.0';
-    
-    script.onerror = function() {
-      console.log('[Vercel Speed Insights] Failed to load script. Please check if any content blockers are enabled.');
-    };
-    
     document.head.appendChild(script);
   }
   

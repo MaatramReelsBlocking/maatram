@@ -133,6 +133,7 @@
   #empty{display:none;text-align:center;padding:56px 20px;color:var(--dim)}
   #empty .big{font-size:44px;margin-bottom:10px}
   #empty b{display:block;color:var(--ink);font-family:var(--font-display);font-size:16px;margin-bottom:8px}
+  #empty p a{color:var(--green)}
 
   /* add event */
   details.add{margin-top:34px;background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:16px 18px}
@@ -202,7 +203,7 @@ body{padding-top:52px!important}
 <script>/* Skin class + the few tokens that must exist at first paint, so
    theme.js itself no longer has to block rendering. */
 (function(){var m=null;try{m=localStorage.getItem('maatram_theme');}catch(_){}if(m!=='minimal')return;document.documentElement.classList.add('minimal');var s=document.createElement("style");s.textContent="html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:\"Plus Jakarta Sans\",\"Sora\",sans-serif;--font-body:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}";document.head.appendChild(s);})();</script>
-<script defer src="theme.js?v=2"></script>
+<script defer src="theme.js?v=3"></script>
 <script src="gate.js"></script>
 <style>.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}</style>
 <style id="a11yCSS">
@@ -218,6 +219,7 @@ body{padding-top:52px!important}
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
   <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link active" href="sports.html">Sports</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
+  <div id="mnavAuth">
     <a id="mnavIn" href="login.html">Sign in</a>
     <div id="mnavChip">
       <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" loading="lazy" decoding="async" width="28" height="28">
@@ -290,21 +292,21 @@ body{padding-top:52px!important}
 
   <div id="empty">
     <div class="big">🏟️</div>
-    <b>Nothing listed here yet.</b>
-    <p>No events match this filter. Widen the city or the date range — or add an event you know about, so everyone else finds it.</p>
+    <b id="emptyH">Nothing listed here yet.</b>
+    <p id="emptyP">No events match this filter. Widen the city or the date range — or add an event you know about, so everyone else finds it.</p>
   </div>
 
   <details class="add">
     <summary>+ Add an event</summary>
     <p style="font-size:13px;color:var(--dim);margin-top:12px">List a real tournament, camp or match. The register link must point to the organiser's own page — Maatram never takes registrations.</p>
     <div class="form">
-      <input type="text" id="aTitle" maxlength="80" placeholder="Event name" autocomplete="off">
-      <select id="aSport"></select>
-      <select id="aCity"></select>
-      <input type="date" id="aDate">
-      <input type="text" id="aVenue" maxlength="80" placeholder="Venue" autocomplete="off">
-      <input type="text" id="aOrg" maxlength="60" placeholder="Organiser" autocomplete="off">
-      <input type="url" class="full" id="aUrl" placeholder="Official registration link (https://…)" autocomplete="off">
+      <input type="text" id="aTitle" maxlength="80" placeholder="Event name" aria-label="Event name" autocomplete="off">
+      <select id="aSport" aria-label="Sport"></select>
+      <select id="aCity" aria-label="City"></select>
+      <input type="date" id="aDate" aria-label="Event date">
+      <input type="text" id="aVenue" maxlength="80" placeholder="Venue" aria-label="Venue" autocomplete="off">
+      <input type="text" id="aOrg" maxlength="60" placeholder="Organiser" aria-label="Organiser" autocomplete="off">
+      <input type="url" class="full" id="aUrl" maxlength="300" placeholder="Official registration link (https://…)" aria-label="Official registration link" autocomplete="off">
       <button class="btn full" id="aBtn" type="button">Publish event</button>
     </div>
     <p id="addMsg"></p>
@@ -552,6 +554,13 @@ function render(){
   const list=events.filter(passes).sort((a,b)=>a.date<b.date?-1:1);
   const g=$('grid');
   g.innerHTML='';
+  if(HOSTED&&authed===false){
+    $('emptyH').textContent='Sign in to see the listings.';
+    $('emptyP').innerHTML='Event listings are shared between signed-in students. <a href="login.html">Sign in</a> to browse them or add one.';
+  }else{
+    $('emptyH').textContent='Nothing listed here yet.';
+    $('emptyP').textContent='No events match this filter. Widen the city or the date range \u2014 or add an event you know about, so everyone else finds it.';
+  }
   $('empty').style.display=list.length?'none':'block';
   $('count').textContent=list.length?(list.length+(list.length===1?' event':' events')):'';
   list.forEach((e,i)=>{
@@ -567,7 +576,7 @@ function render(){
         ? '<a class="go" href="'+esc(safeUrl(e.url))+'" target="_blank" rel="noopener noreferrer nofollow">Register on organiser site ↗</a>'
           +'<span class="why">Opens the organiser\u2019s own page</span>'
         : '<span class="go none">No official link given</span>');
-    if(me&&db&&api&&(me.email||'').toLowerCase()===ADMIN_EMAIL){
+    if(me&&db&&api&&((me.email||'').toLowerCase()===ADMIN_EMAIL||me.uid===e.by)){
       const rm=document.createElement('button');
       rm.type='button'; rm.className='rm'; rm.textContent='Remove this listing';
       let armed=false,t=0;
@@ -605,7 +614,9 @@ $('fQ').addEventListener('input',render);
 /* ---------- cloud ---------- */
 /* the Maatram account can take down any listing; everyone else only their own */
 const ADMIN_EMAIL='maatram97@gmail.com';
-let db=null,api=null,me=null;
+let db=null,api=null,me=null,authed=null;   // authed: null until Firebase answers
+/* date strings are YYYY-MM-DD, so they sort and compare as text */
+function isoDay(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 async function boot(){
   if(!HOSTED){
     $('modePill').textContent='Offline preview';
@@ -620,19 +631,30 @@ async function boot(){
     ]);
     const app=A.getApps().length?A.getApp():A.initializeApp(FB_CONFIG);
     db=F.getFirestore(app); api=F;
-    U.onAuthStateChanged(U.getAuth(app),u=>{me=u;render();});
-    $('modePill').textContent='Live listings';
-    $('modePill').style.color='var(--green)';
-    F.onSnapshot(F.query(F.collection(db,'events'),F.orderBy('date'),F.limit(200)),snap=>{
+    const pill=(t,c)=>{ $('modePill').textContent=t; $('modePill').style.color=c; };
+    let unsub=null;
+    /* reads need a signed-in user: listen once one exists, stop on sign-out.
+       Only events from the last 60 days on, so old listings never crowd out
+       upcoming ones (single-field range + order: no composite index). */
+    U.onAuthStateChanged(U.getAuth(app),u=>{
+      me=u; authed=!!u;
+      if(unsub){unsub();unsub=null;}
       events=[];
-      snap.forEach(d=>{const v=d.data();events.push({
-        id:d.id,title:v.title||'Event',sport:v.sport||'Other',city:v.city||'',
-        date:v.date||'',venue:v.venue||'',org:v.org||'',url:v.url||'',by:v.by||''});});
-      render();
-    },err=>{
-      console.warn('events read',err);
-      $('modePill').textContent='Listings offline';
-      $('modePill').style.color='#ff5d73';
+      if(!u){ pill('Sign in to view','var(--gold)'); render(); return; }
+      pill('Loading\u2026','var(--dim)');
+      const from=new Date(); from.setDate(from.getDate()-60);
+      unsub=F.onSnapshot(F.query(F.collection(db,'events'),F.where('date','>=',isoDay(from)),F.orderBy('date'),F.limit(200)),snap=>{
+        events=[];
+        snap.forEach(d=>{const v=d.data();events.push({
+          id:d.id,title:v.title||'Event',sport:v.sport||'Other',city:v.city||'',
+          date:v.date||'',venue:v.venue||'',org:v.org||'',url:v.url||'',by:v.by||''});});
+        pill('Live listings','var(--green)');
+        render();
+      },err=>{
+        console.warn('events read',err);
+        pill('Listings offline','#ff5d73');
+        render();
+      });
       render();
     });
   }catch(e){
@@ -655,11 +677,11 @@ $('aBtn').onclick=async()=>{
   };
   msg.style.color='#ff5d73';
   if(!ev.title){msg.textContent='Give the event a name.';return;}
-  if(!ev.date){msg.textContent='Pick the date it happens.';return;}
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(ev.date)){msg.textContent='Pick the date it happens.';return;}
   if(ev.url&&!/^https?:\/\//i.test(ev.url)){msg.textContent='The link must start with https://';return;}
   if(!db||!me){msg.textContent='Sign in first, then publish.';return;}
   try{
-    ev.by=me.uid; ev.byName=me.displayName||'Student'; ev.createdAt=Date.now();
+    ev.by=me.uid; ev.createdAt=Date.now();
     await api.addDoc(api.collection(db,'events'),ev);
     /* show it straight away: an old filter would otherwise hide the new listing */
     $('fCity').value=ev.city; $('fSport').value=ev.sport; $('fWhen').value='up'; $('fQ').value='';

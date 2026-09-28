@@ -600,6 +600,58 @@
 })();
 
 /* ══════════════════════════════════════════════════════════════════
+   Vercel Web Analytics + Speed Insights — both served first-party from
+   /_vercel/, so script-src 'self' covers them. Skipped if the page (or
+   speed-insights.js) already added the same script.
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};
+  window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments);};
+  ['/_vercel/insights/script.js','/_vercel/speed-insights/script.js'].forEach(function(src){
+    if(document.head.querySelector('script[src*="'+src+'"]')) return;
+    var s=document.createElement('script'); s.defer=true; s.src=src;
+    document.head.appendChild(s);
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   Keyboard access for the nav account chip and a clean name for the
+   performance toggle. The chip's click handler (index.js / page code)
+   already toggles #mnavMenu.open; this only adds focus, ARIA state and
+   Enter / Space / Escape on top of it.
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  function wire(){
+    var perf=document.getElementById('perfBtn');
+    /* visible text ("Performance" / "Performance: On") names the button */
+    if(perf) perf.removeAttribute('aria-label');
+
+    var chip=document.getElementById('mnavChip'), menu=document.getElementById('mnavMenu');
+    if(!chip||!menu||chip.getAttribute('data-kb')) return;
+    chip.setAttribute('data-kb','1');
+    chip.setAttribute('tabindex','0');
+    chip.setAttribute('role','button');
+    chip.setAttribute('aria-haspopup','menu');
+    function sync(){ chip.setAttribute('aria-expanded',String(menu.classList.contains('open'))); }
+    sync();
+    if(window.MutationObserver)
+      new MutationObserver(sync).observe(menu,{attributes:true,attributeFilter:['class']});
+    chip.addEventListener('keydown',function(e){
+      if(e.target!==chip) return;          /* keys inside the menu keep their own behaviour */
+      if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){ e.preventDefault(); chip.click(); }
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&menu.classList.contains('open')){
+        menu.classList.remove('open');
+        chip.focus();
+      }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire);
+  else wire();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
    Email de-obfuscation — addresses ship split across data attributes
    so scrapers can't regex them out of the HTML. Without JS the page
    still shows a human-readable "user (at) domain" form.

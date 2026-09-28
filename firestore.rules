@@ -52,6 +52,15 @@ service cloud.firestore {
     function safeText(v, max) {
       return v is string && v.size() > 0 && v.size() <= max;
     }
+    /* Google profile photos only: a free-form URL on a doc every student
+       loads would let anyone plant a tracking pixel on the leaderboard. */
+    function photoOk(v) {
+      return v == '' || (v is string && v.size() <= 500
+                         && v.matches('^https://[a-z0-9.-]+\\.googleusercontent\\.com/.*'));
+    }
+    /* A board cycle is always a real month id, never '' (that would reopen
+       the first-ever-roll branch below). */
+    function cycleOk(v) { return v is string && v.matches('^[0-9]{4}-[0-9]{2}$'); }
 
     match /users/{uid} {
 
@@ -66,7 +75,9 @@ service cloud.firestore {
                     && neu().points is int
                     && neu().points >= 0
                     && neu().points <= 100
-                    && (!('photo' in neu()) || neu().photo is string)
+                    && (!('photo' in neu()) || photoOk(neu().photo))
+                    && (!('lastLogin' in neu()) || neu().lastLogin is timestamp)
+                    && (!('cycle' in neu()) || cycleOk(neu().cycle))
                     && (!('lifetime' in neu()) || neu().lifetime == 0)
                     && (!('awardAt' in neu()) || neu().awardAt == request.time);
 
@@ -76,11 +87,13 @@ service cloud.firestore {
                     && neu().points >= 0
                     && neu().points <= 3000                 // hard ceiling on a month
                     && (!('name'  in changed()) || safeText(neu().name, 40))
-                    && (!('photo' in changed()) || neu().photo is string)
+                    && (!('photo' in changed()) || photoOk(neu().photo))
+                    && (!('lastLogin' in changed()) || neu().lastLogin is timestamp)
                     && (
-                         // normal play: one award or one penalty per write
+                         // normal play: one award or one penalty per write.
+                         // cycle and lifetime move only in the two roll branches.
                          (   changed().hasOnly(writableKeys())
-                          && !touched(['lifetime'])
+                          && !touched(['lifetime', 'cycle'])
                           && neu().points >= old().get('points', 0) - 100
                           && neu().points <= old().get('points', 0) + 100
                           && paced())
@@ -88,19 +101,22 @@ service cloud.firestore {
                          // monthly roll: archive this month, then zero
                       || (   changed().hasOnly(writableKeys()
                                  .concat(['m_' + old().get('cycle', 'x')]))
+                          && old().get('cycle', '') != ''
+                          && cycleOk(neu().cycle)
                           && neu().points == 0
                           && neu().cycle != old().get('cycle', '')
                           && neu().lifetime == old().get('lifetime',0) + old().get('points',0)
+                          && neu().get('m_' + old().get('cycle', 'x'), -1) is int
+                          && neu().get('m_' + old().get('cycle', 'x'), -1) == old().get('points', 0)
                           && !touched(['awardAt']))
 
-                         // first-ever roll (gate.js): adopt lifetime, points untouched
-                      || (   changed().hasOnly(writableKeys())
+                         // first-ever roll (gate.js): stamp the cycle only. lifetime holds
+                         // archived past months, so it stays as it is (0 if missing) and
+                         // this month's points stay in points -- never counted twice.
+                      || (   changed().hasOnly(['cycle', 'lifetime'])
                           && old().get('cycle', '') == ''
-                          && neu().cycle is string
-                          && neu().points == old().get('points', 0)
-                          && !touched(['awardAt'])
-                          && (   (neu().lifetime == old().get('lifetime', 0) && old().get('lifetime', 0) >= old().get('points', 0))
-                              || (neu().lifetime == old().get('points', 0)   && old().get('points', 0) >  old().get('lifetime', 0))))
+                          && cycleOk(neu().cycle)
+                          && neu().get('lifetime', 0) == old().get('lifetime', 0))
                        );
 
       /* Deleting an account is a console job, not a browser job. */
@@ -115,12 +131,14 @@ service cloud.firestore {
     match /events/{id} {
       allow read:   if request.auth != null;
       allow create: if request.auth != null
+                    && neu().keys().hasOnly(['title','sport','city','date','venue','org','url','by','createdAt'])
                     && request.resource.data.by == request.auth.uid
                     && request.resource.data.title is string
                     && request.resource.data.title.size() > 0
                     && request.resource.data.title.size() <= 80
                     && request.resource.data.date is string
-                    && request.resource.data.date.size() <= 40
+                    && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+                    && (!('createdAt' in neu()) || neu().createdAt is int)
                     && (!('sport' in neu()) || safeText(neu().sport, 40))
                     && (!('city'  in neu()) || safeText(neu().city, 60))
                     && (!('venue' in neu()) || neu().venue is string && neu().venue.size() <= 120)
