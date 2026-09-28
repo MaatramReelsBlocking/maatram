@@ -33,23 +33,28 @@ const swapMeals={
  Dinner:[['veg-sambar-rice','Rice + sambar + vegetables','A simple, complete evening plate.'],['dal-khichdi','Dal khichdi + vegetable salad','Gentle, warm and balanced.'],['veg-pulao-dinner','Vegetable pulao + dal','Easy family-style dinner fuel.'],['chole-bowl','Chole + rice + cucumber','Plant protein for a steady night.'],['lemon-rice-dinner','Lemon rice + mixed vegetables','Simple ingredients, good rhythm.'],['millet-khichdi','Millet khichdi + vegetable curry','Comforting and naturally gluten-free.']]
 };
 const commonSwapMeta={diets:['vegetarian','eggs','nonveg','vegan','any'],allergens:[],goals:['gain','muscle','fitness','balanced','habits','manage']};
-const mealSwapOptions=(type,currentId)=>[...meals.filter(m=>m.type===type),...(swapMeals[type]||[]).map(([id,name,desc])=>({id,type,name,desc,...commonSwapMeta}))].filter(m=>m.id!==currentId&&m.diets.includes(profile.diet)&&!m.allergens.some(a=>profile.avoid.includes(a))).slice(0,5);
+/* Free-text "anything else to avoid": comma-separated terms matched against meal name/description. */
+const avoidTerms=()=>String(profile.other||'').toLowerCase().split(',').map(t=>t.trim()).filter(Boolean);
+const okTerms=m=>{const text=(m.name+' '+m.desc).toLowerCase();return !avoidTerms().some(t=>text.includes(t));};
+const mealSwapOptions=(type,currentId)=>{const list=[...meals.filter(m=>m.type===type),...(swapMeals[type]||[]).map(([id,name,desc])=>({id,type,name,desc,...commonSwapMeta}))].filter(m=>m.id!==currentId&&m.diets.includes(profile.diet)&&!m.allergens.some(a=>profile.avoid.includes(a)));const filtered=list.filter(okTerms);return (filtered.length?filtered:list).slice(0,5);};
 const goalCopy={gain:['Nourish your momentum.','Energy-rich meals with regular snacks help you keep up with school, sport and life.'],muscle:['Fuel. Move. Recover.','Protein-containing meals, carbohydrates and rest work together.'],fitness:['Move with steady energy.','Balanced meals designed to support everyday activity.'],balanced:['A better plate rhythm.','Simple, familiar meals that help make balance repeatable.'],habits:['Keep it easy to repeat.','A reliable rhythm beats a perfect day.'],manage:['Feel steady and satisfied.','Balanced meals and consistent routines—never skipping meals.']};
-let day=0,plan=[],currentSwap=null,streak=5;
+let day=0,plan=[],currentSwap=null,swapReturn=null;
 
-const savedProfile=localStorage.getItem('maatramWellnessProfile');
-const savedPlan=localStorage.getItem('maatramWellnessPlan');
-
-if(savedProfile){
-  Object.assign(profile,JSON.parse(savedProfile));
-}
-
-if(savedPlan){
-  plan=JSON.parse(savedPlan);
-}
+/* Storage can be blocked (privacy mode, disabled cookies) or hold bad JSON: never let that stop the page. */
+try{
+  const savedProfile=localStorage.getItem('maatramWellnessProfile');
+  if(savedProfile) Object.assign(profile,JSON.parse(savedProfile));
+}catch(_){}
+try{
+  const savedPlan=JSON.parse(localStorage.getItem('maatramWellnessPlan'));
+  if(Array.isArray(savedPlan)&&savedPlan.every(Array.isArray)) plan=savedPlan;
+}catch(_){}
+const savePlan=()=>{try{localStorage.setItem('maatramWellnessPlan',JSON.stringify(plan))}catch(_){}};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-function show(id){$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');$$('.nav-action').forEach(x=>x.classList.toggle('active',x.dataset.screen===id));window.scrollTo({top:0,behavior:'smooth'});}
-function eligible(type){let list=meals.filter(m=>m.type===type&&m.diets.includes(profile.diet)&&m.goals.includes(profile.goal)&&!m.allergens.some(a=>profile.avoid.includes(a)));if(!list.length)list=meals.filter(m=>m.type===type&&m.diets.includes(profile.diet)&&!m.allergens.some(a=>profile.avoid.includes(a)));return list;}
+const reduceMotion=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(_){return false}};
+function show(id){$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo({top:0,behavior:reduceMotion()?'auto':'smooth'});}
+/* Goal-matched meals first, then any compatible meal; free-text avoid terms apply to both, and if they would empty the slot the unfiltered option is used. */
+function eligible(type){const base=meals.filter(m=>m.type===type&&m.diets.includes(profile.diet)&&!m.allergens.some(a=>profile.avoid.includes(a))),byGoal=base.filter(m=>m.goals.includes(profile.goal));return [byGoal.filter(okTerms),base.filter(okTerms),byGoal,base].find(l=>l.length)||[];}
 function buildPlan(){const types=['Breakfast','Mid-morning','Lunch','Evening','Dinner'];/* A deterministic profile seed keeps variations consistent for one person while meaningfully using all private baseline fields—without turning them into body labels or calorie targets. */const baselineSeed=Math.round(profile.age*3+profile.height/7+profile.weight);const activityOffset={inactive:0,light:1,moderate:2,very:3}[profile.activity];plan=Array.from({length:7},(_,i)=>types.map((type,j)=>{const list=eligible(type);return list[(baselineSeed+i+j+activityOffset)%list.length]||{type,name:'Seasonal vegetables + rice/roti',desc:'A flexible meal based on what is available.'};}));}
 function renderPlan(){const [title,copy]=goalCopy[profile.goal];$('#planSummary').textContent=`A 7-day ${title.toLowerCase()} plan shaped around your baseline, goal and ${profile.activity.replace('inactive','mostly inactive')} routine.`;$('#goalTag').textContent=profile.goal.toUpperCase();$('#missionTitle').textContent=title;$('#missionCopy').textContent=copy;$('#safetyNote').textContent=profile.age<18?'For growing bodies, this plan keeps the focus on regular balanced meals, energy, movement, sleep and recovery—not weight targets or restriction. For allergies, health concerns or growth questions, check with a qualified dietitian or healthcare professional.':'General wellness guidance only—not medical nutrition care. For allergies, medical conditions or specialist dietary needs, speak with a qualified dietitian or healthcare professional.';$('#dayTabs').innerHTML=plan.map((_,i)=>`<button class="${i===day?'selected':''}" data-day="${i}">DAY ${i+1}</button>`).join('');$('#dayTitle').textContent=`DAY ${day+1}`;$('#mealList').innerHTML=plan[day].map((m,i)=>`<div class="meal-row"><span class="meal-type">${m.type.toUpperCase()}</span><div><b>${m.name}</b><p>${m.desc}</p></div><button class="swap" data-meal="${i}">SWAP ↻</button></div>`).join('');}
 function validateDetails(){profile.age=+$('#age').value;profile.height=+$('#height').value;profile.weight=+$('#weight').value;if(profile.age<13||profile.age>100||profile.height<100||profile.height>250||profile.weight<25||profile.weight>300){$('#detailError').textContent='Enter an age, height and weight within the shown ranges.';return false}$('#detailError').textContent='';return true;}
@@ -58,39 +63,53 @@ $$('[data-next]').forEach(b=>b.onclick=()=>toNext(b.dataset.next));$$('[data-bac
 $$('[data-choice] button').forEach(b=>b.onclick=()=>{const parent=b.closest('[data-choice]');parent.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');profile[parent.dataset.choice]=b.dataset.value;if(parent.dataset.choice==='goal')$('#goalHint').textContent='GOAL LOCKED IN';if(parent.dataset.choice==='activity')$('#activityHint').textContent='ACTIVITY LEVEL SAVED';});
 $('#dietChips').querySelectorAll('button').forEach(b=>b.onclick=()=>{$$('#dietChips button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');profile.diet=b.dataset.value;$('#preferenceHint').textContent='PREFERENCE SAVED';});
 $('#avoidChips').querySelectorAll('button').forEach(b=>b.onclick=()=>{b.classList.toggle('selected');profile.avoid=$$('#avoidChips button.selected').map(x=>x.dataset.value);});
-$('#generate').onclick=()=>{if(!profile.diet){$('#preferenceHint').textContent='PICK A FOOD PREFERENCE FIRST';return}profile.other=$('#otherAvoid').value.trim();show('loading');let lines=['Checking your preferences...','Building familiar meal options...','Keeping your plan practical...'];let n=0;let interval=setInterval(()=>{$('#loadingLine').textContent=lines[++n]||'Your plan is ready.';if(n>=lines.length){clearInterval(interval);buildPlan();localStorage.setItem('maatramWellnessProfile',JSON.stringify(profile));localStorage.setItem('maatramWellnessPlan',JSON.stringify(plan));renderPlan();setTimeout(()=>show('plan'),380)}},620)};
+$('#generate').onclick=()=>{if(!profile.diet){$('#preferenceHint').textContent='PICK A FOOD PREFERENCE FIRST';return}profile.other=$('#otherAvoid').value.trim();show('loading');let lines=['Checking your preferences...','Building familiar meal options...','Keeping your plan practical...'];let n=0;let interval=setInterval(()=>{$('#loadingLine').textContent=lines[++n]||'Your plan is ready.';if(n>=lines.length){clearInterval(interval);buildPlan();try{localStorage.setItem('maatramWellnessProfile',JSON.stringify(profile))}catch(_){}savePlan();renderPlan();setTimeout(()=>show('plan'),380)}},620)};
 $('#dayTabs').onclick=e=>{if(e.target.dataset.day!==undefined){day=+e.target.dataset.day;renderPlan()}};
-$('#mealList').onclick=e=>{if(e.target.dataset.meal===undefined)return;currentSwap=+e.target.dataset.meal;const meal=plan[day][currentSwap];const options=mealSwapOptions(meal.type,meal.id);$('#swapOptions').innerHTML=options.map(x=>`<button class="swap-option" data-id="${x.id}"><b>${x.name}</b><small>${x.desc}</small></button>`).join('');$('#swapModal').classList.add('open');$('#swapModal').setAttribute('aria-hidden','false')};
-$('#swapOptions').onclick=e=>{const button=e.target.closest('[data-id]');if(!button)return;const replacement=[...meals,...Object.entries(swapMeals).flatMap(([type,items])=>items.map(([id,name,desc])=>({id,type,name,desc,...commonSwapMeta})))].find(m=>m.id===button.dataset.id);plan[day][currentSwap]=replacement;$('#closeSwap').click();renderPlan()};$('#closeSwap').onclick=()=>{$('#swapModal').classList.remove('open');$('#swapModal').setAttribute('aria-hidden','true')};
-$('#editPlan').onclick=()=>show('details');$('#backPlan').onclick=()=>show('plan');
+$('#mealList').onclick=e=>{if(e.target.dataset.meal===undefined)return;currentSwap=+e.target.dataset.meal;const meal=plan[day][currentSwap];const options=mealSwapOptions(meal.type,meal.id);$('#swapOptions').innerHTML=options.map(x=>`<button class="swap-option" data-id="${x.id}"><b>${x.name}</b><small>${x.desc}</small></button>`).join('');swapReturn=e.target;$('#swapModal').classList.add('open');$('#swapModal').setAttribute('aria-hidden','false');($('#swapOptions button')||$('#closeSwap')).focus()};
+$('#swapOptions').onclick=e=>{const button=e.target.closest('[data-id]');if(!button)return;const replacement=[...meals,...Object.entries(swapMeals).flatMap(([type,items])=>items.map(([id,name,desc])=>({id,type,name,desc,...commonSwapMeta})))].find(m=>m.id===button.dataset.id);plan[day][currentSwap]=replacement;savePlan();swapReturn=null;$('#closeSwap').click();renderPlan();const again=$(`#mealList [data-meal="${currentSwap}"]`);if(again)again.focus()};$('#closeSwap').onclick=()=>{$('#swapModal').classList.remove('open');$('#swapModal').setAttribute('aria-hidden','true');if(swapReturn&&swapReturn.isConnected)swapReturn.focus();swapReturn=null};
+/* Dialog keyboard: Esc closes, Tab stays inside while open. */
+$('#swapModal').addEventListener('keydown',e=>{if(!$('#swapModal').classList.contains('open'))return;if(e.key==='Escape'){e.preventDefault();$('#closeSwap').click();return}if(e.key!=='Tab')return;const f=$$('#swapModal button');if(!f.length)return;const first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}});
+$('#swapModal').addEventListener('click',e=>{if(e.target===$('#swapModal'))$('#closeSwap').click()});
+$('#editPlan').onclick=()=>show('details');
 /* Wellness points: +25 per finished check, max +100 a day. Progress and the
    amount already paid live per account per day in localStorage, so refresh or
    reopen never pays twice. Payment goes through the site-wide maatramAward
    queue into users/{uid}.points (the existing leaderboard score).
    ponytail: device-local record, move to Firestore if rules ever allow a private wellness doc. */
 const WL_TARGETS={meals:1,hydration:8,activity:1,sleep:1};
-const wlKey=uid=>'maatram_wellness_'+(uid||'guest')+'_'+new Date().toLocaleDateString('en-CA');
+const wlToday=()=>new Date().toLocaleDateString('en-CA');
+const wlKey=uid=>'maatram_wellness_'+(uid||'guest')+'_'+wlToday();
 const wlLoad=uid=>{try{return JSON.parse(localStorage.getItem(wlKey(uid)))||{}}catch(_){return{}}};
 const wlFresh=s=>Object.assign({meals:0,hydration:0,activity:0,sleep:0,paid:0},s);
-let wlUid=null,wellnessTrack=wlFresh(wlLoad(null));
+let wlUid=null,wlDay=wlToday(),wellnessTrack=wlFresh(wlLoad(null));
 const wlSave=()=>{try{localStorage.setItem(wlKey(wlUid),JSON.stringify(wellnessTrack))}catch(_){}};
-function updateDailyReward(){
+/* Bring memory up to date with the saved record: a new day starts from today's
+   record (never yesterday's state under today's key), and progress or payment
+   made in another tab is kept (max of saved and in-memory values). */
+function wlSync(){
+  if(wlDay!==wlToday()){wlDay=wlToday();wellnessTrack=wlFresh(wlLoad(wlUid));return;}
+  const saved=wlLoad(wlUid);
+  for(const h of [...Object.keys(WL_TARGETS),'paid'])wellnessTrack[h]=Math.max(+saved[h]||0,+wellnessTrack[h]||0);
+}
+function updateDailyReward(award=true){
+  wlSync();
   Object.entries(WL_TARGETS).forEach(([habit,max])=>{const n=Math.min(wellnessTrack[habit],max),button=$(`[data-habit="${habit}"]`);$('#'+habit+'Progress').textContent=`${n} / ${max}`;button.disabled=n>=max;if(n>=max)button.textContent='COMPLETE ✓';button.closest('.habit-card').classList.toggle('done',n>=max);});
   const done=Object.entries(WL_TARGETS).filter(([h,max])=>wellnessTrack[h]>=max).length,earned=done*25,owed=earned-wellnessTrack.paid,status=$('#rewardStatus');
-  if(wlUid&&owed>0&&window.maatramAward){wellnessTrack.paid=earned;wlSave();window.maatramAward(owed,`Wellness ${done}/4`);status.classList.remove('bump');void status.offsetWidth;status.classList.add('bump');}
+  if(award&&wlUid&&owed>0&&window.maatramAward){wellnessTrack.paid=earned;wlSave();window.maatramAward(owed,`Wellness ${done}/4`);status.classList.remove('bump');void status.offsetWidth;status.classList.add('bump');}
   status.classList.toggle('unlocked',done===4);
   status.innerHTML=!wlUid?`<b>${done} of 4</b> done today. <a href="../login.html">Sign in</a> to earn <b>+25 PTS</b> per check on the leaderboard.`
     :done===4?'✨ Whole routine complete. <b>+100 PTS</b> added to your score today.'
     :done?`<b>${done} of 4</b> done · <b>+${earned} PTS</b> earned today. Next check adds <b>+25</b>.`
     :'Complete a check to earn <b>+25 PTS</b> — up to <b>+100 PTS</b> today.';
 }
-$$('.habit-card button').forEach(button=>button.onclick=()=>{const habit=button.dataset.habit;if(wellnessTrack[habit]<WL_TARGETS[habit]){wellnessTrack[habit]++;wlSave();}updateDailyReward();});
-addEventListener('maatram:user',e=>{const uid=e.detail;if(uid===wlUid)return;let s=wlLoad(uid);if(uid){const g=wlLoad(null);for(const h in WL_TARGETS)s[h]=Math.max(s[h]||0,g[h]||0);try{localStorage.removeItem(wlKey(null))}catch(_){}}wlUid=uid;wellnessTrack=wlFresh(s);wlSave();updateDailyReward();});
+$$('.habit-card button').forEach(button=>button.onclick=()=>{const habit=button.dataset.habit;wlSync();if(wellnessTrack[habit]<WL_TARGETS[habit]){wellnessTrack[habit]++;wlSave();}updateDailyReward();});
+addEventListener('maatram:user',e=>{const uid=e.detail;if(uid===wlUid)return;let s=wlLoad(uid);if(uid){const g=wlLoad(null);for(const h in WL_TARGETS)s[h]=Math.max(s[h]||0,g[h]||0);try{localStorage.removeItem(wlKey(null))}catch(_){}}wlUid=uid;wlDay=wlToday();wellnessTrack=wlFresh(s);wlSave();updateDailyReward();});
+/* Another tab changed today's record: show its progress here; only the tab that made a check pays for it. */
+addEventListener('storage',e=>{if(e.key===wlKey(wlUid))updateDailyReward(false);});
+/* Page left open past midnight: show a fresh day when the tab is looked at again. */
+const wlRollover=()=>{if(wlDay!==wlToday())updateDailyReward(false);};
+addEventListener('focus',wlRollover);document.addEventListener('visibilitychange',()=>{if(!document.hidden)wlRollover();});
 updateDailyReward();
-$$('.track-card button').forEach(b=>b.onclick=()=>{const card=b.closest('.track-card'),strong=card.querySelector('strong');let [n,max]=strong.textContent.split('/').map(x=>+x.trim());if(n<max)n++;strong.textContent=`${n} / ${max}`;if(n===max){b.textContent='COMPLETE ✓';b.disabled=true;}});
-/* Fragment links scroll without changing this single-feature state; buttons keep navigation clean. */
-$('#homeOpen').onclick=()=>show('intro');
-$$('.nav-action').forEach(button=>button.onclick=()=>{if(!plan.length){show('intro');return}show(button.dataset.screen)});
 if(location.hash){history.replaceState(null,'',location.pathname);show('intro');}
 if(plan.length){
   renderPlan();
