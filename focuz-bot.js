@@ -179,12 +179,12 @@
 
   /* ---- UI (built on first open) ---- */
   var CSS =
-    '#fz-btn{position:fixed;right:18px;bottom:74px;z-index:903;width:52px;height:52px;border-radius:50%;border:1px solid rgba(52,211,153,.55);' +
+    '#fz-btn{position:fixed;right:18px;bottom:74px;z-index:10000;width:52px;height:52px;border-radius:50%;border:1px solid rgba(52,211,153,.55);' +
     'background:linear-gradient(135deg,#34D399,#4E9BFF);color:#04120F;display:grid;place-items:center;cursor:pointer;' +
     'box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 4px rgba(52,211,153,.12);transition:transform .2s ease;padding:0}' +
     '#fz-btn:hover{transform:translateY(-2px) scale(1.04)}#fz-btn svg{width:24px;height:24px}' +
     '#fz-btn:focus-visible,#fz-panel :focus-visible{outline:2px solid #fff;outline-offset:2px}' +
-    '#fz-panel{position:fixed;right:18px;bottom:136px;z-index:904;width:360px;max-width:calc(100vw - 24px);height:min(540px,calc(100dvh - 160px));' +
+    '#fz-panel{position:fixed;right:18px;bottom:136px;z-index:10001;width:360px;max-width:calc(100vw - 24px);height:min(540px,calc(100dvh - 160px));' +
     'display:flex;flex-direction:column;border-radius:20px;overflow:hidden;background:rgba(8,14,16,.94);color:#E8F2EF;' +
     'border:1px solid rgba(52,211,153,.35);box-shadow:0 24px 60px rgba(0,0,0,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);' +
     'font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;opacity:0;transform:translateY(12px) scale(.98);' +
@@ -217,6 +217,8 @@
     /* Mobile: full-width sheet, clear of the ◐ pill */
     '@media(max-width:560px){#fz-btn{right:12px;bottom:66px;width:48px;height:48px}' +
     '#fz-panel{left:8px;right:8px;bottom:8px;width:auto;max-width:none;height:min(78dvh,620px);border-radius:20px}}' +
+    /* Lift the bubble above the guest sign-in bar (gate.js #mguest) on phones */
+    '@media(max-width:640px){body:has(#mguest) #fz-btn{bottom:124px}}' +
     'html.fz-perf #fz-panel{backdrop-filter:none;-webkit-backdrop-filter:none}' +
     '@media(prefers-reduced-motion:reduce){#fz-btn,#fz-panel{transition:none}}';
 
