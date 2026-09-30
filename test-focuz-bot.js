@@ -49,6 +49,8 @@ btn.click();
 const panel = d.getElementById('fz-panel');
 ok(panel && !panel.hidden, 'panel opens');
 ok(panel.getAttribute('role') === 'dialog', 'dialog role');
+ok(btn.querySelector('svg.fz-av .eye') && btn.querySelector('svg').getAttribute('aria-hidden') === 'true', 'bubble shows focus-eye mascot');
+ok(d.querySelector('#fz-head .fz-hav svg.fz-av'), 'panel header shows mascot');
 ok(/Focuz/.test(d.querySelector('.fz-b').textContent), 'greeting shown');
 ok(d.querySelectorAll('.fz-chip').length === 4, 'home chips shown');
 d.getElementById('fz-in').value = 'how does hard lock work';

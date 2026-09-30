@@ -182,7 +182,13 @@
     '#fz-btn{position:fixed;right:18px;bottom:74px;z-index:10000;width:52px;height:52px;border-radius:50%;border:1px solid rgba(52,211,153,.55);' +
     'background:linear-gradient(135deg,#34D399,#4E9BFF);color:#04120F;display:grid;place-items:center;cursor:pointer;' +
     'box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 4px rgba(52,211,153,.12);transition:transform .2s ease;padding:0}' +
-    '#fz-btn:hover{transform:translateY(-2px) scale(1.04)}#fz-btn svg{width:24px;height:24px}' +
+    '#fz-btn:hover{transform:translateY(-2px) scale(1.04)}#fz-btn svg{width:100%;height:100%}' +
+    /* Mascot: focus eye inside a target, blinks every few seconds */
+    '.fz-av{display:block;width:100%;height:100%}.fz-av .w{fill:#F4FFFB}.fz-av .d{fill:#04120F}' +
+    '.fz-av .ring{fill:none;stroke:#04120F;stroke-opacity:.3;stroke-width:2}.fz-av .tk{fill:none;stroke:#04120F;stroke-width:3.2;stroke-linecap:round}' +
+    '.fz-av .eye{transform-box:view-box;transform-origin:32px 32px;animation:fzblink 5s infinite}' +
+    '@keyframes fzblink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}' +
+    '#fz-head .fz-hav{width:30px;height:30px;border-radius:50%;flex:none;opacity:1;overflow:hidden;background:linear-gradient(135deg,#34D399,#4E9BFF)}.fz-hav .eye{animation-delay:-2.5s}' +
     '#fz-btn:focus-visible,#fz-panel :focus-visible{outline:2px solid #fff;outline-offset:2px}' +
     '#fz-panel{position:fixed;right:18px;bottom:136px;z-index:10001;width:360px;max-width:calc(100vw - 24px);height:min(540px,calc(100dvh - 160px));' +
     'display:flex;flex-direction:column;border-radius:20px;overflow:hidden;background:rgba(8,14,16,.94);color:#E8F2EF;' +
@@ -209,7 +215,7 @@
     '#fz-send{min-width:44px;min-height:44px;border:0;border-radius:12px;background:linear-gradient(135deg,#34D399,#4E9BFF);color:#04120F;font-weight:700;cursor:pointer}' +
     '.fz-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}' +
     /* Minimal Glass theme */
-    'html.minimal #fz-btn{background:rgba(255,255,255,.08);color:#ECEFEE;border-color:rgba(255,255,255,.18);box-shadow:0 8px 24px rgba(0,0,0,.45);backdrop-filter:blur(14px)}' +
+    'html.minimal #fz-btn,html.minimal #fz-head .fz-hav{background:linear-gradient(135deg,#AFCEC1,#6F9384);color:#ECEFEE;border-color:rgba(255,255,255,.18);box-shadow:0 8px 24px rgba(0,0,0,.45);backdrop-filter:blur(14px)}' +
     'html.minimal #fz-panel{background:rgba(16,18,17,.9);color:#ECEFEE;border-color:rgba(255,255,255,.13)}' +
     'html.minimal #fz-head b{background:none;color:#9CC0B2}' +
     'html.minimal .fz-u,html.minimal #fz-send{background:#9CC0B2;color:#0B0C0B}' +
@@ -219,11 +225,13 @@
     '#fz-panel{left:8px;right:8px;bottom:8px;width:auto;max-width:none;height:min(78dvh,620px);border-radius:20px}}' +
     /* Lift the bubble above the guest sign-in bar (gate.js #mguest) on phones */
     '@media(max-width:640px){body:has(#mguest) #fz-btn{bottom:124px}}' +
-    'html.fz-perf #fz-panel{backdrop-filter:none;-webkit-backdrop-filter:none}' +
-    '@media(prefers-reduced-motion:reduce){#fz-btn,#fz-panel{transition:none}}';
+    'html.minimal .fz-av .d{fill:#0B0C0B}html.minimal .fz-av .w{fill:#F4F7F6}html.minimal .fz-av .ring,html.minimal .fz-av .tk{stroke:#0B0C0B}' +
+    'html.fz-perf #fz-panel{backdrop-filter:none;-webkit-backdrop-filter:none}html.fz-perf .fz-av .eye{animation:none}' +
+    '@media(prefers-reduced-motion:reduce){#fz-btn,#fz-panel{transition:none}.fz-av .eye{animation:none}}';
 
-  var ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-    '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.3 2.4c-.5.2-.8.6-.8 1.1v.5"/><path d="M12 16.5h.01"/></svg>';
+  var ICON = '<svg class="fz-av" viewBox="0 0 64 64" aria-hidden="true" focusable="false">' +
+    '<circle class="ring" cx="32" cy="32" r="23"/><path class="tk" d="M32 6v6M32 52v6M6 32h6M52 32h6"/>' +
+    '<g class="eye"><path class="w" d="M14 32q18-17 36 0q-18 17-36 0z"/><circle class="d" cx="32" cy="32" r="8"/><circle class="w" cx="35" cy="29" r="2.6"/></g></svg>';
 
   var btn, panel, log, input, built = false, isOpen = false, lastFocus = null;
   var page = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
@@ -281,7 +289,8 @@
     var sub = el('span', null, 'Maatram help');
     var x = el('button', null, '×'); x.id = 'fz-x'; x.type = 'button'; x.setAttribute('aria-label', 'Close help');
     x.addEventListener('click', close);
-    head.appendChild(t); head.appendChild(sub); head.appendChild(x);
+    var av = el('span', 'fz-hav'); av.innerHTML = ICON;
+    head.appendChild(av); head.appendChild(t); head.appendChild(sub); head.appendChild(x);
     log = el('div'); log.id = 'fz-log'; log.setAttribute('aria-live', 'polite'); log.setAttribute('role', 'log');
     var form = el('form'); form.id = 'fz-form';
     var lab = el('label', 'fz-sr', 'Ask Focuz a question'); lab.htmlFor = 'fz-in';
