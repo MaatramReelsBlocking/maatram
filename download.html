@@ -45,6 +45,7 @@ a{color:inherit}
 .skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:#06090B;
   padding:10px 16px;border-radius:0 0 12px 0;z-index:99;font-weight:700}
 .skip:focus{left:0}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 :focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:6px}
 .wrap{width:min(760px,100% - 40px);margin-inline:auto}
 
@@ -108,6 +109,28 @@ a.ghost{display:inline-flex;align-items:center;min-height:52px;padding:14px 22px
   border:1px solid var(--line);border-radius:99px;text-decoration:none;
   font-size:14.5px;color:var(--dim);background:var(--panel)}
 a.ghost:hover{color:var(--ink)}
+
+/* ---- two app cards ---- */
+.apps{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin:8px 0 0}
+@media (min-width:700px){.apps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.app{display:flex;flex-direction:column;gap:14px;border:1px solid var(--line);
+  background:var(--panel);border-radius:var(--r);padding:22px 20px}
+.app h2{margin:0;font-size:clamp(20px,3.4vw,24px)}
+.app p{margin:0;color:var(--dim);font-size:14.5px}
+.app .chips{margin:0}
+.app .cta{flex-direction:column;align-items:stretch;margin-top:auto}
+.app a.dl{padding:15px 22px;font-size:16px}
+.app a.ghost{justify-content:center;min-height:44px;padding:10px 18px}
+.tag{align-self:flex-start;font-size:11.5px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;padding:5px 11px;border-radius:99px;border:1px solid var(--line);color:var(--dim)}
+.tag.live{color:var(--green);border-color:rgba(47,227,143,.4)}
+html.minimal .tag.live{border-color:rgba(156,192,178,.45)}
+.both{color:var(--dim);font-size:14px;margin:16px 0 0}
+h3.for{font-size:16.5px;margin:26px 0 10px;letter-spacing:-.01em}
+h3.for:first-of-type{margin-top:0}
+ol.steps{margin:0;padding-left:20px;color:var(--dim);font-size:14.5px}
+ol.steps li + li{margin-top:9px}
+ol.steps b{color:var(--ink)}
 
 /* ---- section ---- */
 section{margin-top:clamp(48px,9vw,86px);content-visibility:auto;
@@ -337,31 +360,58 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 
   <p class="eyebrow">Android · free &amp; open source</p>
   <h1>Get Maatram on <em>your phone</em></h1>
-  <p class="lede">The app runs the App Gate, Hard Lock and Maatram Shield natively, so
-    blocking keeps working after you leave the browser. Install it straight from here —
-    it is not on the Play Store.</p>
+  <div class="apps">
+    <article class="app" aria-labelledby="appFull">
+      <span class="tag">Stable, not updated</span>
+      <h2 id="appFull">Maatram, full app</h2>
+      <p>Every feature from the website, plus native app blocking.</p>
+      <ul class="chips">
+        <li>Version <b>1.1</b></li>
+        <li><b>2.90 MB</b></li>
+        <li>Android <b>5.1</b> and above</li>
+        <li><b>com.maatram.app</b></li>
+      </ul>
+      <div class="cta">
+        <a class="dl" id="dlBtn" href="maatram-v1.1.apk" download
+           type="application/vnd.android.package-archive">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/>
+          </svg>
+          Download APK<span class="sr-only"> — Maatram full app</span>
+        </a>
+        <a class="ghost" href="#verify">Check the file is genuine</a>
+      </div>
+    </article>
 
-  <ul class="chips">
-    <li>Version <b>1.1</b></li>
-    <li><b>2.90 MB</b></li>
-    <li>Android <b>5.1</b> and above</li>
-    <li><b>com.maatram.app</b></li>
-  </ul>
-
-  <div class="cta">
-    <a class="dl" id="dlBtn" href="maatram-v1.1.apk" download
-       type="application/vnd.android.package-archive">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/>
-      </svg>
-      Download APK
-    </a>
-    <a class="ghost" href="#verify">Check the file is genuine</a>
+    <article class="app" aria-labelledby="appLock">
+      <span class="tag live">Maintained</span>
+      <h2 id="appLock">Maatram Hard Lock</h2>
+      <p>Hard Lock only. Lighter, faster, kept up to date.</p>
+      <ul class="chips">
+        <li>Version <b>1.0</b></li>
+        <li><b>7.54 MB</b></li>
+        <li>Android <b>8.0</b> and above</li>
+        <li><b>com.maatram.hardlock</b></li>
+      </ul>
+      <div class="cta">
+        <a class="dl" id="dlBtnLock" href="https://github.com/MaatramReelsBlocking/maatram-hard-lock/releases/download/build-2/maatram-hardlock.apk"
+           type="application/vnd.android.package-archive" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/>
+          </svg>
+          Download APK<span class="sr-only"> — Maatram Hard Lock</span>
+        </a>
+        <a class="ghost" href="#verify-lock">Check the file is genuine</a>
+      </div>
+    </article>
   </div>
+  <p class="both">Both can be installed together. They don't clash.</p>
 
   <section id="install" class="rv">
     <h2>The install path</h2>
+    <h3 class="for">Full app</h3>
     <p class="sub">Android asks five questions before a sideloaded app can run. Tick each
       one off — your place is saved if you leave this page to install.</p>
     <p class="sub"><b>Already have version 1.0?</b> Uninstall it first. Version 1.1 is signed
@@ -437,24 +487,50 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
         </div>
       </li>
     </ol>
+
+    <h3 class="for">Hard Lock</h3>
+    <div class="card">
+      <ol class="steps">
+        <li>Let the download finish, then open <span class="path">maatram-hardlock.apk</span>
+          from the <b>Files</b> app.</li>
+        <li>If Play Protect says <b>App blocked to protect your device</b>, tap
+          <b>More details</b>, then <b>Install anyway</b>.</li>
+        <li>Turn on the shield: <span class="path">Settings → Accessibility → Maatram Focus Shield</span>.
+          If it shows <b>Restricted setting</b>, tap OK, then go to
+          <span class="path">Settings → Apps → Maatram Hard Lock → ⋮ → Allow restricted settings</span>
+          and turn the shield on again.</li>
+        <li>Optional: in the app, turn on <b>Lock protection</b> so it cannot be uninstalled
+          while a lock is running.</li>
+      </ol>
+    </div>
   </section>
 
   <section id="verify" class="rv">
     <h2>Check the file is genuine</h2>
-    <p class="sub">This is the SHA-256 of the exact file served from this site. If your
+    <p class="sub">These are the SHA-256 hashes of the exact files we publish. If your
       copy hashes to something else, it is not the file we published — delete it.</p>
+    <h3 class="for">Full app · maatram-v1.1.apk</h3>
     <div class="hashbox">
       <p class="hash" id="hash">b643b5832b32142776e2c0e2b3fc310e14549c8e23e20c1283215857a16702b2</p>
-      <button class="copy" id="copyBtn" type="button">Copy hash</button>
+      <button class="copy" type="button">Copy hash</button>
       <pre>Windows   certutil -hashfile maatram-v1.1.apk SHA256
 macOS     shasum -a 256 maatram-v1.1.apk
 Linux     sha256sum maatram-v1.1.apk</pre>
+    </div>
+    <h3 class="for" id="verify-lock">Hard Lock · maatram-hardlock.apk (build 2)</h3>
+    <div class="hashbox">
+      <p class="hash">3ff8092388b244a8034968ac6b56e95f7de32c445f44001a1d19ab244bb78aa2</p>
+      <button class="copy" type="button">Copy hash</button>
+      <pre>Windows   certutil -hashfile maatram-hardlock.apk SHA256
+macOS     shasum -a 256 maatram-hardlock.apk
+Linux     sha256sum maatram-hardlock.apk</pre>
     </div>
   </section>
 
   <section id="details" class="rv">
     <h2>What the build contains</h2>
     <p class="sub">Read straight out of the APK manifest.</p>
+    <h3 class="for">Full app</h3>
     <dl class="spec">
       <dt>Package</dt><dd>com.maatram.app</dd>
       <dt>Version</dt><dd>1.1 (version code 2)</dd>
@@ -467,11 +543,25 @@ Linux     sha256sum maatram-v1.1.apk</pre>
       <dt>Source</dt><dd><a href="https://github.com/MaatramReelsBlocking/maatram"
         rel="noopener">github.com/MaatramReelsBlocking/maatram</a></dd>
     </dl>
+    <h3 class="for">Hard Lock</h3>
+    <dl class="spec">
+      <dt>Package</dt><dd>com.maatram.hardlock</dd>
+      <dt>Version</dt><dd>1.0 (version code 1) · build 2</dd>
+      <dt>Size</dt><dd>7 907 250 bytes · 7.54 MB</dd>
+      <dt>Requires</dt><dd>Android 8.0 (API 26) or newer · built against API 34</dd>
+      <dt>Permissions</dt><dd>Start at boot · exact alarms · vibrate · overlay · query installed apps</dd>
+      <dt>Service</dt><dd>BlockerService (Maatram Focus Shield) — the accessibility service
+        that blocks apps during a Hard Lock</dd>
+      <dt>Device admin</dt><dd>Optional — stops the app being uninstalled while a lock runs</dd>
+      <dt>Signing</dt><dd>Debug key, new for every build</dd>
+      <dt>Source</dt><dd><a href="https://github.com/MaatramReelsBlocking/maatram-hard-lock"
+        rel="noopener">github.com/MaatramReelsBlocking/maatram-hard-lock</a></dd>
+    </dl>
   </section>
 
   <section id="trouble" class="rv">
     <h2>If it will not install</h2>
-    <p class="sub">Three failures cover almost everything.</p>
+    <p class="sub">The common failures, and the fix for each.</p>
     <dl class="spec">
       <dt>App not installed</dt><dd>An older Maatram is still on the phone. Uninstall it,
         then install again.</dd>
@@ -479,6 +569,13 @@ Linux     sha256sum maatram-v1.1.apk</pre>
         warning about the source, not about the file.</dd>
       <dt>Hard Lock does nothing</dt><dd>Maatram Shield is off, or the system killed it.
         Re-enable it in Accessibility and follow the Samsung steps in gate 5.</dd>
+      <dt>Hard Lock: shield greyed out</dt><dd>Restricted setting. Tap the shield once, tap OK,
+        then Settings → Apps → Maatram Hard Lock → ⋮ → Allow restricted settings. No such
+        option? Uninstall, then reinstall the APK with SAI (Split APKs Installer) from the
+        Play Store.</dd>
+      <dt>Hard Lock: App not installed</dt><dd>An older Hard Lock build is on the phone — each
+        build has its own key. Turn off Lock protection in Device admin apps, uninstall,
+        then install again.</dd>
     </dl>
   </section>
 
@@ -569,10 +666,10 @@ Linux     sha256sum maatram-v1.1.apk</pre>
   });
   paint();
 
-  /* ---- copy hash ---- */
-  var copyBtn = document.getElementById('copyBtn');
-  var hashEl = document.getElementById('hash');
-  if (copyBtn && hashEl) {
+  /* ---- copy hash (one button per hash box) ---- */
+  [].slice.call(document.querySelectorAll('button.copy')).forEach(function(copyBtn){
+    var hashEl = copyBtn.parentNode.querySelector('.hash');
+    if (!hashEl) return;
     copyBtn.addEventListener('click', function(){
       var txt = hashEl.textContent.trim();
       var ok = function(){ copyBtn.textContent = 'Copied'; setTimeout(function(){
@@ -589,7 +686,7 @@ Linux     sha256sum maatram-v1.1.apk</pre>
         document.body.removeChild(t);
       }
     });
-  }
+  });
 
   /* ---- reveals ---- */
   var rv = [].slice.call(document.querySelectorAll('.rv'));
