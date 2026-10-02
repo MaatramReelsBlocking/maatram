@@ -61,13 +61,13 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://maatram.co.in/#webpage","url":"https://maatram.co.in/","name":"Maatram — Free Screen Time & Focus App for Students","description":"Maatram helps students cut screen time and stay focused with study timers, a social-media app gate, live study rooms, streaks and weekly screen-time reports. Free, open source, made by Gen Z for Gen Z.","inLanguage":"en","isPartOf":{"@id":"https://maatram.co.in/#website"},"about":{"@id":"https://maatram.co.in/#webapp"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://maatram.co.in/og-image.png"},"breadcrumb":{"@id":"https://maatram.co.in/#breadcrumb"},"datePublished":"2026-07-18","dateModified":"2026-09-28","author":{"@id":"https://maatram.co.in/#org"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","@id":"https://maatram.co.in/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://maatram.co.in/"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","@id":"https://maatram.co.in/#faq","mainEntity":[{"@type":"Question","name":"Is Maatram free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Maatram is completely free and open source. There are no ads, no paid tier and no subscription."}},{"@type":"Question","name":"How does Maatram reduce screen time?","acceptedAnswer":{"@type":"Answer","text":"Maatram puts friction between you and distracting apps. The App Gate makes you wait and pay a points toll before opening social media, Hard Lock blocks chosen apps for 5 to 90 minutes, and focus timers plus study rooms reward the time you spend off your phone."}},{"@type":"Question","name":"Do I need to create an account?","acceptedAnswer":{"@type":"Answer","text":"No. Every tool, including Timers, App Gate, Study Room, Screen Stats, Leaderboard, Wellness and the Sports Corner, opens without an account. Sign in with Google if you want your points saved and shown on the Leaderboard; pages that award points show a small bar reminding guests of this. Listing a sports event also needs a sign-in."}},{"@type":"Question","name":"Where is my screen-time data stored?","acceptedAnswer":{"@type":"Answer","text":"The daily screen-time numbers you enter on the Stats page are stored locally in your own browser. If you sign in, your name, photo and points are saved to your account so they can appear on the Leaderboard."}},{"@type":"Question","name":"Who built Maatram?","acceptedAnswer":{"@type":"Answer","text":"Maatram was built by a team of class 10 students at SSVM School of Excellence as an open-source school venture — inspired by Gen Z, made by Gen Z, made for Gen Z."}}]}</script>
-<link rel="stylesheet" href="index.css?v=2">
+<link rel="stylesheet" href="index.css?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap" media="print" onload="this.media='all';this.onload=null">
 <script>!function(){var a=null;try{a=localStorage.getItem("maatram_theme")}catch(a){}if("minimal"===a){document.documentElement.classList.add("minimal");var t=document.createElement("style");t.textContent='html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:"Plus Jakarta Sans","Sora",sans-serif;--font-body:"Plus Jakarta Sans","Inter",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:"Plus Jakarta Sans","Inter",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}',document.head.appendChild(t)}}();</script>
-<script defer src="index.js?v=3"></script>
+<script defer src="index.js?v=4"></script>
 <script defer src="theme.js?v=3"></script><script defer src="/focuz-bot.js"></script>
 
 
@@ -113,6 +113,7 @@
 <span>Made for <b>Gen&nbsp;Z</b></span>
 </div>
 <button id="enter"><span>Enter Maatram</span></button>
+<div class="hint" aria-hidden="true">move · click · hold</div>
 <div class="m-cue" aria-hidden="true"><span class="cue-bar"></span>SCROLL</div>
 </div>
 
@@ -122,7 +123,6 @@
 <div class="corner tr">Focus <b>·</b> Sync <b>·</b> Change</div>
 <div class="corner bl">Team Maatram</div>
 <div class="corner br">Action <b>⟹</b> Value</div>
-<div class="hint">move · click · hold</div>
 
 <div class="bar" id="barT"></div>
 <div class="bar" id="barB"></div>
@@ -149,22 +149,17 @@
 
 
 <button id="perfBtn" type="button" aria-pressed="false" title="Toggle performance mode (less animation, zero lag)">
-<span class="pf-ic">⚡</span><span class="pf-sw"></span><span id="perfLbl">Performance</span>
+<span class="pf-ic">⚡</span><span class="pf-sw"></span><span id="perfLbl">Performance: Off</span>
 </button>
+<script>document.getElementById("perfLbl").textContent=window.MAATRAM_PERF?"Performance: On":"Performance: Off";document.getElementById("perfBtn").setAttribute("aria-pressed",String(!!window.MAATRAM_PERF))</script>
 
 <section id="proof" aria-label="Maatram, verified">
 <div class="proof-in">
 <p class="proof-kick">Built in the open, not just claimed</p>
 <div class="proof-row">
-<a href="https://github.com/MaatramReelsBlocking/maatram" target="_blank" rel="noopener" class="proof-badge">
-<img loading="lazy" decoding="async" src="https://img.shields.io/github/stars/MaatramReelsBlocking/maatram?style=flat-square&color=2fe38f&labelColor=0a1c16" srcset="https://img.shields.io/github/stars/MaatramReelsBlocking/maatram?style=flat-square&color=2fe38f&labelColor=0a1c16 1x" width="94" height="20" alt="Maatram GitHub stars"><span class="sr-only"> — Maatram GitHub stars on GitHub</span>
-</a>
-<a href="https://github.com/MaatramReelsBlocking/maatram" target="_blank" rel="noopener" class="proof-badge">
-<img loading="lazy" decoding="async" src="https://img.shields.io/github/forks/MaatramReelsBlocking/maatram?style=flat-square&color=37b6ff&labelColor=0a1c16" srcset="https://img.shields.io/github/forks/MaatramReelsBlocking/maatram?style=flat-square&color=37b6ff&labelColor=0a1c16 1x" width="94" height="20" alt="Maatram GitHub forks"><span class="sr-only"> — Maatram GitHub forks on GitHub</span>
-</a>
-<a href="https://github.com/MaatramReelsBlocking/maatram/blob/main/LICENSE" target="_blank" rel="noopener" class="proof-badge">
-<img loading="lazy" decoding="async" src="https://img.shields.io/badge/license-MIT-2fe38f?style=flat-square&labelColor=0a1c16" srcset="https://img.shields.io/badge/license-MIT-2fe38f?style=flat-square&labelColor=0a1c16 1x" width="106" height="20" alt="MIT License"><span class="sr-only"> — MIT License on GitHub</span>
-</a>
+<a href="https://github.com/MaatramReelsBlocking/maatram/stargazers" target="_blank" rel="noopener" class="proof-badge pb"><span class="pb-k">Stars</span><span class="pb-v" id="pbStars">View</span></a>
+<a href="https://github.com/MaatramReelsBlocking/maatram/forks" target="_blank" rel="noopener" class="proof-badge pb"><span class="pb-k">Forks</span><span class="pb-v pb-blue" id="pbForks">View</span></a>
+<a href="https://github.com/MaatramReelsBlocking/maatram/blob/main/LICENSE" target="_blank" rel="noopener" class="proof-badge pb"><span class="pb-k">License</span><span class="pb-v">MIT</span></a>
 <a href="leaderboard.html" class="proof-badge proof-cta">See real students on the live leaderboard →</a>
 </div>
 <p class="proof-sub">Maatram is built and used daily by Team Maatram at SSVM School of Excellence — every line of it is public on GitHub, so you never have to take our word for it.</p>

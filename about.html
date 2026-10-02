@@ -361,7 +361,7 @@ body{padding-top:52px!important}
   function paint(on){
     document.documentElement.classList.toggle('perf',on);
     btn.setAttribute('aria-pressed',String(on));
-    lbl.textContent = on ? 'Performance: On' : 'Performance';
+    lbl.textContent = on ? 'Performance: On' : 'Performance: Off';
   }
   paint(!!window.MAATRAM_PERF);
   btn.addEventListener('click',function(){

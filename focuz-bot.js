@@ -1,10 +1,11 @@
-/* Focuz — Maatram help bot. Offline FAQ matcher: no network, no deps.
+/* Focuz — Maatram help bot. AI answers (streamed from /api/focuz) for any question,
+   with an offline FAQ matcher as instant chips and as the fallback when AI is unreachable.
    Loaded with <script defer src="/focuz-bot.js"> on every page. */
 (function () {
   'use strict';
   if (window.__focuz) return; window.__focuz = true;
 
-  var GREET = "Hi, I'm Focuz. Ask me anything about Maatram: points, Hard Lock, study rooms or the app.";
+  var GREET = "Hi, I'm Focuz, Maatram's AI. Ask me anything: homework in any subject, exam plans, focus tips, coding, or how Maatram works.";
   var MAIL = 'maatram97@gmail.com';
 
   /* ---- Knowledge base: every fact below is taken from the live site pages ---- */
@@ -233,50 +234,188 @@
     '<circle class="ring" cx="32" cy="32" r="23"/><path class="tk" d="M32 6v6M32 52v6M6 32h6M52 32h6"/>' +
     '<g class="eye"><path class="w" d="M14 32q18-17 36 0q-18 17-36 0z"/><circle class="d" cx="32" cy="32" r="8"/><circle class="w" cx="35" cy="29" r="2.6"/></g></svg>';
 
-  var btn, panel, log, input, built = false, isOpen = false, lastFocus = null;
+  /* AI chat additions: wider panel, markdown, typing dots, toolbar, textarea */
+  CSS +=
+    '#fz-panel{width:400px;height:min(620px,calc(100dvh - 160px))}' +
+    '#fz-panel.big{width:min(760px,calc(100vw - 36px));height:calc(100dvh - 150px)}' +
+    '#fz-head .fz-tb{width:36px;height:36px;border:0;background:none;color:inherit;font-size:17px;cursor:pointer;border-radius:10px;opacity:.75}' +
+    '#fz-head .fz-tb:hover{background:rgba(255,255,255,.07);opacity:1}#fz-x{width:40px;height:40px}' +
+    '#fz-head span .fz-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#34D399;margin-right:5px;vertical-align:1px;box-shadow:0 0 8px #34D399}' +
+    '#fz-head span .fz-dot.off{background:#9aa5a2;box-shadow:none}' +
+    '.fz-b.md{white-space:normal;max-width:94%}.fz-b.md p{margin:0 0 8px}.fz-b.md p:last-child{margin-bottom:0}' +
+    '.fz-b.md ul,.fz-b.md ol{margin:4px 0 8px;padding-left:20px}.fz-b.md li{margin:2px 0}' +
+    '.fz-b.md h4{margin:10px 0 4px;font-size:15px;color:#6EE7B7}.fz-b.md a{display:inline;margin:0}' +
+    '.fz-b.md code{font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(0,0,0,.4);padding:1px 5px;border-radius:5px}' +
+    '.fz-b.md pre{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;overflow-x:auto;margin:6px 0 8px}' +
+    '.fz-b.md pre code{background:none;padding:0;white-space:pre}' +
+    '.fz-b.md blockquote{margin:6px 0;padding-left:10px;border-left:3px solid rgba(52,211,153,.5);opacity:.9}' +
+    '.fz-act{display:flex;gap:6px;margin-top:8px}.fz-act button{min-height:30px;padding:4px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:inherit;font:inherit;font-size:12px;cursor:pointer;opacity:.75}' +
+    '.fz-act button:hover{opacity:1;border-color:rgba(52,211,153,.5)}' +
+    '.fz-typing{display:inline-flex;gap:4px;padding:4px 2px}.fz-typing i{width:7px;height:7px;border-radius:50%;background:#6EE7B7;animation:fzdot 1s infinite ease-in-out}' +
+    '.fz-typing i:nth-child(2){animation-delay:.15s}.fz-typing i:nth-child(3){animation-delay:.3s}' +
+    '@keyframes fzdot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}' +
+    '.fz-err{color:#fca5a5}' +
+    '#fz-form{align-items:flex-end}' +
+    '#fz-in{resize:none;padding:11px 14px;line-height:1.4;max-height:140px;overflow-y:auto;font-family:inherit}' +
+    '#fz-send.stop{background:rgba(255,255,255,.12);color:#E8F2EF;border:1px solid rgba(255,255,255,.2)}' +
+    '.fz-note{font-size:11px;opacity:.45;text-align:center;padding:0 10px 8px}' +
+    'html.minimal .fz-b.md h4,html.minimal .fz-typing i{color:#AFCEC1;background:#AFCEC1}html.minimal .fz-b.md h4{background:none}' +
+    '@media(max-width:560px){#fz-panel.big{left:0;right:0;bottom:0;width:auto;height:100dvh;border-radius:0}}' +
+    '@media(prefers-reduced-motion:reduce){.fz-typing i{animation:none;opacity:.7}}html.fz-perf .fz-typing i{animation:none;opacity:.7}';
+
+  var API = '/api/focuz', KEY = 'focuz_chat_v2';
+  var btn, panel, log, input, send, status, built = false, isOpen = false, lastFocus = null;
+  var hist = [], busy = null, aiDown = false;
   var page = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
   if (page === 'index') page = '';
 
   function el(tag, cls, txt) { var n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; }
   function scrollEnd() { log.scrollTop = log.scrollHeight; }
   function say(text, who) { var m = el('div', 'fz-m ' + (who === 'u' ? 'fz-u' : 'fz-b'), text); log.appendChild(m); scrollEnd(); return m; }
+  function save() { try { sessionStorage.setItem(KEY, JSON.stringify(hist.slice(-30))); } catch (_) {} }
+  function remember(role, content) { hist.push({ role: role, content: content }); save(); }
+
+  /* ---- tiny safe markdown: escape first, then format ---- */
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function inline(s) {
+    return s
+      .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?:;]|$)/g, '$1<em>$2</em>')
+      .replace(/\[([^\]\n]+)\]\(((?:https?:\/\/|\/)[^)\s"]+)\)/g, function (m, t, u) {
+        var ext = /^https?:/.test(u) && u.indexOf(location.origin) !== 0;
+        return '<a href="' + u + '"' + (ext ? ' target="_blank" rel="noopener nofollow"' : '') + '>' + t + '</a>';
+      });
+  }
+  function md(src) {
+    var parts = esc(src).split(/```[\w+-]*\n?/), html = '';
+    parts.forEach(function (chunk, i) {
+      if (i % 2) { html += '<pre><code>' + chunk.replace(/\n$/, '') + '</code></pre>'; return; }
+      var list = null;
+      chunk.split('\n').forEach(function (line) {
+        var ul = /^\s*[-*•]\s+(.*)/.exec(line), ol = /^\s*\d+[.)]\s+(.*)/.exec(line), kind = ul ? 'ul' : ol ? 'ol' : null;
+        if (list && list !== kind) { html += '</' + list + '>'; list = null; }
+        if (kind) { if (!list) { html += '<' + kind + '>'; list = kind; } html += '<li>' + inline((ul || ol)[1]) + '</li>'; return; }
+        var h = /^#{1,6}\s+(.*)/.exec(line), q = /^&gt;\s?(.*)/.exec(line);
+        if (h) html += '<h4>' + inline(h[1]) + '</h4>';
+        else if (q) html += '<blockquote>' + inline(q[1]) + '</blockquote>';
+        else if (line.trim()) html += '<p>' + inline(line) + '</p>';
+      });
+      if (list) html += '</' + list + '>';
+    });
+    return html;
+  }
+  window.__focuzMd = md; // exposed for tests
+
+  function actions(m, text) {
+    var bar = el('div', 'fz-act'), c = el('button', null, 'Copy'); c.type = 'button';
+    c.addEventListener('click', function () {
+      (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {
+        c.textContent = 'Copied'; setTimeout(function () { c.textContent = 'Copy'; }, 1400);
+      }, function () { c.textContent = 'Copy failed'; });
+    });
+    bar.appendChild(c); m.appendChild(bar);
+  }
+  function botMd(text, withActions) {
+    var m = el('div', 'fz-m fz-b md'); m.innerHTML = md(text); log.appendChild(m);
+    if (withActions) actions(m, text);
+    scrollEnd(); return m;
+  }
+
   function chips(ids, label) {
     var box = el('div', 'fz-chips'); box.setAttribute('role', 'group'); box.setAttribute('aria-label', label || 'Suggested questions');
     ids.forEach(function (id) {
       var e = KB.filter(function (x) { return x.id === id; })[0]; if (!e) return;
       var c = el('button', 'fz-chip', e.q); c.type = 'button';
-      c.addEventListener('click', function () { say(e.q, 'u'); answer(e); });
+      c.addEventListener('click', function () { if (busy) return; say(e.q, 'u'); remember('user', e.q); answer(e); });
       box.appendChild(c);
     });
     log.appendChild(box); scrollEnd();
   }
+  /* instant offline answer from the help-centre KB */
   function answer(e) {
-    var m = say(e.a, 'b');
+    var m = say(e.a, 'b'), extra = '';
     if (e.l) {
       var a = el('a', null, e.l[0] + ' →'); a.href = e.l[1];
       if (/^https?:/.test(e.l[1])) { a.target = '_blank'; a.rel = 'noopener'; }
       m.appendChild(document.createElement('br')); m.appendChild(a);
+      extra = ' [' + e.l[0] + '](' + e.l[1] + ')';
     }
     if (e.mail && !e.l) {
       var ml = el('a', null, 'Email ' + MAIL + ' →'); ml.href = 'mailto:' + MAIL;
       m.appendChild(document.createElement('br')); m.appendChild(ml);
     }
+    remember('assistant', e.a + extra);
   }
-  function ask(q) {
-    q = q.trim(); if (!q) return;
-    say(q, 'u');
-    var r = match(q);
+  function offline(q, r) {
     if (r.length && r[0].s >= 1.5 && (!r[1] || r[0].s >= r[1].s * 1.25)) {
       answer(r[0].e);
     } else if (r.length) {
       say('Not fully sure what you mean. Did you mean one of these?', 'b');
       chips(r.slice(0, 3).map(function (x) { return x.e.id; }), 'Did you mean');
     } else {
-      var m = say("I don't have an answer for that yet. The team can help: email " + MAIL + ' or use the feedback form on Socials.', 'b');
+      var m = say("I'm in offline mode right now, so I can only answer Maatram questions. The team can help: email " + MAIL + ' or use the feedback form on Socials.', 'b');
       var a = el('a', null, 'Open Socials & feedback →'); a.href = '/socials.html';
       m.appendChild(document.createElement('br')); m.appendChild(a);
       chips(['points', 'hardlock', 'room', 'android'], 'Popular questions');
     }
+  }
+  function setStatus(on) {
+    status.innerHTML = '<i class="fz-dot' + (on ? '' : ' off') + '"></i>' + (on ? 'AI · ask anything' : 'Offline FAQ mode');
+  }
+  function setBusy(ctrl) {
+    busy = ctrl;
+    send.classList.toggle('stop', !!ctrl);
+    send.textContent = ctrl ? '■' : '➤';
+    send.setAttribute('aria-label', ctrl ? 'Stop answer' : 'Send');
+  }
+
+  function ask(q) {
+    q = q.trim(); if (!q || busy) return;
+    say(q, 'u'); remember('user', q);
+    var r = match(q);
+    if (aiDown || !window.fetch || !window.TextDecoder) { offline(q, r); return; }
+    var ctx = r.slice(0, 3).map(function (x) { return '- ' + x.e.q + ' ' + x.e.a + (x.e.l ? ' (' + x.e.l[1] + ')' : ''); }).join('\n');
+    var m = el('div', 'fz-m fz-b md'); m.innerHTML = '<span class="fz-typing" aria-label="Focuz is typing"><i></i><i></i><i></i></span>';
+    log.appendChild(m); scrollEnd();
+    var ctrl = window.AbortController ? new AbortController() : null, text = '', raf = 0;
+    function stopped() { return !!(ctrl && ctrl.signal.aborted); }
+    setBusy(ctrl || {});
+    function paint() { raf = 0; var near = log.scrollHeight - log.scrollTop - log.clientHeight < 80; m.innerHTML = md(text); if (near) scrollEnd(); }
+    fetch(API, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctrl && ctrl.signal,
+      body: JSON.stringify({ messages: hist.slice(-12), page: page || 'home', ctx: ctx })
+    }).then(function (res) {
+      if (res.status === 429) return res.json().then(function (j) { throw { soft: j.error || 'Too many questions at once. Try again in a minute.' }; });
+      if (!res.ok || !res.body) throw new Error('ai ' + res.status);
+      var reader = res.body.getReader(), dec = new TextDecoder();
+      function pump() {
+        return reader.read().then(function (x) {
+          if (x.done) return;
+          text += dec.decode(x.value, { stream: true });
+          if (!raf) raf = requestAnimationFrame(paint);
+          return pump();
+        });
+      }
+      return pump();
+    }).catch(function (err) {
+      if (stopped() || (err && err.name === 'AbortError')) return;
+      if (err && err.soft) { m.remove(); var s = say(err.soft, 'b'); s.classList.add('fz-err'); hist.pop(); save(); throw 'handled'; }
+      if (!text) { aiDown = true; setStatus(false); m.remove(); offline(q, r); throw 'handled'; }
+    }).then(function () {
+      if (raf) cancelAnimationFrame(raf);
+      if (!text) { m.remove(); if (!stopped()) { aiDown = true; setStatus(false); offline(q, r); } return; }
+      if (stopped()) text += ' …';
+      m.innerHTML = md(text); actions(m, text); scrollEnd();
+      remember('assistant', text);
+    }, function () {}).then(function () { setBusy(null); if (isOpen && matchMedia('(pointer:fine)').matches) input.focus(); });
+  }
+
+  function reset() {
+    if (busy && busy.abort) busy.abort();
+    hist = []; save(); log.innerHTML = '';
+    say(GREET, 'b');
+    chips(PAGE_CHIPS[page] || PAGE_CHIPS['']);
   }
 
   function build() {
@@ -286,23 +425,40 @@
     panel.hidden = true;
     var head = el('div'); head.id = 'fz-head';
     var t = el('b', null, 'Focuz'); t.id = 'fz-title';
-    var sub = el('span', null, 'Maatram help');
+    status = el('span');
+    var nw = el('button', 'fz-tb', '↺'); nw.type = 'button'; nw.title = 'New chat'; nw.setAttribute('aria-label', 'Start a new chat');
+    nw.addEventListener('click', reset);
+    var big = el('button', 'fz-tb', '⤢'); big.type = 'button'; big.title = 'Expand'; big.setAttribute('aria-label', 'Expand chat');
+    big.setAttribute('aria-pressed', 'false');
+    big.addEventListener('click', function () { var on = panel.classList.toggle('big'); big.setAttribute('aria-pressed', String(on)); scrollEnd(); });
     var x = el('button', null, '×'); x.id = 'fz-x'; x.type = 'button'; x.setAttribute('aria-label', 'Close help');
     x.addEventListener('click', close);
     var av = el('span', 'fz-hav'); av.innerHTML = ICON;
-    head.appendChild(av); head.appendChild(t); head.appendChild(sub); head.appendChild(x);
+    head.appendChild(av); head.appendChild(t); head.appendChild(status); head.appendChild(nw); head.appendChild(big); head.appendChild(x);
     log = el('div'); log.id = 'fz-log'; log.setAttribute('aria-live', 'polite'); log.setAttribute('role', 'log');
     var form = el('form'); form.id = 'fz-form';
     var lab = el('label', 'fz-sr', 'Ask Focuz a question'); lab.htmlFor = 'fz-in';
-    input = el('input'); input.id = 'fz-in'; input.type = 'text'; input.autocomplete = 'off'; input.maxLength = 200;
-    input.placeholder = 'Ask about points, locks, rooms…';
-    var send = el('button', null, '➤'); send.id = 'fz-send'; send.type = 'submit'; send.setAttribute('aria-label', 'Send');
+    input = el('textarea'); input.id = 'fz-in'; input.rows = 1; input.autocomplete = 'off'; input.maxLength = 2000;
+    input.placeholder = 'Ask anything…';
+    function grow() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 140) + 'px'; }
+    input.addEventListener('input', grow);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { cancelable: true })); }
+    });
+    send = el('button', null, '➤'); send.id = 'fz-send'; send.type = 'submit'; send.setAttribute('aria-label', 'Send');
     form.appendChild(lab); form.appendChild(input); form.appendChild(send);
-    form.addEventListener('submit', function (ev) { ev.preventDefault(); var v = input.value; input.value = ''; ask(v); });
-    panel.appendChild(head); panel.appendChild(log); panel.appendChild(form);
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      if (busy) { if (busy.abort) busy.abort(); return; }
+      var v = input.value; input.value = ''; grow(); ask(v);
+    });
+    var note = el('div', 'fz-note', 'Focuz is AI and can make mistakes. Check important answers.');
+    panel.appendChild(head); panel.appendChild(log); panel.appendChild(form); panel.appendChild(note);
     document.body.appendChild(panel);
-    say(GREET, 'b');
-    chips(PAGE_CHIPS[page] || PAGE_CHIPS['']);
+    setStatus(true);
+    try { hist = JSON.parse(sessionStorage.getItem(KEY) || '[]') || []; } catch (_) { hist = []; }
+    if (!hist.length) { say(GREET, 'b'); chips(PAGE_CHIPS[page] || PAGE_CHIPS['']); }
+    else hist.forEach(function (h) { h.role === 'user' ? say(h.content, 'u') : botMd(h.content, true); });
   }
   function open() {
     if (!built) build();
@@ -310,6 +466,7 @@
     panel.hidden = false; isOpen = true;
     requestAnimationFrame(function () { if (isOpen) panel.classList.add('open'); });
     btn.setAttribute('aria-expanded', 'true');
+    scrollEnd();
     if (window.matchMedia('(pointer:fine)').matches) input.focus(); else panel.querySelector('#fz-x').focus();
   }
   function close() {
@@ -323,8 +480,8 @@
     var st = el('style'); st.id = 'fz-css'; st.textContent = CSS; document.head.appendChild(st);
     if (window.MAATRAM_PERF === true) document.documentElement.classList.add('fz-perf');
     btn = el('button'); btn.id = 'fz-btn'; btn.type = 'button';
-    btn.setAttribute('aria-label', 'Open Focuz help'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'fz-panel');
-    btn.title = 'Focuz — help'; btn.innerHTML = ICON;
+    btn.setAttribute('aria-label', 'Open Focuz AI help'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'fz-panel');
+    btn.title = 'Focuz — ask anything'; btn.innerHTML = ICON;
     btn.addEventListener('click', function () { isOpen ? close() : open(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });
     document.body.appendChild(btn);

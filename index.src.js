@@ -315,7 +315,7 @@ addEventListener('resize',fitAll);
   function paint(on){
     document.documentElement.classList.toggle('perf',on);
     btn.setAttribute('aria-pressed',String(on));
-    lbl.textContent = on ? 'Performance: On' : 'Performance';
+    lbl.textContent = on ? 'Performance: On' : 'Performance: Off';
   }
   paint(!!window.MAATRAM_PERF);
   btn.addEventListener('click',function(){
@@ -329,3 +329,13 @@ addEventListener('resize',fitAll);
 })();
 
 ;
+
+/* ══ live GitHub counts for the proof badges ══ */
+(function(){
+  var s=document.getElementById('pbStars'),f=document.getElementById('pbForks');
+  if(!s||!f||!window.fetch) return;
+  fetch('https://api.github.com/repos/MaatramReelsBlocking/maatram')
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(d){if(d){s.textContent=d.stargazers_count;f.textContent=d.forks_count;}})
+    .catch(function(){});
+})();
