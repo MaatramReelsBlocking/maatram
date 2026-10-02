@@ -143,7 +143,7 @@
   /* ── perf pill restyle so both pills match ── */
   +'html.minimal #perfBtn{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.05);'
   +'backdrop-filter:blur(14px);color:#8A928E}'
-  +'html.minimal.perf #perfBtn .pf-sw,html.perf.minimal #perfBtn .pf-sw{'
+  +'html.minimal:not(.perf) #perfBtn .pf-sw{'
   +'background:linear-gradient(90deg,#9CC0B2,#7E9C8E)!important}'
 
   /* ── shared top banner (#mnav): neon gradients + gold chip → sage glass ── */

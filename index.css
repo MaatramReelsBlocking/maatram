@@ -229,9 +229,9 @@ body{padding-top:52px!important}
   #perfBtn .pf-ic{font-size:13px;line-height:1}
   #perfBtn .pf-sw{width:28px;height:15px;border-radius:100px;border:1px solid rgba(255,255,255,.3);position:relative;transition:all .25s;flex-shrink:0}
   #perfBtn .pf-sw::after{content:"";position:absolute;top:1.5px;left:2px;width:10px;height:10px;border-radius:50%;background:#cfe9dd;transition:all .25s}
-  html.perf #perfBtn .pf-sw{background:linear-gradient(90deg,#2fe38f,#37b6ff);border-color:transparent}
-  html.perf #perfBtn .pf-sw::after{left:14px;background:#04120f}
-  html.perf #perfBtn{border-color:rgba(47,227,143,.4)}
+  html:not(.perf) #perfBtn .pf-sw{background:linear-gradient(90deg,#2fe38f,#37b6ff);border-color:transparent}
+  html:not(.perf) #perfBtn .pf-sw::after{left:14px;background:#04120f}
+  html:not(.perf) #perfBtn{border-color:rgba(47,227,143,.4)}
   @media(pointer:coarse){#perfBtn{bottom:12px;left:12px}}
 
 

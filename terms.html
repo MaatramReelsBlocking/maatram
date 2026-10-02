@@ -169,9 +169,9 @@ body{padding-top:52px!important}
   #perfBtn .pf-ic{font-size:13px;line-height:1}
   #perfBtn .pf-sw{width:28px;height:15px;border-radius:100px;border:1px solid rgba(255,255,255,.3);position:relative;transition:all .25s;flex-shrink:0}
   #perfBtn .pf-sw::after{content:"";position:absolute;top:1.5px;left:2px;width:10px;height:10px;border-radius:50%;background:#cfe9dd;transition:all .25s}
-  html.perf #perfBtn .pf-sw{background:linear-gradient(90deg,#2fe38f,#37b6ff);border-color:transparent}
-  html.perf #perfBtn .pf-sw::after{left:14px;background:#04120f}
-  html.perf #perfBtn{border-color:rgba(47,227,143,.4)}
+  html:not(.perf) #perfBtn .pf-sw{background:linear-gradient(90deg,#2fe38f,#37b6ff);border-color:transparent}
+  html:not(.perf) #perfBtn .pf-sw::after{left:14px;background:#04120f}
+  html:not(.perf) #perfBtn{border-color:rgba(47,227,143,.4)}
   @media(pointer:coarse){#perfBtn{bottom:12px;left:12px}}
 
 </style>
@@ -182,7 +182,7 @@ body{padding-top:52px!important}
 <script>/* Skin class + the few tokens that must exist at first paint, so
    theme.js itself no longer has to block rendering. */
 (function(){var m=null;try{m=localStorage.getItem('maatram_theme');}catch(_){}if(m!=='minimal')return;document.documentElement.classList.add('minimal');var s=document.createElement("style");s.textContent="html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:\"Plus Jakarta Sans\",\"Sora\",sans-serif;--font-body:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}";document.head.appendChild(s);})();</script>
-<script defer src="theme.js?v=3"></script><script defer src="/focuz-bot.js"></script>
+<script defer src="theme.js?v=4"></script><script defer src="/focuz-bot.js"></script>
 
 <style id="mfootCSS">
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
@@ -391,8 +391,8 @@ body{padding-top:52px!important}
   var KEY='maatram_perf', btn=document.getElementById('perfBtn'), lbl=document.getElementById('perfLbl');
   function paint(on){
     document.documentElement.classList.toggle('perf',on);
-    btn.setAttribute('aria-pressed',String(on));
-    lbl.textContent = on ? 'Performance: On' : 'Performance: Off';
+    btn.setAttribute('aria-pressed',String(!on));
+    lbl.textContent = on ? 'Performance: Off' : 'Performance: On';
   }
   paint(!!window.MAATRAM_PERF);
   btn.addEventListener('click',function(){

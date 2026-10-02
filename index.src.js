@@ -314,8 +314,8 @@ addEventListener('resize',fitAll);
   var KEY='maatram_perf', btn=document.getElementById('perfBtn'), lbl=document.getElementById('perfLbl');
   function paint(on){
     document.documentElement.classList.toggle('perf',on);
-    btn.setAttribute('aria-pressed',String(on));
-    lbl.textContent = on ? 'Performance: On' : 'Performance: Off';
+    btn.setAttribute('aria-pressed',String(!on));
+    lbl.textContent = on ? 'Performance: Off' : 'Performance: On';
   }
   paint(!!window.MAATRAM_PERF);
   btn.addEventListener('click',function(){

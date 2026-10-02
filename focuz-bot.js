@@ -84,7 +84,7 @@
 
     // Misc
     { id: 'lag', q: 'The site is slow or laggy', k: ['slow', 'lag', 'laggy', 'performance', 'battery drain', 'heavy', 'hang', 'freeze'],
-      a: 'Turn on ⚡ Performance (bottom-left button). It stops the background animations while keeping every tool working. It switches on by itself on smaller phones.' },
+      a: 'Turn off ⚡ Performance (bottom-left button). That stops the background animations while keeping every tool working. It is off by default on smaller phones.' },
     { id: 'theme', q: 'Can I change the look?', k: ['theme', 'dark mode', 'light mode', 'colors', 'customize', 'minimal', 'neon', 'design'],
       a: 'Yes. Tap the ◐ Customize UI button at the bottom-right to switch the whole site between Neon and Minimal Glass.' },
     { id: 'contact', q: 'Contact the team', k: ['contact', 'email', 'support', 'help me', 'human', 'report', 'bug', 'feedback', 'complaint', 'suggestion'],
