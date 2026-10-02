@@ -265,7 +265,7 @@
 
   var API = '/api/focuz', KEY = 'focuz_chat_v2';
   var btn, panel, log, input, send, status, built = false, isOpen = false, lastFocus = null;
-  var hist = [], busy = null, aiDown = false;
+  var hist = [], busy = null;
   var page = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
   if (page === 'index') page = '';
 
@@ -354,14 +354,14 @@
       say('Not fully sure what you mean. Did you mean one of these?', 'b');
       chips(r.slice(0, 3).map(function (x) { return x.e.id; }), 'Did you mean');
     } else {
-      var m = say("I'm in offline mode right now, so I can only answer Maatram questions. The team can help: email " + MAIL + ' or use the feedback form on Socials.', 'b');
+      var m = say("Focuz AI is busy right now. Ask again in a moment and I'll answer properly. For Maatram questions you can also tap one below, or email " + MAIL + '.', 'b');
       var a = el('a', null, 'Open Socials & feedback →'); a.href = '/socials.html';
       m.appendChild(document.createElement('br')); m.appendChild(a);
       chips(['points', 'hardlock', 'room', 'android'], 'Popular questions');
     }
   }
   function setStatus(on) {
-    status.innerHTML = '<i class="fz-dot' + (on ? '' : ' off') + '"></i>' + (on ? 'AI · ask anything' : 'Offline FAQ mode');
+    status.innerHTML = '<i class="fz-dot' + (on ? '' : ' off') + '"></i>' + (on ? 'AI · ask anything' : 'AI busy · will retry');
   }
   function setBusy(ctrl) {
     busy = ctrl;
@@ -374,7 +374,7 @@
     q = q.trim(); if (!q || busy) return;
     say(q, 'u'); remember('user', q);
     var r = match(q);
-    if (aiDown || !window.fetch || !window.TextDecoder) { offline(q, r); return; }
+    if (!window.fetch || !window.TextDecoder) { offline(q, r); return; }
     var ctx = r.slice(0, 3).map(function (x) { return '- ' + x.e.q + ' ' + x.e.a + (x.e.l ? ' (' + x.e.l[1] + ')' : ''); }).join('\n');
     var m = el('div', 'fz-m fz-b md'); m.innerHTML = '<span class="fz-typing" aria-label="Focuz is typing"><i></i><i></i><i></i></span>';
     log.appendChild(m); scrollEnd();
@@ -401,12 +401,12 @@
     }).catch(function (err) {
       if (stopped() || (err && err.name === 'AbortError')) return;
       if (err && err.soft) { m.remove(); var s = say(err.soft, 'b'); s.classList.add('fz-err'); hist.pop(); save(); throw 'handled'; }
-      if (!text) { aiDown = true; setStatus(false); m.remove(); offline(q, r); throw 'handled'; }
+      if (!text) { setStatus(false); m.remove(); offline(q, r); throw 'handled'; }
     }).then(function () {
       if (raf) cancelAnimationFrame(raf);
-      if (!text) { m.remove(); if (!stopped()) { aiDown = true; setStatus(false); offline(q, r); } return; }
+      if (!text) { m.remove(); if (!stopped()) { setStatus(false); offline(q, r); } return; }
       if (stopped()) text += ' …';
-      m.innerHTML = md(text); actions(m, text); scrollEnd();
+      setStatus(true); m.innerHTML = md(text); actions(m, text); scrollEnd();
       remember('assistant', text);
     }, function () {}).then(function () { setBusy(null); if (isOpen && matchMedia('(pointer:fine)').matches) input.focus(); });
   }
