@@ -8,6 +8,8 @@ const BLOCKED_DOMAINS = [
 ];
 
 const RULE_ID_START = 1000;
+const CUSTOM_RULE_START = 2000;   // your own sites: 2000, 2001, ...
+const MAX_CUSTOM_SITES = 50;
 const LOCK_ALARM = "maatram-hard-lock";
 
 
@@ -43,15 +45,86 @@ function createBlockingRules() {
 }
 
 
+/*
+ * Your own sites (added in the popup or on maatram.co.in).
+ * They use a plain "block" rule, which needs no host permission,
+ * so the extension's permissions stay exactly the same.
+ */
+
+function normalizeSite(value) {
+
+  const d = String(value || "").trim().toLowerCase()
+    .replace(/^[a-z][a-z0-9+.-]*:\/\//, "")
+    .split(/[\/?#:]/)[0]
+    .replace(/^www\./, "");
+
+  if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d)) return "";
+  if (/(^|\.)maatram\.co\.in$/.test(d)) return "";
+  if (BLOCKED_DOMAINS.includes(d)) return "";
+  return d;
+
+}
+
+
+async function getCustomSites() {
+
+  const { customSites = [] } = await chrome.storage.local.get("customSites");
+  return Array.isArray(customSites) ? customSites : [];
+
+}
+
+
+async function setCustomSites(list) {
+
+  const data = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime"]);
+
+  if (data.hardLockActive && Number(data.hardLockEndTime) > Date.now()) {
+    throw new Error("You can change your sites after the lock ends.");
+  }
+
+  const clean = [...new Set((Array.isArray(list) ? list : []).map(normalizeSite).filter(Boolean))];
+
+  if (clean.length > MAX_CUSTOM_SITES) {
+    throw new Error("You can add up to " + MAX_CUSTOM_SITES + " sites.");
+  }
+
+  await chrome.storage.local.set({ customSites: clean });
+  return clean;
+
+}
+
+
+function createCustomRules(sites) {
+
+  return sites.map((domain, index) => ({
+    id: CUSTOM_RULE_START + index,
+    priority: 100,
+    action: { type: "block" },
+    condition: { requestDomains: [domain], resourceTypes: ["main_frame"] }
+  }));
+
+}
+
+
+async function customRuleIds() {
+
+  const rules = await chrome.declarativeNetRequest.getDynamicRules();
+  return rules.map(r => r.id).filter(id => id >= CUSTOM_RULE_START);
+
+}
+
+
 async function enableBlocking() {
 
   const rules =
-    createBlockingRules();
+    createBlockingRules().concat(
+      createCustomRules(await getCustomSites())
+    );
 
   await chrome.declarativeNetRequest.updateDynamicRules({
 
     removeRuleIds:
-      rules.map(rule => rule.id),
+      rules.map(rule => rule.id).concat(await customRuleIds()),
 
     addRules:
       rules
@@ -67,7 +140,7 @@ async function disableBlocking() {
     BLOCKED_DOMAINS.map(
       (_, index) =>
         RULE_ID_START + index
-    );
+    ).concat(await customRuleIds());
 
   await chrome.declarativeNetRequest.updateDynamicRules({
 
@@ -267,6 +340,24 @@ chrome.runtime.onMessageExternal.addListener(
         }
 
 
+        if (message.action === "SET_CUSTOM_SITES") {
+
+          sendResponse({ success: true, sites: await setCustomSites(message.sites) });
+
+          return;
+
+        }
+
+
+        if (message.action === "GET_CUSTOM_SITES") {
+
+          sendResponse({ success: true, sites: await getCustomSites() });
+
+          return;
+
+        }
+
+
         if (message.action === "GET_USAGE") {
 
           const { usage = {} } = await chrome.storage.local.get("usage");
@@ -411,6 +502,14 @@ chrome.runtime.onMessage.addListener(
           );
 
           sendResponse({ success: true, active: true });
+
+          return;
+
+        }
+
+        if (message.action === "SET_CUSTOM_SITES") {
+
+          sendResponse({ success: true, sites: await setCustomSites(message.sites) });
 
           return;
 

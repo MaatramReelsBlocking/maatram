@@ -635,3 +635,117 @@ h1 {
   display: none;
 
 }
+
+
+/* =========================
+   YOUR SITES
+========================= */
+
+.my-sites {
+
+  margin-top: 17px;
+
+}
+
+.my-sites .section-title {
+
+  display: block;
+
+}
+
+.lock-row input {
+
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 11px 10px;
+
+  border-radius: 10px;
+
+  border: 1px solid #16473d;
+
+  background: #061f1a;
+
+  color: #d6f3ec;
+
+  font-size: 12px;
+
+  font-family: inherit;
+
+}
+
+.lock-row input:focus-visible {
+
+  outline: 2px solid #35bdf3;
+
+  outline-offset: 2px;
+
+}
+
+.site-list {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+  margin-top: 8px;
+
+}
+
+.site-chip {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 2px;
+
+  padding: 4px 4px 4px 10px;
+
+  border-radius: 999px;
+
+  border: 1px solid #16473d;
+
+  color: #d6f3ec;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+}
+
+.site-chip button {
+
+  width: 22px;
+
+  height: 22px;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: none;
+
+  color: #6fa79c;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+}
+
+.site-chip button:hover {
+
+  color: #d6f3ec;
+
+}
+
+.my-sites.locked form,
+.my-sites.locked .site-chip button {
+
+  display: none;
+
+}

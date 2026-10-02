@@ -325,3 +325,54 @@ chrome.storage.local.get("usage").then(({ usage = {} }) => {
     if (m) el.firstElementChild.textContent += " · " + (m >= 60 ? Math.floor(m / 60) + "h " + (m % 60) + "m" : m + "m");
   });
 });
+
+
+/* Your own sites: added here or on maatram.co.in, blocked during every Hard Lock. */
+const siteForm = document.getElementById("siteForm");
+const siteInput = document.getElementById("siteInput");
+const siteError = document.getElementById("siteError");
+const siteList = document.getElementById("siteList");
+
+async function saveSites(list) {
+  siteError.textContent = "";
+  const response = await chrome.runtime.sendMessage({ action: "SET_CUSTOM_SITES", sites: list });
+  if (!response || !response.success) {
+    siteError.textContent = (response && response.error) || "Could not save your sites.";
+  }
+  renderSites();
+}
+
+async function renderSites() {
+  const data = await chrome.storage.local.get(["customSites", "hardLockActive", "hardLockEndTime"]);
+  const sites = Array.isArray(data.customSites) ? data.customSites : [];
+  const locked = Boolean(data.hardLockActive) && Number(data.hardLockEndTime) > Date.now();
+  siteForm.parentElement.classList.toggle("locked", locked);
+  siteList.textContent = sites.length ? "" : (locked ? "" : "Add any site you want locked too.");
+  sites.forEach(site => {
+    const chip = document.createElement("span");
+    chip.className = "site-chip";
+    chip.textContent = site;
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "×";
+    remove.setAttribute("aria-label", "Remove " + site);
+    remove.addEventListener("click", () => saveSites(sites.filter(s => s !== site)));
+    chip.appendChild(remove);
+    siteList.appendChild(chip);
+  });
+}
+
+siteForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  const value = siteInput.value.trim();
+  if (!value) return;
+  const { customSites = [] } = await chrome.storage.local.get("customSites");
+  siteInput.value = "";
+  await saveSites(customSites.concat(value));
+  const after = (await chrome.storage.local.get("customSites")).customSites || [];
+  if (!siteError.textContent && after.length === customSites.length) {
+    siteError.textContent = "Use a site address like netflix.com (Instagram, YouTube and the rest are already blocked).";
+  }
+});
+
+renderSites();
