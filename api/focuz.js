@@ -11,7 +11,7 @@ const PROVIDERS = [
   { name: 'gemini', key: env.GEMINI_API_KEY, url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
     models: [env.GEMINI_MODEL, 'gemini-3.8-flash'] },
   { name: 'nvidia', key: env.NVIDIA_API_KEY, url: 'https://integrate.api.nvidia.com/v1/chat/completions',
-    models: [env.NVIDIA_MODEL, 'meta/llama-3.3-70b-instruct', 'meta/llama-3.1-8b-instruct'] },
+    models: [env.NVIDIA_MODEL, 'nvidia/nemotron-3-super-120b-a12b', 'deepseek-ai/deepseek-v4.1-flash', 'openai/gpt-oss-20b', 'mistralai/mistral-large-2-instruct', 'nvidia/nemotron-3.5-lightning-30b-a3b'] },
   { name: 'gateway', key: env.AI_GATEWAY_API_KEY || env.VERCEL_OIDC_TOKEN, oidc: true, url: 'https://ai-gateway.vercel.sh/v1/chat/completions',
     models: [env.FOCUZ_MODEL, 'anthropic/claude-haiku-4.5'] },
 ];
@@ -101,7 +101,7 @@ module.exports = async function handler(req, res) {
         });
         if (upstream.ok) break outer;
         console.warn('focuz', p.name, model, upstream.status, (await upstream.text()).slice(0, 200));
-        if (upstream.status !== 503 && upstream.status !== 429) { upstream = null; break; }
+        if (upstream.status !== 503) { upstream = null; break; } // only 'busy' is worth a retry; quota/not-found move on
       } catch (e) { console.warn('focuz', p.name, model, e.message); }
       upstream = null;
     }
