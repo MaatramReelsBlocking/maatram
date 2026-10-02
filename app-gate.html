@@ -204,6 +204,24 @@
   }
   .apps.deny{animation:shake .5s}
 
+  /* your sites */
+  .mysites{background:var(--card);border:1px solid var(--stroke);border-radius:22px;backdrop-filter:blur(14px);padding:24px 26px;margin:-36px 0 34px}
+  .ms-head{display:flex;align-items:baseline;gap:10px;font-family:var(--font-display);font-size:17px}
+  .ms-head span{font-size:12px;color:var(--dim)}
+  .mysites .sub{margin:6px 0 14px}
+  #siteForm{display:flex;gap:10px;max-width:460px}
+  #siteInput{flex:1;min-width:0;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--stroke);background:rgba(0,0,0,.3);color:var(--ink);font:inherit;font-size:16px}
+  #siteForm button{min-height:44px;padding:0 20px;border-radius:12px;border:0;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--green),var(--blue));color:#04120f}
+  .site-msg{min-height:18px;font-size:12.5px;color:var(--danger);margin-top:8px}
+  .site-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .site-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 6px 5px 12px;border-radius:999px;border:1px solid var(--stroke);font-size:13px}
+  .site-chip button{width:28px;height:28px;border:0;border-radius:50%;background:none;color:var(--dim);font-size:17px;cursor:pointer}
+  .site-chip button:hover{color:var(--ink);background:rgba(255,255,255,.08)}
+  body.locked #siteForm{opacity:.45;pointer-events:none}
+  body.locked .site-chip button{display:none}
+  .app.custom .icon{background:linear-gradient(135deg,#1f3a31,#173048);font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--ink)}
+  .app.custom .name{overflow-wrap:anywhere}
+
   /* hard lock panel */
   .panel{
     background:var(--card);
@@ -455,6 +473,17 @@ window.maatramAward=window.maatramAward||function(pts,reason){
       <div class="name">WhatsApp</div>
       <div class="hint">whatsapp.com</div>
     </a>
+  </section>
+
+  <section class="mysites" aria-labelledby="mySitesT">
+    <div class="ms-head"><b id="mySitesT">Your sites</b><span id="siteCount"></span></div>
+    <p class="sub">Add any other website, like a game or streaming site. It is locked with the apps above during Hard Lock, in Chrome with the Maatram Hard Lock extension.</p>
+    <form id="siteForm" autocomplete="off">
+      <input id="siteInput" type="text" inputmode="url" placeholder="e.g. netflix.com" maxlength="100" aria-label="Website address">
+      <button type="submit">Add</button>
+    </form>
+    <div class="site-msg" id="siteMsg" role="status"></div>
+    <div class="site-chips" id="siteChips"></div>
   </section>
 
   <section class="panel">
@@ -728,7 +757,9 @@ lockBtn.addEventListener('click', async ()=>{
 
   try {
 
-    /* Start Chrome extension blocking */
+    /* Start Chrome extension blocking (your sites first, so they lock too) */
+
+    await syncSites(getSites());
 
     const response =
       await sendToMaatramExtension({
@@ -808,6 +839,45 @@ grid.addEventListener('click', e=>{
     window.maatramAward(-10,evt.app+' opened');
   }
 }, true);
+
+/* ============ Your sites: extra sites locked along with the apps ============ */
+const SITES_KEY='maatram_custom_sites', MAX_SITES=50;
+function normSite(v){
+  const d=String(v||'').trim().toLowerCase().replace(/^[a-z][a-z0-9+.-]*:\/\//,'').split(/[\/?#:]/)[0].replace(/^www\./,'');
+  return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) && !/(^|\.)maatram\.co\.in$/.test(d) ? d : '';
+}
+function getSites(){ try{ const a=JSON.parse(store.get(SITES_KEY)||'[]'); return Array.isArray(a)?a.filter(normSite):[]; }catch(_){ return []; } }
+/* older extension versions answer "Unknown message action" — the site list still works on this page */
+function syncSites(list){ return sendToMaatramExtension({action:'SET_CUSTOM_SITES',sites:list}).catch(()=>null); }
+function spot(a){ a.addEventListener('pointermove',e=>{ const r=a.getBoundingClientRect(); a.style.setProperty('--mx',(e.clientX-r.left)+'px'); a.style.setProperty('--my',(e.clientY-r.top)+'px'); }); }
+function saveSites(list){ store.set(SITES_KEY,JSON.stringify(list)); renderSites(); syncSites(list); }
+function renderSites(){
+  const list=getSites(), box=document.getElementById('siteChips');
+  grid.querySelectorAll('.app.custom').forEach(n=>n.remove());
+  box.textContent='';
+  list.forEach(d=>{
+    const a=document.createElement('a'); a.className='app custom'; a.href='https://'+d; a.target='_blank'; a.rel='noopener';
+    a.innerHTML='<span class="lock-badge">🔒</span><div class="icon"></div><div class="name"></div><div class="hint">Your site</div>';
+    a.querySelector('.icon').textContent=d[0].toUpperCase(); a.querySelector('.name').textContent=d;
+    grid.appendChild(a); spot(a);
+    const c=document.createElement('span'); c.className='site-chip'; c.textContent=d;
+    const x=document.createElement('button'); x.type='button'; x.textContent='×'; x.setAttribute('aria-label','Remove '+d);
+    x.addEventListener('click',()=>{ if(!body.classList.contains('locked')) saveSites(getSites().filter(s=>s!==d)); });
+    c.appendChild(x); box.appendChild(c);
+  });
+  document.getElementById('siteCount').textContent=list.length?list.length+' added':'';
+}
+document.getElementById('siteForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const inp=document.getElementById('siteInput'), msg=document.getElementById('siteMsg');
+  if(body.classList.contains('locked')){ msg.textContent='You can change your sites after the lock ends.'; return; }
+  const d=normSite(inp.value), list=getSites();
+  if(!d){ msg.textContent='Type a website address, like netflix.com'; return; }
+  if(list.includes(d)){ msg.textContent=d+' is already on your list.'; return; }
+  if(list.length>=MAX_SITES){ msg.textContent='You can add up to '+MAX_SITES+' sites.'; return; }
+  msg.textContent=''; inp.value=''; saveSites(list.concat(d));
+});
+renderSites();
 
 /* restore lock across refresh */
 (function(){
