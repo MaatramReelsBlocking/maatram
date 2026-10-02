@@ -91,13 +91,13 @@ module.exports = async function handler(req, res) {
   outer: for (const p of PROVIDERS) {
     const key = p.key || (p.oidc && req.headers['x-vercel-oidc-token']);
     if (!key) continue;
-    for (const model of [...new Set(p.models.filter(Boolean))]) for (let attempt = 0; attempt < 2; attempt++) {
-      if (attempt) await new Promise((r) => setTimeout(r, 1500)); // busy model: one quick retry
+    for (const model of [...new Set(p.models.filter(Boolean))]) for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt) await new Promise((r) => setTimeout(r, 1500 * attempt)); // busy model: retry with backoff
       try {
         upstream = await fetch(p.url, {
           method: 'POST',
           headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages, stream: true, max_tokens: 1200, temperature: 0.5 }),
+          body: JSON.stringify({ model, messages, stream: true, max_tokens: 4000, temperature: 0.5 }),
         });
         if (upstream.ok) break outer;
         console.warn('focuz', p.name, model, upstream.status, (await upstream.text()).slice(0, 200));
