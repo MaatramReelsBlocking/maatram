@@ -321,3 +321,11 @@ html.perf .ring,html.perf h1.neon .L.in,html.perf .under-glow.show,html.perf .sl
 html.perf .under-glow{opacity:1!important;transform:none!important}
 html.perf .slogan .w,html.perf .jingle,html.perf #enter,html.perf .pre{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
 html.perf .corner,html.perf .hint{animation:none!important;opacity:.85!important}
+
+/* SEO pass: card titles and footer column titles are styled text, not headings; card links are short */
+html.m-index .m-card .mc-t{display:block;font-family:var(--font-display,"Fredoka"),sans-serif;font-weight:600;font-size:18px;color:var(--ink,#ECEFEE);margin:16px 0 6px}
+.mc-link{color:inherit;text-decoration:none}
+.mc-link::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:1}
+.mc-link:focus-visible{outline:none}.m-card:focus-within{outline:2px solid #9CC0B2;outline-offset:3px}
+#mfoot .fh{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#7f8b8d;margin:0 0 12px;font-weight:700}
+button.fcard{font:inherit;width:100%;text-align:center}
