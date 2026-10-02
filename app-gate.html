@@ -847,8 +847,18 @@ function normSite(v){
   return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) && !/(^|\.)maatram\.co\.in$/.test(d) ? d : '';
 }
 function getSites(){ try{ const a=JSON.parse(store.get(SITES_KEY)||'[]'); return Array.isArray(a)?a.filter(normSite):[]; }catch(_){ return []; } }
-/* older extension versions answer "Unknown message action" — the site list still works on this page */
-function syncSites(list){ return sendToMaatramExtension({action:'SET_CUSTOM_SITES',sites:list}).catch(()=>null); }
+/* Send the list to every installed copy (Web Store + dev). Extensions older than 1.2.0
+   answer "Unknown message action" and cannot block your sites, so say so instead of failing silently. */
+async function syncSites(list){
+  let ok=false;
+  for(const id of MAATRAM_EXTENSION_IDS){
+    try{ const r=await sendToExtensionId(id,{action:'SET_CUSTOM_SITES',sites:list}); if(r.success || !/unknown/i.test(r.error||'')) ok=true; }catch(_){}
+  }
+  const msg=document.getElementById('siteMsg');
+  if(list.length && !ok) msg.textContent='Your sites need Maatram Hard Lock extension 1.2.0 or newer. Update the extension to lock them; the apps above still lock.';
+  else if(/^Your sites need/.test(msg.textContent)) msg.textContent='';
+  return ok;
+}
 function spot(a){ a.addEventListener('pointermove',e=>{ const r=a.getBoundingClientRect(); a.style.setProperty('--mx',(e.clientX-r.left)+'px'); a.style.setProperty('--my',(e.clientY-r.top)+'px'); }); }
 function saveSites(list){ store.set(SITES_KEY,JSON.stringify(list)); renderSites(); syncSites(list); }
 function renderSites(){
@@ -878,6 +888,7 @@ document.getElementById('siteForm').addEventListener('submit',e=>{
   msg.textContent=''; inp.value=''; saveSites(list.concat(d));
 });
 renderSites();
+syncSites(getSites());
 
 /* restore lock across refresh */
 (function(){
