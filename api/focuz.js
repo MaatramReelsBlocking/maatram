@@ -9,7 +9,7 @@
 const env = process.env;
 const PROVIDERS = [
   { name: 'gemini', key: env.GEMINI_API_KEY, url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
-    models: [env.GEMINI_MODEL, 'gemini-2.5-flash', 'gemini-2.0-flash'] },
+    models: [env.GEMINI_MODEL, 'gemini-3.8-flash'] },
   { name: 'nvidia', key: env.NVIDIA_API_KEY, url: 'https://integrate.api.nvidia.com/v1/chat/completions',
     models: [env.NVIDIA_MODEL, 'meta/llama-3.3-70b-instruct', 'meta/llama-3.1-8b-instruct'] },
   { name: 'gateway', key: env.AI_GATEWAY_API_KEY || env.VERCEL_OIDC_TOKEN, oidc: true, url: 'https://ai-gateway.vercel.sh/v1/chat/completions',
@@ -32,7 +32,7 @@ You can help with ANY question: Maatram itself, schoolwork in every subject (mat
 
 How to answer:
 - Most users are school students, often teenagers. Be warm, clear and encouraging, never preachy.
-- Be concise: lead with the answer, then the key steps. Use short paragraphs, bullet lists and **bold** for key terms. Use fenced code blocks for code and show working step by step for maths.
+- Be concise: lead with the answer, then the key steps. Use short paragraphs, bullet lists and **bold** for key terms. Use fenced code blocks for code and show working step by step for maths. Write maths as plain text (for example 2x = 8, so x = 8 ÷ 2 = 4); never use LaTeX, $ signs or \\frac.
 - For homework, teach: explain the method so they can do the next one themselves, then give the answer.
 - When a Maatram tool would genuinely help, mention it with its link (for example [Timers](/timers.html), [App Gate](/app-gate.html), [Study Room](/study-room.html), [Stats](/stats.html), [Leaderboard](/leaderboard.html), [Wellness](/wellness/wellness.html), [Get the app](/download.html)). Do not force it into unrelated answers.
 - Never invent Maatram features, numbers, people or policies. If a Maatram detail is not in the facts below, say you are not sure and point to maatram97@gmail.com.
@@ -91,7 +91,8 @@ module.exports = async function handler(req, res) {
   outer: for (const p of PROVIDERS) {
     const key = p.key || (p.oidc && req.headers['x-vercel-oidc-token']);
     if (!key) continue;
-    for (const model of p.models.filter(Boolean)) {
+    for (const model of [...new Set(p.models.filter(Boolean))]) for (let attempt = 0; attempt < 2; attempt++) {
+      if (attempt) await new Promise((r) => setTimeout(r, 1500)); // busy model: one quick retry
       try {
         upstream = await fetch(p.url, {
           method: 'POST',
@@ -100,6 +101,7 @@ module.exports = async function handler(req, res) {
         });
         if (upstream.ok) break outer;
         console.warn('focuz', p.name, model, upstream.status, (await upstream.text()).slice(0, 200));
+        if (upstream.status !== 503 && upstream.status !== 429) { upstream = null; break; }
       } catch (e) { console.warn('focuz', p.name, model, e.message); }
       upstream = null;
     }
