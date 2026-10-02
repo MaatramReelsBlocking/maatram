@@ -1,19 +1,27 @@
 /* Focuz AI — streams answers for the help bot (focuz-bot.js).
-   Runs as a Vercel Node function at /api/focuz. Uses Vercel AI Gateway:
-   on Vercel it authenticates with the project's OIDC token, so no API key
-   is needed. Set AI_GATEWAY_API_KEY to use a key instead, FOCUZ_MODEL to
-   pick a different model. If anything fails the bot falls back to its
-   offline FAQ, so the site never shows a dead chat. */
+   Runs as a Vercel Node function at /api/focuz. Works with whichever free
+   key is set in Vercel → Settings → Environment Variables (tried in order):
+     GEMINI_API_KEY  — free from aistudio.google.com (no card)
+     NVIDIA_API_KEY  — free from build.nvidia.com (no card)
+     AI_GATEWAY_API_KEY / Vercel OIDC — Vercel AI Gateway (needs a card on file)
+   If every provider fails the bot falls back to its offline FAQ. */
 
-const GATEWAY = 'https://ai-gateway.vercel.sh/v1/chat/completions';
-const MODELS = [process.env.FOCUZ_MODEL, 'anthropic/claude-haiku-4.5', 'alibaba/qwen3.7-flash'].filter(Boolean);
+const env = process.env;
+const PROVIDERS = [
+  { name: 'gemini', key: env.GEMINI_API_KEY, url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+    models: [env.GEMINI_MODEL, 'gemini-2.5-flash', 'gemini-2.0-flash'] },
+  { name: 'nvidia', key: env.NVIDIA_API_KEY, url: 'https://integrate.api.nvidia.com/v1/chat/completions',
+    models: [env.NVIDIA_MODEL, 'meta/llama-3.3-70b-instruct', 'meta/llama-3.1-8b-instruct'] },
+  { name: 'gateway', key: env.AI_GATEWAY_API_KEY || env.VERCEL_OIDC_TOKEN, oidc: true, url: 'https://ai-gateway.vercel.sh/v1/chat/completions',
+    models: [env.FOCUZ_MODEL, 'anthropic/claude-haiku-4.5'] },
+];
 const ALLOWED = /^https:\/\/(www\.)?maatram\.co\.in$|^https:\/\/maatram-website[\w-]*\.vercel\.app$|^http:\/\/localhost(:\d+)?$/;
 
 const CORE = `Facts about Maatram (only state Maatram facts that appear here or in the page context below):
 - Maatram (maatram.co.in) is a free, open-source (MIT) focus and screen-time platform for students, built by a team of five class 10B students at SSVM School of Excellence, Coimbatore. Slogan: "Bringing a change in you". Inspired by Gen Z, made by Gen Z, made for Gen Z. No ads, no paid tier.
 - Tools: Focus Timers (Pomodoro 25 min +25 pts, Deep Work 90 min +100 pts), App Gate (opening a social app costs 10 pts) with Hard Lock (5 to 90 minutes, +10 pts per 5 minutes locked), Study Rooms (up to 5 people, live synced timers, chat, strikes when someone opens a social app; 3 strikes ends your seat and costs 30 pts; +10 pts after 10 minutes), Screen Stats (manual daily log stored on the device, +50 pts when your week is under your average), Leaderboard (monthly and all-time, signed-in students only), Wellness (7-day meal plan and four daily checks, +25 pts each), Sports Corner (local events posted by signed-in users).
 - No account needed; Google sign-in saves points to the Leaderboard. Android app (APK from /download.html, Android 5.1+, Maatram Shield accessibility service does the blocking). Chrome extension "Maatram Hard Lock" blocks Instagram, Snapchat, TikTok, YouTube, X and Facebook while a lock started on the site is active. No iPhone app.
-- Bottom-left ⚡ Performance switch turns off background animation. Bottom-right ◐ Customize UI switches Neon / Minimal Glass themes.
+- Bottom-left ⚡ Performance switch: On = full animation, Off = calm mode with no background animation (off by default on small or slow devices). Bottom-right ◐ Customize UI switches Neon / Minimal Glass themes.
 - Contact: maatram97@gmail.com or the feedback form on /socials.html. Socials: Instagram @maatram_official97, X @maatram_97, Reddit u/Maatram97, GitHub MaatramReelsBlocking/maatram.`;
 
 function system(page, ctx) {
@@ -78,22 +86,23 @@ module.exports = async function handler(req, res) {
   try { input = clean(req.body); } catch (_) { input = null; }
   if (!input) return res.status(400).json({ error: 'bad request' });
 
-  const key = process.env.AI_GATEWAY_API_KEY || req.headers['x-vercel-oidc-token'] || process.env.VERCEL_OIDC_TOKEN;
-  if (!key) return res.status(503).json({ error: 'ai unavailable' });
-
   const messages = [{ role: 'system', content: system(input.page, input.ctx) }, ...input.messages];
   let upstream = null;
-  for (const model of MODELS) {
-    try {
-      upstream = await fetch(GATEWAY, {
-        method: 'POST',
-        headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model, messages, stream: true, max_tokens: 900, temperature: 0.5 }),
-      });
-      if (upstream.ok) break;
-      console.warn('focuz', model, upstream.status, (await upstream.text()).slice(0, 200));
+  outer: for (const p of PROVIDERS) {
+    const key = p.key || (p.oidc && req.headers['x-vercel-oidc-token']);
+    if (!key) continue;
+    for (const model of p.models.filter(Boolean)) {
+      try {
+        upstream = await fetch(p.url, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model, messages, stream: true, max_tokens: 1200, temperature: 0.5 }),
+        });
+        if (upstream.ok) break outer;
+        console.warn('focuz', p.name, model, upstream.status, (await upstream.text()).slice(0, 200));
+      } catch (e) { console.warn('focuz', p.name, model, e.message); }
       upstream = null;
-    } catch (e) { console.warn('focuz', model, e.message); upstream = null; }
+    }
   }
   if (!upstream) return res.status(503).json({ error: 'ai unavailable' });
 
