@@ -226,3 +226,15 @@ html.minimal .habit-card.done{border-color:rgba(156,192,178,.55)!important;box-s
 html.minimal .daily-guide article{border-color:rgba(255,255,255,.13);background:rgba(255,255,255,.04)}
 html.minimal .daily-guide article small,html.minimal .guide-tips{color:#8A928E}
 html.minimal .meal-badge{border-color:rgba(255,255,255,.25)}
+/* How to make: side panel */
+.row-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.recipe-modal{justify-content:flex-end;padding:0}
+.recipe-modal .modal-inner{width:min(460px,100%);height:100%;max-height:100vh;overflow-y:auto;border-radius:14px 0 0 14px;padding:30px 26px 40px}
+.recipe-modal h2{font-size:clamp(26px,4vw,34px);letter-spacing:-1px;margin:8px 34px 6px 0;line-height:1.1}
+.recipe-modal h3{margin:22px 0 8px;font-size:10px}
+.recipe-meta{color:var(--green);font:12px var(--mono);margin:0}
+.recipe-list{margin:0;padding-left:20px;color:#c7ddd4;font-size:14px;line-height:1.55}
+.recipe-list li{margin-bottom:7px}
+.recipe-note{margin-top:22px;color:#6f9586;font-size:11.5px;line-height:1.5}
+@media(max-width:560px){.meal-row .row-btns{grid-column:2;justify-content:flex-start}.recipe-modal .modal-inner{border-radius:0}}
+html.minimal .recipe-list{color:#C9CFC9}
