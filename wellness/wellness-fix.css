@@ -211,3 +211,18 @@ html.minimal .habit-card.done{border-color:rgba(156,192,178,.55)!important;box-s
 .nav a.mn-link:focus-visible{outline-offset:-2px}
 
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.scan i{animation:none}.primary,.progress i,.nav a.mn-link{transition:none}}
+
+/* Daily guide + meal badges (meal catalogue v2) */
+.daily-guide .guide-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.daily-guide article{border:1px solid rgba(141,227,192,.22);border-radius:8px;padding:13px;background:rgba(8,20,15,.45)}
+.daily-guide article span{display:block;font:10px var(--mono);letter-spacing:1.4px;color:#78a798}
+.daily-guide article b{display:block;margin:6px 0 4px;font:600 18px var(--display,var(--sans));color:var(--green)}
+.daily-guide article small{display:block;color:#82a296;font-size:11.5px;line-height:1.45}
+.guide-tips{margin:16px 0 0;padding-left:18px;color:#a9c7bb;font-size:13px;line-height:1.6}
+.meal-badge{display:inline-block;margin-left:8px;padding:2px 7px;border:1px solid rgba(18,230,154,.35);border-radius:99px;color:var(--green);font:600 9px var(--mono);letter-spacing:1px;font-style:normal;vertical-align:2px}
+.swap-option .meal-badge{margin:6px 0 0}
+@media(max-width:850px){.daily-guide .guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.daily-guide .guide-grid{grid-template-columns:1fr}}
+html.minimal .daily-guide article{border-color:rgba(255,255,255,.13);background:rgba(255,255,255,.04)}
+html.minimal .daily-guide article small,html.minimal .guide-tips{color:#8A928E}
+html.minimal .meal-badge{border-color:rgba(255,255,255,.25)}
