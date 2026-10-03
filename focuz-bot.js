@@ -64,7 +64,7 @@
 
     // Wellness / Sports
     { id: 'wellness', q: 'What is Wellness?', k: ['wellness', 'meal', 'meal plan', 'diet', 'food', 'hydration', 'water', 'sleep', 'health'],
-      a: 'Wellness gives you a private 7-day meal plan and four daily checks: meals, hydration, activity and sleep. Each check pays +25 pts, up to +100 a day. Your plan and checks stay on your device.', l: ['Open Wellness', '/wellness/wellness.html'] },
+      a: 'Wellness gives you a private 7-day meal plan from 80+ Indian meals (swap any meal), a daily protein and water guide based on ICMR-NIN guidelines, and four daily checks: meals, hydration, activity and sleep. Each check pays +25 pts, up to +100 a day. Your plan and checks stay on your device.', l: ['Open Wellness', '/wellness/wellness.html'] },
     { id: 'sports', q: 'What is Sports Corner?', k: ['sports', 'sport', 'event', 'tournament', 'match', 'camp', 'sports corner', 'outdoor'],
       a: 'Sports Corner lists local tournaments, camps and meet-ups posted by signed-in users. Filter by city, sport and date. Registration always happens on the organiser\'s own site.', l: ['Open Sports Corner', '/sports.html'] },
 
