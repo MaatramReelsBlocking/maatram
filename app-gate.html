@@ -630,6 +630,9 @@ function claimLock(end,total){
   /* +10 for every full 5 minutes survived — awarded exactly once per lock */
   if(store.get('maatram_lock_claimed')===String(end)) return;
   store.set('maatram_lock_claimed', String(end));
+  /* stats.html: minutes kept off socials, per local day */
+  try{ const d=new Date(end), k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const s=JSON.parse(store.get('maatram_saved_v1')||'{}'); s[k]=(s[k]||0)+Math.round(total/60); store.set('maatram_saved_v1',JSON.stringify(s)); }catch(_){}
   const earned=Math.floor(total/300)*10;
   if(earned>0) window.maatramAward(earned,'Hard Lock '+Math.floor(total/60)+'m');
 }
