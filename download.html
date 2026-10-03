@@ -389,13 +389,13 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       <h2 id="appLock">Maatram Hard Lock</h2>
       <p>Hard Lock only. Locks just the apps you pick, and keeps running through "Clear all". Lighter, faster, kept up to date.</p>
       <ul class="chips">
-        <li>Version <b>1.2</b></li>
+        <li>Version <b>1.3</b></li>
         <li><b>7.56 MB</b></li>
         <li>Android <b>8.0</b> and above</li>
         <li><b>com.maatram.hardlock</b></li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtnLock" href="https://github.com/MaatramReelsBlocking/maatram-hard-lock/releases/download/build-12/maatram-hardlock.apk"
+        <a class="dl" id="dlBtnLock" href="https://github.com/MaatramReelsBlocking/maatram-hard-lock/releases/download/build-13/maatram-hardlock.apk"
            type="application/vnd.android.package-archive" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -504,7 +504,8 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
           and turn the shield on again.</li>
         <li>In the app, tap <b>Allow background running</b>. On Xiaomi, Redmi or POCO, also tap
           <b>Open Autostart settings</b> and turn Maatram Hard Lock on. Without this,
-          <b>Clear all</b> in Recents can end the lock early.</li>
+          <b>Clear all</b> in Recents can end the lock early. Then open Recents, hold the
+          Maatram Hard Lock card and tap the lock icon so <b>Clear all</b> skips it.</li>
         <li>Tap <b>Choose apps to lock</b>. Only the apps you tick get locked.</li>
         <li>Optional: in the app, turn on <b>Lock protection</b> so it cannot be uninstalled
           while a lock is running.</li>
@@ -524,9 +525,9 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 macOS     shasum -a 256 maatram-v1.1.apk
 Linux     sha256sum maatram-v1.1.apk</pre>
     </div>
-    <h3 class="for" id="verify-lock">Hard Lock · maatram-hardlock.apk (build 12)</h3>
+    <h3 class="for" id="verify-lock">Hard Lock · maatram-hardlock.apk (build 13)</h3>
     <div class="hashbox">
-      <p class="hash">f8538198b17c5e4a5fce5d234723874925bcbded72f44632af583d05f8c9bfb8</p>
+      <p class="hash">e20bb7507d38ba1731b959c95125d71ec41ff6a9c6df6117295ce4beaa4b5048</p>
       <button class="copy" type="button">Copy hash</button>
       <pre>Windows   certutil -hashfile maatram-hardlock.apk SHA256
 macOS     shasum -a 256 maatram-hardlock.apk
@@ -553,10 +554,10 @@ Linux     sha256sum maatram-hardlock.apk</pre>
     <h3 class="for">Hard Lock</h3>
     <dl class="spec">
       <dt>Package</dt><dd>com.maatram.hardlock</dd>
-      <dt>Version</dt><dd>1.2 (version code 3) · build 12</dd>
-      <dt>Size</dt><dd>7 928 246 bytes · 7.56 MB</dd>
+      <dt>Version</dt><dd>1.3 (version code 4) · build 13</dd>
+      <dt>Size</dt><dd>7 931 262 bytes · 7.56 MB</dd>
       <dt>Requires</dt><dd>Android 8.0 (API 26) or newer · built against API 34</dd>
-      <dt>Permissions</dt><dd>Start at boot · exact alarms · see installed apps (to choose apps to lock) · ask to run without battery limits</dd>
+      <dt>Permissions</dt><dd>Start at boot · exact alarms · see installed apps (to choose apps to lock) · ask to run without battery limits · "Hard Lock is on" notification while a lock runs</dd>
       <dt>Service</dt><dd>BlockerService (Maatram Focus Shield) — the accessibility service
         that blocks apps during a Hard Lock</dd>
       <dt>Device admin</dt><dd>Optional — stops the app being uninstalled while a lock runs</dd>
