@@ -150,6 +150,9 @@
   .room-header h2 span{font-size:13px;font-weight:500;color:var(--dim);letter-spacing:1px;margin-left:8px;font-family:var(--font-body)}
   #leaveBtn{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:9px 22px;border-radius:100px;border:1px solid rgba(255,93,115,.4);color:var(--danger);background:rgba(255,93,115,.06);cursor:pointer;transition:all .3s}
   #leaveBtn:hover{background:rgba(255,93,115,.14)}
+  .room-actions{display:flex;gap:10px;flex-wrap:wrap}
+  #shareBtn{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:9px 22px;border-radius:100px;border:1px solid var(--green);color:var(--green);background:transparent;cursor:pointer;transition:all .3s}
+  #shareBtn:hover{background:rgba(47,227,143,.1)}
 
   /* seats */
   .seats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
@@ -352,7 +355,10 @@ window.maatramAward=window.maatramAward||function(pts,reason){
   <div id="room">
     <div class="room-header">
       <h2>Room <span id="roomCodeDisplay"></span></h2>
-      <button id="leaveBtn">Leave room</button>
+      <div class="room-actions">
+        <button id="shareBtn" type="button">Share link</button>
+        <button id="leaveBtn">Leave room</button>
+      </div>
     </div>
     <div class="seats" id="seats">
       <div class="seat empty" id="seat0"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 1</div><div class="empty-label">waiting…</div></div>
@@ -528,15 +534,21 @@ function checkReady(){
   $('joinBtn').disabled=!($('nameInput').value.trim() && $('codeInput').value.trim().length>=4);
 }
 
-// pre-fill a code
-$('codeInput').value=randCode();
+// pre-fill a code: an invite link (?room=CODE) wins; kept in sessionStorage so it survives the sign-in hop
+const invite=(()=>{ let c=cleanCode(new URLSearchParams(location.search).get('room'));
+  try{ if(c) sessionStorage.setItem('maatram_room_invite',c); else c=sessionStorage.getItem('maatram_room_invite')||''; }catch(_){}
+  return c.length>=4?c:''; })();
+if(invite) history.replaceState(null,'',location.pathname);
+$('codeInput').value=invite||randCode();
 checkReady();
+if(invite) $('nameInput').focus();
 
 $('joinBtn').onclick=()=>{
   myName=$('nameInput').value.trim()||'Anon';
   myAvatar=randAvatar();
   myId=getUID();
   const code=cleanCode($('codeInput').value);
+  try{ sessionStorage.removeItem('maatram_room_invite'); }catch(_){}
   joinRoom(code);
 };
 
@@ -583,6 +595,15 @@ function leaveRoom(kicked=false){
 }
 
 $('leaveBtn').onclick=()=>leaveRoom();
+/* invite link: phones get the share sheet, everyone else gets it copied */
+$('shareBtn').onclick=async()=>{
+  const url=location.origin+location.pathname+'?room='+encodeURIComponent(roomCode), btn=$('shareBtn');
+  try{
+    if(navigator.share && matchMedia('(pointer:coarse)').matches){ await navigator.share({title:'Maatram study room',url}); return; }
+    await navigator.clipboard.writeText(url); btn.textContent='Link copied ✓';
+    setTimeout(()=>{ btn.textContent='Share link'; },2000);
+  }catch(e){ if(e && e.name!=='AbortError') prompt('Copy this link:',url); }
+};
 $('kickedOk').onclick=()=>{ $('kicked').classList.remove('show'); leaveRoom(true); };
 
 /* ═══════════════════════════════════════════════
@@ -682,6 +703,7 @@ function checkStored(){try{const raw=store.get('maatram_social_open');if(!raw)re
 (function(){
   try{
     const s=sessGet(); if(!s||!s.code) return;
+    if(invite && invite!==s.code) return;   /* opened someone's invite link: show their room, not the old one */
     if(Date.now()-(s.last||0)>5*60*1000){ sessDel(); return; }   // stale — start fresh
     myId=getUID(); myName=s.name||'Anon'; myAvatar=s.avatar||randAvatar();
     myStart=s.start||Date.now(); myStrikes=s.strikes||0;
