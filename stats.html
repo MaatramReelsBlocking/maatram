@@ -134,7 +134,7 @@
   .stats-head span{font-size:12px;color:var(--dim)}
   .ext-note{font-size:12.5px;color:var(--dim);margin:-6px 0 14px;line-height:1.5}
   .ext-note a{color:var(--green)}
-  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
   @media(max-width:640px){.kpis{grid-template-columns:1fr}}
   .kpi{background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:20px 22px}
   .kpi .v{font-family:var(--font-display);font-weight:800;font-size:clamp(22px,3.4vw,32px);background:linear-gradient(90deg,var(--green),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -299,6 +299,8 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     <div class="kpi bad"><div class="v" id="kToday">0m</div><div class="l">Today total</div></div>
     <div class="kpi"><div class="v" id="kAvg">0m</div><div class="l">7-day average</div></div>
     <div class="kpi"><div class="v" id="kTrend">—</div><div class="l">vs yesterday</div></div>
+    <div class="kpi"><div class="v" id="kSaved">0m</div><div class="l">Saved by Hard Lock today</div></div>
+    <div class="kpi"><div class="v" id="kSavedWk">0m</div><div class="l">Saved by Hard Lock · 7 days</div></div>
   </div>
 
   <div class="charts">
@@ -418,6 +420,11 @@ function renderStats(animate){
     $('kTrend').textContent=(diff<=0?'▼ ':'▲ ')+fmtMin(Math.abs(diff));
     $('kTrend').parentElement.className='kpi '+(diff>0?'bad':'');
   } else $('kTrend').textContent='—';
+
+  /* time saved: minutes of completed Hard Locks, written by app-gate.html */
+  let sv={}; try{ sv=JSON.parse(store.get('maatram_saved_v1'))||{}; }catch(_){}
+  let svWk=0; for(let i=0;i<7;i++) svWk+=+sv[dayKey(i)]||0;
+  $('kSaved').textContent=fmtMin(+sv[tKey]||0); $('kSavedWk').textContent=fmtMin(svWk);
 
   $('statsRange').textContent=days?days+' day'+(days>1?'s':'')+' logged':'no days logged yet';
 
