@@ -1,0 +1,51 @@
+{
+  "updated": "2026-10-04",
+  "note": "Found automatically from public event pages. Each entry links to the organiser or its official registration page. Refreshed daily; past events are removed.",
+  "events": [
+    {
+      "title": "Chargebee Chennai Runs 2026 (3K / 5K / 10K / Half)",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-11-01",
+      "venue": "Chennai",
+      "org": "Madras Round Table 1",
+      "url": "https://chennairuns.com/"
+    },
+    {
+      "title": "DFO Dhanya 10K Run (1K / 3K / 5K / 10K)",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-11-01",
+      "venue": "Periyar Nagar West, Chennai",
+      "org": "Takkaru Studio School of Sports",
+      "url": "https://www.indiarunning.com/events/dfo_dhanya_10k_run_47335"
+    },
+    {
+      "title": "Erode Marathon 2026 (5K / 10K / Half / 32K)",
+      "sport": "Running",
+      "city": "Erode",
+      "date": "2026-11-22",
+      "venue": "Erode",
+      "org": "Erode Runners Club",
+      "url": "https://erodemarathon.com/"
+    },
+    {
+      "title": "Coimbatore Marathon 2026",
+      "sport": "Running",
+      "city": "Coimbatore",
+      "date": "2026-12-20",
+      "venue": "Coimbatore",
+      "org": "Coimbatore Cancer Foundation",
+      "url": "https://coimbatoremarathon.com/"
+    },
+    {
+      "title": "Freshworks Chennai Marathon 2027 (10K / Half / 32K / Full)",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2027-01-03",
+      "venue": "Finish: India Maritime University, Uthandi",
+      "org": "Chennai Runners",
+      "url": "https://www.thechennaimarathon.com/"
+    }
+  ]
+}

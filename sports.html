@@ -522,6 +522,17 @@ $('locBtn').onclick=()=>{
 
 /* ---------- data ---------- */
 let events=[];
+/* sports-auto.json: marathons and football tournaments found automatically from
+   public event pages, refreshed daily. Public, so it shows even when signed out. */
+let autoEvents=[];
+const sameEv=(a,b)=>a.date===b.date&&a.title.trim().toLowerCase()===b.title.trim().toLowerCase();
+fetch('sports-auto.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
+  if(!j||!Array.isArray(j.events))return;
+  autoEvents=j.events.filter(e=>e&&e.title&&e.date).map((e,i)=>({id:'auto-'+i,title:String(e.title),
+    sport:String(e.sport||'Other'),city:String(e.city||''),date:String(e.date),venue:String(e.venue||''),
+    org:String(e.org||''),url:String(e.url||''),by:'',auto:true}));
+  render();
+}).catch(()=>{});
 function today(){const d=new Date();d.setHours(0,0,0,0);return d;}
 function dayDiff(iso){
   const d=new Date(iso+'T00:00:00');
@@ -551,7 +562,8 @@ function passes(e){
   return true;
 }
 function render(){
-  const list=events.filter(passes).sort((a,b)=>a.date<b.date?-1:1);
+  const all=events.concat(autoEvents.filter(a=>!events.some(e=>sameEv(e,a))));
+  const list=all.filter(passes).sort((a,b)=>a.date<b.date?-1:1);
   const g=$('grid');
   g.innerHTML='';
   if(HOSTED&&authed===false){
@@ -567,7 +579,7 @@ function render(){
     const safe=/^https:\/\/|^http:\/\//i.test(e.url||'');
     const d=document.createElement('article');
     d.className='ev';
-    d.innerHTML='<div class="tags"><span class="tag">'+esc(e.sport)+'</span><span class="tag city">'+esc(e.city)+'</span></div>'
+    d.innerHTML='<div class="tags"><span class="tag">'+esc(e.sport)+'</span><span class="tag city">'+esc(e.city)+'</span>'+(e.auto?'<span class="tag" title="Found automatically from the organiser\u2019s public page">Auto-found</span>':'')+'</div>'
       +'<h3>'+esc(e.title)+'</h3>'
       +'<p class="meta">'+whenLabel(e.date)
       +(e.venue?'<br>'+esc(e.venue):'')
@@ -576,7 +588,7 @@ function render(){
         ? '<a class="go" href="'+esc(safeUrl(e.url))+'" target="_blank" rel="noopener noreferrer nofollow">Register on organiser site ↗</a>'
           +'<span class="why">Opens the organiser\u2019s own page</span>'
         : '<span class="go none">No official link given</span>');
-    if(me&&db&&api&&((me.email||'').toLowerCase()===ADMIN_EMAIL||me.uid===e.by)){
+    if(!e.auto&&me&&db&&api&&((me.email||'').toLowerCase()===ADMIN_EMAIL||me.uid===e.by)){
       const rm=document.createElement('button');
       rm.type='button'; rm.className='rm'; rm.textContent='Remove this listing';
       let armed=false,t=0;
