@@ -1,9 +1,162 @@
 {
-  "updated": "2026-10-04",
-  "note": "Found automatically from public event pages. Each entry links to the organiser or its official registration page. Refreshed daily; past events are removed.",
+  "updated": "2026-10-05",
+  "note": "Found automatically from public race listings (RacesIndia). Each entry links to the organiser or its official registration page. Refreshed weekly; past events are removed.",
   "events": [
     {
-      "title": "Chargebee Chennai Runs 2026 (3K / 5K / 10K / Half)",
+      "title": "Ciska Marathon 4.0 2026",
+      "sport": "Running",
+      "city": "Coimbatore",
+      "date": "2026-10-11",
+      "venue": "codissia",
+      "org": "CISKA MARATHON",
+      "url": "https://www.citywoofer.com/e/ciska-marathon-40"
+    },
+    {
+      "title": "Foot Orienteering 2026",
+      "sport": "Other",
+      "city": "Bengaluru",
+      "date": "2026-10-11",
+      "venue": "Bengaluru",
+      "org": "nth Adventure",
+      "url": "https://www.nthadventure.com"
+    },
+    {
+      "title": "Green India KIDZ-Athon October 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-10-11",
+      "venue": "Nehru Park Sports Ground, Chetpet, Chennai",
+      "org": "Arjun M",
+      "url": "https://www.indiarunning.com/events/green_india_kidzathon_oct_2026_22573"
+    },
+    {
+      "title": "Namma Run Bengaluru 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-10-11",
+      "venue": "Nice Road Hosakerehalli",
+      "org": "TE SPORTS",
+      "url": "https://www.indiarunning.com/events/namma_run_bengaluru__south_edition_51834"
+    },
+    {
+      "title": "Soles for Souls Marathon Chennai 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-10-11",
+      "venue": "Chennai",
+      "org": "Council for Leather Exports",
+      "url": "https://solesforsouls.in/"
+    },
+    {
+      "title": "Sprint Adventure Race 2026",
+      "sport": "Other",
+      "city": "Bengaluru",
+      "date": "2026-10-11",
+      "venue": "Bengaluru",
+      "org": "nth Adventure",
+      "url": "https://www.nthadventure.com"
+    },
+    {
+      "title": "Wild Warrior Obstacle Games Bengaluru 2026",
+      "sport": "Other",
+      "city": "Bengaluru",
+      "date": "2026-10-11",
+      "venue": "Bengaluru",
+      "org": "Wild Warrior Race",
+      "url": "https://zenmountain.in/event/wildwarrior-og-bengaluru"
+    },
+    {
+      "title": "Chennai Night Run 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-10-17",
+      "venue": "Chennai",
+      "org": "Sportspro",
+      "url": "https://chennainightrun.com/"
+    },
+    {
+      "title": "BBCh MTB XC Race and Trail Run 2026",
+      "sport": "Cycling",
+      "city": "Bengaluru",
+      "date": "2026-10-18",
+      "venue": "Bengaluru",
+      "org": "Bangalore Bicycle Championships",
+      "url": "https://www.bbch.in/events/bbch26-race09"
+    },
+    {
+      "title": "HCL Cyclothon Chennai 2026",
+      "sport": "Cycling",
+      "city": "Chennai",
+      "date": "2026-10-18",
+      "venue": "Chennai",
+      "org": "CFI",
+      "url": "https://hclcyclothon.com/chennai-edition/"
+    },
+    {
+      "title": "Run for Our Heroes with Pride 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-10-18",
+      "venue": "Olcott Memorial Higher Secondary School, Besant Nagar, Chennai",
+      "org": "SBPMS BRO SPORTS ACADEMY",
+      "url": "https://www.indiarunning.com/events/soldierathon_2026__run_for_the_soldiers_with_pride_69500"
+    },
+    {
+      "title": "Georgian Run 2026",
+      "sport": "Running",
+      "city": "Kochi",
+      "date": "2026-10-20",
+      "venue": "Kochi",
+      "org": "",
+      "url": "https://reg.myraceindia.com/form/georgianrun2026"
+    },
+    {
+      "title": "Breakthrough Run 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-10-25",
+      "venue": "Dwaraka Nagar",
+      "org": "Leanpitch Technologies Pvt Ltd",
+      "url": "https://www.indiarunning.com/events/breakthrough_run_33370"
+    },
+    {
+      "title": "IPA Neerathon 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-10-25",
+      "venue": "D' Souza Layout",
+      "org": "Raadiant Sports",
+      "url": "https://www.indiarunning.com/events/ipa_neerathon_23079"
+    },
+    {
+      "title": "Kochi Spice Coast Marathon 2026",
+      "sport": "Running",
+      "city": "Kochi",
+      "date": "2026-10-25",
+      "venue": "Kochi",
+      "org": "",
+      "url": "https://www.spicecoastmarathon.com/"
+    },
+    {
+      "title": "Pephands Run for Life - Breast Cancer Awareness 6K 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-10-25",
+      "venue": "Phoenix Marketcity, Velachery",
+      "org": "Pephands Foundation",
+      "url": "https://www.indiarunning.com/events/pephands_run_for_life__6k_breast_cancer_awareness_marathon_october_2026_21676"
+    },
+    {
+      "title": "The Run by Dharan 2026",
+      "sport": "Running",
+      "city": "Salem",
+      "date": "2026-10-25",
+      "venue": "Salem",
+      "org": "Dharan Hospital , Salem",
+      "url": "https://therun.dharan.in/"
+    },
+    {
+      "title": "Chargebee Chennai Runs 2026",
       "sport": "Running",
       "city": "Chennai",
       "date": "2026-11-01",
@@ -12,22 +165,184 @@
       "url": "https://chennairuns.com/"
     },
     {
-      "title": "DFO Dhanya 10K Run (1K / 3K / 5K / 10K)",
+      "title": "DFO Dhanya 10K Run 2026",
       "sport": "Running",
       "city": "Chennai",
       "date": "2026-11-01",
-      "venue": "Periyar Nagar West, Chennai",
-      "org": "Takkaru Studio School of Sports",
+      "venue": "Periyar Nagar West",
+      "org": "takkaru studio school of sports",
       "url": "https://www.indiarunning.com/events/dfo_dhanya_10k_run_47335"
     },
     {
-      "title": "Erode Marathon 2026 (5K / 10K / Half / 32K)",
+      "title": "Hoysala Hustle 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-11-01",
+      "venue": "Bengaluru",
+      "org": "",
+      "url": "https://hoysalahustle.bhasinsports.com/"
+    },
+    {
+      "title": "Orange Run 2026",
+      "sport": "Running",
+      "city": "Kochi",
+      "date": "2026-11-01",
+      "venue": "Kochi",
+      "org": "",
+      "url": "https://pacenation.in/event/orange-run-2026"
+    },
+    {
+      "title": "Rise Up Youth Anti-Drug Run 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-11-01",
+      "venue": "Besant Nagar",
+      "org": "",
+      "url": "https://registrations.indiarunning.com/chennais_anti_drug_run_22705"
+    },
+    {
+      "title": "Chennai Runners Big's Backyard Ultra 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-11-13",
+      "venue": "FC Madras Football Academy",
+      "org": "Chennai Runners",
+      "url": "https://chennairunners.in/"
+    },
+    {
+      "title": "Bengaluru Corporate Wellness Run 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-11-15",
+      "venue": "Dwaraka Nagar",
+      "org": "Global Events",
+      "url": "https://www.indiarunning.com/events/bengaluru_corporate_wellness_run_2026_27940"
+    },
+    {
+      "title": "Chennai Fitness Run 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-11-15",
+      "venue": "Besant Nagar",
+      "org": "",
+      "url": "https://www.ticketprix.com/event/chennaifitnessrunruntogetherrisestronger"
+    },
+    {
+      "title": "Chennai Juniorthon 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-11-15",
+      "venue": "SDAT Nehru Park, Chetpet",
+      "org": "",
+      "url": "https://registrations.indiarunning.com/chennai_juniorthon_2026__5th_edition_36564"
+    },
+    {
+      "title": "HRX Half Marathon Bengaluru 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-11-15",
+      "venue": "NICE Road, Bengaluru",
+      "org": "life is calling sports",
+      "url": "https://www.indiarunning.com/events/hrx_4_half_marathon_bengaluru_37807"
+    },
+    {
+      "title": "Lions Diabetes Awareness Run 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-11-15",
+      "venue": "Bengaluru",
+      "org": "Lions District 317E",
+      "url": "https://lions317e.org"
+    },
+    {
+      "title": "Erode Marathon 2026",
       "sport": "Running",
       "city": "Erode",
       "date": "2026-11-22",
       "venue": "Erode",
       "org": "Erode Runners Club",
-      "url": "https://erodemarathon.com/"
+      "url": "https://reg.myraceindia.com/form/erodemarathon2026"
+    },
+    {
+      "title": "Larsen Memorial Run 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-11-22",
+      "venue": "Chennai",
+      "org": "",
+      "url": "https://reg.myraceindia.com/form/LMR26"
+    },
+    {
+      "title": "Namma Run Coimbatore 2026",
+      "sport": "Running",
+      "city": "Coimbatore",
+      "date": "2026-11-22",
+      "venue": "codissia",
+      "org": "TE SPORTS",
+      "url": "https://www.indiarunning.com/events/namma_run_coimbatore__south_edition_52470"
+    },
+    {
+      "title": "Chennai Half Marathon 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-11-29",
+      "venue": "Island Grounds, Chennai",
+      "org": "NEB Sports Pvt Ltd",
+      "url": "https://www.nebsports.in"
+    },
+    {
+      "title": "Bharat Midnight Marathon (Bengaluru Midnight Marathon) 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-12-05",
+      "venue": "KTPO, Whitefield",
+      "org": "Rotary Bangalore IT Corridor",
+      "url": "https://rbitc.org/"
+    },
+    {
+      "title": "Dhash Bengaluru Half Marathon 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-12-06",
+      "venue": "Bengaluru",
+      "org": "",
+      "url": "https://raceiq.in/dbhm2026"
+    },
+    {
+      "title": "BigFoot Backyard Ultra Bengaluru 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-12-12",
+      "venue": "AgniTeja Farm Stay",
+      "org": "BigFoot Adventures India",
+      "url": "https://bigfootadventuresindia.com/"
+    },
+    {
+      "title": "Devils Circuit Bengaluru 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-12-12",
+      "venue": "Bengaluru",
+      "org": "Devils Circuit",
+      "url": "https://devilscircuit.com/"
+    },
+    {
+      "title": "Kochi Navy Half Marathon 2026",
+      "sport": "Running",
+      "city": "Kochi",
+      "date": "2026-12-13",
+      "venue": "Kochi",
+      "org": "Southern Naval Command",
+      "url": "https://www.kochinavymarathon.com/"
+    },
+    {
+      "title": "Run for Our National Heroes 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-12-13",
+      "venue": "Sai Ram Colony",
+      "org": "BALAJI RAMKUMAR",
+      "url": "https://www.indiarunning.com/events/run_for_our_national_heroes_2026_21239"
     },
     {
       "title": "Times Internet Half Marathon - Bengaluru",
@@ -39,6 +354,24 @@
       "url": "https://registrations.indiarunning.com/times_internet_half_marathon__bengaluru_39648"
     },
     {
+      "title": "VAMOS * KYN Chennai Half Marathon 2026",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2026-12-13",
+      "venue": "Chennai",
+      "org": "Vamos Run Club",
+      "url": "https://tickets.kynhood.com/event/69b8e61f885a915fd7a0db37"
+    },
+    {
+      "title": "The Yoddha Race Bengaluru 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-12-19",
+      "venue": "Bengaluru",
+      "org": "The Yoddha Race",
+      "url": "https://theyoddharace.com/findRace"
+    },
+    {
       "title": "Coimbatore Marathon 2026",
       "sport": "Running",
       "city": "Coimbatore",
@@ -48,13 +381,202 @@
       "url": "https://coimbatoremarathon.com/"
     },
     {
-      "title": "Freshworks Chennai Marathon 2027 (10K / Half / 32K / Full)",
+      "title": "Thump Celebration Bengaluru Half Marathon and 10K 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-12-20",
+      "venue": "Dwaraka Nagar",
+      "org": "life is calling sports",
+      "url": "https://www.indiarunning.com/events/thump_celebration_bengaluru_12_marathon_and_10k_run_2026_38459"
+    },
+    {
+      "title": "Times Internet Half Marathon - Bengaluru 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-12-20",
+      "venue": "Bengaluru",
+      "org": "Times Internet Limited",
+      "url": "https://www.indiarunning.com/events/times_internet_half_marathon__bengaluru_39648"
+    },
+    {
+      "title": "Walkaroo Coimbatore Marathon 2026",
+      "sport": "Running",
+      "city": "Coimbatore",
+      "date": "2026-12-20",
+      "venue": "Coimbatore",
+      "org": "Coimbatore Cancer Foundation",
+      "url": "https://coimbatoremarathon.com/"
+    },
+    {
+      "title": "Freshworks Chennai Marathon 2027",
       "sport": "Running",
       "city": "Chennai",
       "date": "2027-01-03",
-      "venue": "Finish: India Maritime University, Uthandi",
+      "venue": "Chennai",
       "org": "Chennai Runners",
       "url": "https://www.thechennaimarathon.com/"
+    },
+    {
+      "title": "Devils Circuit Kochi 2027",
+      "sport": "Running",
+      "city": "Kochi",
+      "date": "2027-01-24",
+      "venue": "Kochi",
+      "org": "Devils Circuit",
+      "url": "https://devilscircuit.com/"
+    },
+    {
+      "title": "MAHETHON Bengaluru Marathon 2027",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2027-01-24",
+      "venue": "Bengaluru",
+      "org": "",
+      "url": "https://www.eventzalley.com/event-details/mahethon-2027-bengaluru-for-non-mahe"
+    },
+    {
+      "title": "Bengaluru Mountain Festival 2027",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2027-01-25",
+      "venue": "Bengaluru",
+      "org": "Mountain Festival Adventures",
+      "url": "https://bmftrails.com"
+    },
+    {
+      "title": "Coimbatore Backyard Ultra 2027",
+      "sport": "Running",
+      "city": "Coimbatore",
+      "date": "2027-01-30",
+      "venue": "Kumaraguru Institutions",
+      "org": "Nithin S S",
+      "url": "https://battlegroundindia.com/coimbatorebackyardultra"
+    },
+    {
+      "title": "K10K Cancer Awareness Run Chennai 2027",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2027-01-31",
+      "venue": "Chennai",
+      "org": "kauverymarathon.com",
+      "url": "https://kauverymarathon.com"
+    },
+    {
+      "title": "SBI Green Marathon Bengaluru 2027",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2027-01-31",
+      "venue": "Bengaluru",
+      "org": "SBI Green Marathon official calendar",
+      "url": "https://greenmarathon.in/"
+    },
+    {
+      "title": "Devils Circuit Chennai 2027",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2027-02-07",
+      "venue": "Chennai",
+      "org": "Devils Circuit",
+      "url": "https://devilscircuit.com/"
+    },
+    {
+      "title": "HCL Cyclothon Bengaluru 2027",
+      "sport": "Cycling",
+      "city": "Bengaluru",
+      "date": "2027-02-07",
+      "venue": "Bengaluru",
+      "org": "CFI",
+      "url": "https://hclcyclothon.com/bengaluru-race-info/"
+    },
+    {
+      "title": "Tuffman Bengaluru Half Marathon 2027",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2027-02-07",
+      "venue": "NICE Tollgate, Hosakerehalli",
+      "org": "Tuffman",
+      "url": "https://tuffmanindia.com"
+    },
+    {
+      "title": "Bharat Race Bengaluru 2027",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2027-02-14",
+      "venue": "Bengaluru",
+      "org": "BharatRace",
+      "url": "https://www.bharatrace.com/Forms/Public/UpcomingEvents"
+    },
+    {
+      "title": "Federal Bank Kochi Marathon 2027",
+      "sport": "Running",
+      "city": "Kochi",
+      "date": "2027-02-14",
+      "venue": "Maharajas College Ground",
+      "org": "Fitpage",
+      "url": "https://www.indiarunning.com/events/federal_bank_kochi_marathon_2027_27115"
+    },
+    {
+      "title": "Namma Hejje Bengaluru Half Marathon 2027",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2027-02-21",
+      "venue": "To be announced",
+      "org": "Nischith M S",
+      "url": "https://www.indiarunning.com/events/namma_hejje_half_marathon_2027__bengaluru__first_edition_53455"
+    },
+    {
+      "title": "SBI Green Marathon Chennai 2027",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2027-02-21",
+      "venue": "Chennai",
+      "org": "SBI Green Marathon official calendar",
+      "url": "https://greenmarathon.in/"
+    },
+    {
+      "title": "Nammude Run Kochi 2027",
+      "sport": "Running",
+      "city": "Kochi",
+      "date": "2027-02-28",
+      "venue": "Ernakulam South",
+      "org": "TE SPORTS",
+      "url": "https://www.indiarunning.com/events/nammude_run_kochi__south_edition_22014"
+    },
+    {
+      "title": "Chalo Bharat Walkathon Bengaluru Edition 2027",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2027-03-14",
+      "venue": "Bengaluru",
+      "org": "Play Free Sport India",
+      "url": "https://www.indiarunning.com/events/chalo_bharat_walkathon_bengaluru_edition_2026_43370"
+    },
+    {
+      "title": "Karnataka State Police Run 2027",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2027-03-14",
+      "venue": "Bengaluru",
+      "org": "NEB Sports Pvt Ltd",
+      "url": "https://www.nebsports.in"
+    },
+    {
+      "title": "Ooty Ultra 2027",
+      "sport": "Running",
+      "city": "Ooty",
+      "date": "2027-03-21",
+      "venue": "Ooty",
+      "org": "KaysFIT Academy",
+      "url": "https://kfita.in"
+    },
+    {
+      "title": "World Women's Day Run - Namma Chennai 2027",
+      "sport": "Running",
+      "city": "Chennai",
+      "date": "2027-03-21",
+      "venue": "Sai Ram Colony",
+      "org": "Gagner Sports",
+      "url": "https://www.indiarunning.com/events/world_womens_day_run__namma_chennai_2027_22794"
     }
   ]
 }
