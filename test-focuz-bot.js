@@ -2,6 +2,7 @@
 const fs = require('fs');
 const { JSDOM } = require('jsdom');
 const src = fs.readFileSync(__dirname + '/focuz-bot.js', 'utf8');
+const kbSrc = fs.readFileSync(__dirname + '/focuz-kb.js', 'utf8');
 let pass = 0, fail = 0;
 const ok = (c, m) => { c ? pass++ : (fail++, console.log('FAIL', m)); };
 
@@ -11,6 +12,7 @@ function load(path) {
     { url: 'https://maatram.co.in' + path, runScripts: 'outside-only', pretendToBeVisual: true });
   dom.window.matchMedia = () => ({ matches: true });
   dom.window.eval(src);
+  dom.window.eval(kbSrc); // the extra topics file the bot lazy-loads on first open
   dom.window.document.dispatchEvent(new dom.window.Event('DOMContentLoaded'));
   return dom.window;
 }
@@ -32,6 +34,12 @@ const cases = [
   ['i keep procrastinating', 'tip-start'], ['i cant stop scrolling reels', 'tip-phone'],
   ['how to concentrate longer', 'tip-focus'], ['board exam revision tips', 'tip-exam'],
   ['leaderbord rank', 'leaderboard'], ['what is maatram', 'what'],
+  // focuz-kb.js topics, typed the way students actually type
+  ['heyy', 'hi'], ['r u a bot', 'ai'], ['tysm', 'thanks'], ['tell me a joke pls', 'joke'], ['i feel so lonely', 'lonely'],
+  ['i want to kill myself', 'crisis'], ['someone is bullying me online', 'bully'], ['is red bull bad', 'energy'],
+  ['exam tomorrow i didnt study anything', 'lastmin'], ['make me a timetable', 'timetable'], ['explain photosynthesis', 'photosynthesis'],
+  ['pythagoras theorm', 'pythagoras'], ['why are reels so addictive', 'dopamine'], ['i cant stop playing free fire', 'gaming'],
+  ['science or commerce after 10th', 'stream'], ['does maatram work on iphone', 'iphone'], ['what does maatram mean', 'meaning'],
 ];
 for (const [q, id] of cases) {
   const r = w.__focuzMatch(q);
@@ -39,6 +47,8 @@ for (const [q, id] of cases) {
 }
 ok(w.__focuzMatch('the a is').length === 0, 'stopwords only -> no match');
 ok(w.__focuzMatch('quantum banana').length === 0, 'nonsense -> no match');
+ok(w.__focuzKB.length >= 188 && new Set(w.__focuzKB.map(e => e.id)).size === w.__focuzKB.length, 'core + 150 extra topics, unique ids');
+ok(w.__focuzKB.every(e => e.q && e.k.length && [].concat(e.a).every(t => typeof t === 'string' && t.length > 5)), 'every topic has q, keywords and answers');
 
 // Widget
 const d = w.document;
@@ -49,7 +59,7 @@ btn.click();
 const panel = d.getElementById('fz-panel');
 ok(panel && !panel.hidden, 'panel opens');
 ok(panel.getAttribute('role') === 'dialog', 'dialog role');
-ok(btn.querySelector('svg.fz-av .eye') && btn.querySelector('svg').getAttribute('aria-hidden') === 'true', 'bubble shows focus-eye mascot');
+ok(btn.querySelector('svg.fz-av .kat') && btn.querySelector('svg.fz-av .eye') && btn.querySelector('svg').getAttribute('aria-hidden') === 'true', 'bubble shows the Mini Ronin mascot');
 ok(d.querySelector('#fz-head .fz-hav svg.fz-av'), 'panel header shows mascot');
 ok(/Focuz/.test(d.querySelector('.fz-b').textContent), 'greeting shown');
 ok(d.querySelectorAll('.fz-chip').length === 4, 'home chips shown');

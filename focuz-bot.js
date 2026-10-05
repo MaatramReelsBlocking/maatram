@@ -5,106 +5,106 @@
   'use strict';
   if (window.__focuz) return; window.__focuz = true;
 
-  var GREET = "Hi, I'm Focuz, Maatram's AI. Ask me anything: homework in any subject, exam plans, focus tips, coding, or how Maatram works.";
+  var GREET = "yo, I'm Focuz 🥷 Maatram's AI. ask me anything fr: homework in any subject, exam plans, focus hacks, coding, or how Maatram works.";
   var MAIL = 'maatram97@gmail.com';
 
   /* ---- Knowledge base: every fact below is taken from the live site pages ---- */
   var KB = [
     // Basics
     { id: 'what', q: 'What is Maatram?', k: ['what is maatram', 'about', 'maatram', 'what does it do', 'purpose', 'app'],
-      a: 'Maatram is a free focus and screen-time app for students. It puts a cost, a pause and an audience between you and the feed: Focus Timers, App Gate with Hard Lock, Study Rooms, Screen Stats, a Leaderboard and Wellness, all on one points balance.', l: ['About Maatram', '/about.html'] },
-    { id: 'free', q: 'Is Maatram free?', k: ['free', 'cost', 'price', 'paid', 'pay', 'subscription', 'money', 'ads', 'premium'],
-      a: 'Yes. Maatram is completely free and open source. No ads, no paid tier, no subscription.' },
+      a: "Maatram is a free focus + screen-time app for students. it puts a cost, a pause and an audience between you and the feed: Focus Timers, App Gate with Hard Lock, Study Rooms, Screen Stats, a Leaderboard and Wellness, all on one points balance.", l: ['About Maatram', '/about.html'] },
+    { id: 'free', q: 'Is Maatram free?', k: ['is it free', 'is maatram free', 'free', 'cost', 'price', 'paid', 'pay', 'subscription', 'money', 'ads', 'premium'],
+      a: 'yep, 100% free and open source. no ads, no paid tier, no subscription. no catch fr.' },
     { id: 'account', q: 'Do I need an account?', k: ['account', 'need account', 'register', 'signup', 'sign up', 'guest', 'without login'],
-      a: 'No. Every tool opens without an account. Sign in with Google only if you want your points saved and shown on the Leaderboard. Listing a sports event also needs a sign-in.', l: ['Sign in', '/login.html'] },
+      a: "nope. every tool opens without an account. sign in with Google only if you want your points saved and on the Leaderboard. listing a sports event also needs a sign-in.", l: ['Sign in', '/login.html'] },
     { id: 'signin', q: 'How do I sign in?', k: ['sign in', 'signin', 'login', 'log in', 'google', 'gmail', 'logout', 'sign out'],
-      a: 'Maatram uses Google sign-in only. Open the Sign in page and tap Continue with Google. To sign out, tap your profile chip in the top bar and choose Sign out.', l: ['Sign in', '/login.html'] },
-    { id: 'data', q: 'Where is my data stored?', k: ['data', 'privacy', 'stored', 'store', 'safe', 'track', 'spy', 'collect', 'delete account', 'personal'],
-      a: 'Screen-time numbers you enter on Stats stay in your own browser. If you sign in, your name, photo and points are saved to your account so they can appear on the Leaderboard. Study Room messages go through a public relay and are not stored, so never share personal details there.', l: ['Privacy policy', '/privacy.html'] },
+      a: "Google sign-in only. open the Sign in page, tap Continue with Google, done. to sign out, tap your profile chip in the top bar → Sign out.", l: ['Sign in', '/login.html'] },
+    { id: 'data', q: 'Where is my data stored?', k: ['data', 'privacy', 'stored', 'store', 'safe', 'track', 'spy', 'collect', 'personal'],
+      a: "the screen-time numbers you type on Stats stay in your own browser. if you sign in, your name, photo and points are saved to your account so they can show on the Leaderboard. Study Room messages go through a public relay and aren't stored, so never drop personal details there.", l: ['Privacy policy', '/privacy.html'] },
     { id: 'who', q: 'Who built Maatram?', k: ['who built', 'who made', 'team', 'creator', 'ssvm', 'school', 'students', 'developer'],
-      a: 'A team of five class 10B students at SSVM School of Excellence, Coimbatore. Inspired by Gen Z, made by Gen Z, made for Gen Z.', l: ['About the team', '/about.html'] },
+      a: 'five class 10B students at SSVM School of Excellence, Coimbatore. inspired by Gen Z, made by Gen Z, made for Gen Z 🫡', l: ['About the team', '/about.html'] },
 
     // Points
-    { id: 'points', q: 'How do points work?', k: ['points', 'pts', 'score', 'earn', 'how to earn', 'reward', 'balance', 'lose points', 'penalty'],
-      a: 'Everything runs on one points balance. Earn: Pomodoro +25, Deep Work +100, Hard Lock +10 per 5 minutes locked, +10 after 10 minutes in a Study Room, +50 when your week comes in under your screen-time average, Wellness +25 per daily check (up to +100). Lose: opening a social app on App Gate costs 10, getting struck out of a room costs 30.' },
-    { id: 'points-missing', q: "My points aren't saving", k: ['points not saving', 'points gone', 'points missing', 'points reset', 'lost points', 'points zero', 'not updating'],
-      a: 'Points are only saved when you are signed in with Google, otherwise they live on this device only. The monthly board also starts fresh each month; your all-time total keeps growing. Check the All time tab on the Leaderboard.', l: ['Leaderboard', '/leaderboard.html'] },
-    { id: 'leaderboard', q: 'How does the Leaderboard work?', k: ['leaderboard', 'rank', 'ranking', 'top', 'board', 'monthly', 'all time', 'my rank'],
-      a: 'The Leaderboard ranks real signed-in students by points. It has a This month tab and an All time tab. No fake accounts, no paid boosts.', l: ['Open Leaderboard', '/leaderboard.html'] },
+    { id: 'points', q: 'How do points work?', k: ['points work', 'points', 'pts', 'score', 'earn', 'how to earn', 'reward', 'balance', 'lose points', 'penalty'],
+      a: "everything runs on one points balance.\n**earn:** Pomodoro +25, Deep Work +100, Hard Lock +10 per 5 min locked, +10 after 10 min in a Study Room, +50 when your week is under your screen-time average, Wellness +25 per daily check (up to +100).\n**lose:** opening a social app on App Gate costs 10, getting struck out of a room costs 30." },
+    { id: 'points-missing', q: "My points aren't saving", k: ['points arent saving', 'points not saving', 'points gone', 'points missing', 'points reset', 'lost points', 'points zero', 'not updating'],
+      a: "points only save when you're signed in with Google, otherwise they live on this device only. also the monthly board starts fresh every month, but your all-time total keeps growing. check the All time tab on the Leaderboard.", l: ['Leaderboard', '/leaderboard.html'] },
+    { id: 'leaderboard', q: 'How does the Leaderboard work?', k: ['leaderboard work', 'leaderboard', 'rank', 'ranking', 'top', 'board', 'monthly', 'all time', 'my rank'],
+      a: 'the Leaderboard ranks real signed-in students by points, with a This month tab and an All time tab. no fake accounts, no paid boosts. pure grind 💪', l: ['Open Leaderboard', '/leaderboard.html'] },
 
     // Timers
     { id: 'timers', q: 'How do the Focus Timers work?', k: ['timer', 'timers', 'pomodoro', 'deep work', 'focus', 'session', 'break', '25', '90'],
-      a: 'Pick Pomodoro (25 min focus, 5 min break, +25 pts) or Deep Work (90 min focus, 15 min break, +100 pts). Press Start. Space starts or pauses, R resets. Points land when a focus session finishes.', l: ['Open Timers', '/timers.html'] },
+      a: 'pick Pomodoro (25 min focus, 5 min break, +25 pts) or Deep Work (90 min focus, 15 min break, +100 pts) and hit Start. Space starts or pauses, R resets. points land when a focus session finishes.', l: ['Open Timers', '/timers.html'] },
     { id: 'timer-which', q: 'Pomodoro or Deep Work?', k: ['which timer', 'pomodoro or deep work', 'deep work or pomodoro', 'which is better', 'better', 'vs', 'compare', 'difference', 'better timer', 'choose timer'],
-      a: 'Pomodoro is short sprints that make it easy to start and keep breaks frequent. Deep Work is one long, distraction-free block for hard tasks and pays the biggest single reward in Maatram.', l: ['Open Timers', '/timers.html'] },
+      a: "Pomodoro = short sprints, easy to start, frequent breaks. perfect when you're struggling to begin. Deep Work = one long no-distraction block for the hard stuff, and it pays the biggest single reward in Maatram.", l: ['Open Timers', '/timers.html'] },
 
     // App Gate / Hard Lock
     { id: 'gate', q: 'What is the App Gate?', k: ['app gate', 'gate', 'block', 'blocker', 'instagram', 'youtube', 'snapchat', 'tiktok', 'whatsapp', 'social media'],
-      a: 'App Gate holds shortcuts to Instagram, Snapchat, TikTok, YouTube and WhatsApp behind a gate you control. Opening one costs 10 points. Arm Hard Lock to put them all out of reach until your focus window ends.', l: ['Open App Gate', '/app-gate.html'] },
+      a: "App Gate keeps shortcuts to Instagram, Snapchat, TikTok, YouTube and WhatsApp behind a gate you control. opening one costs 10 points. arm Hard Lock and they're all out of reach till your focus window ends.", l: ['Open App Gate', '/app-gate.html'] },
     { id: 'hardlock', q: 'How does Hard Lock work?', k: ['hard lock', 'hardlock', 'lock', 'locked', 'unlock', 'lock duration', 'minutes'],
-      a: 'On App Gate, pick a window from 5 to 90 minutes and press Lock. Every app goes grey and un-clickable until the timer runs out. No exits, no shortcuts. You earn +10 pts for every 5 minutes (90 minutes = +180).', l: ['Open App Gate', '/app-gate.html'] },
-    { id: 'hardlock-pc', q: 'Hard Lock on my computer?', k: ['computer', 'laptop', 'pc', 'desktop', 'chrome', 'browser block', 'block on laptop', 'instagram computer', 'block website'],
-      a: 'In Chrome on a computer, add the Maatram Hard Lock extension. While a Hard Lock started on the site is active, it blocks Instagram, Snapchat, TikTok, YouTube, X and Facebook in Chrome.', l: ['Get the extension', 'https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen'] },
+      a: "on App Gate, pick 5 to 90 minutes and press Lock. every app goes grey and un-clickable till the timer runs out. no exits, no shortcuts. you earn +10 pts for every 5 minutes (90 minutes = +180) 🔒", l: ['Open App Gate', '/app-gate.html'] },
+    { id: 'hardlock-pc', q: 'Hard Lock on my computer?', k: ['hard lock on my computer', 'hard lock on laptop', 'computer', 'laptop', 'pc', 'desktop', 'chrome', 'browser block', 'block on laptop', 'instagram computer', 'block website'],
+      a: 'yep, in Chrome. add the Maatram Hard Lock extension. while a Hard Lock started on the site is running, it blocks Instagram, Snapchat, TikTok, YouTube, X and Facebook in Chrome.', l: ['Get the extension', 'https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen'] },
     { id: 'extension', q: 'What does the Chrome extension do?', k: ['extension', 'chrome extension', 'web store', 'add to chrome', 'addon', 'plugin'],
-      a: 'Maatram Hard Lock is a Chrome extension. The lock is started on maatram.co.in; the extension only blocks while that lock is active. It collects no data.', l: ['Chrome Web Store', 'https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen'] },
+      a: "Maatram Hard Lock is our Chrome extension. you start the lock on maatram.co.in and the extension blocks only while that lock is active. it collects no data.", l: ['Chrome Web Store', 'https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen'] },
 
     // Study room
     { id: 'room', q: 'How do Study Rooms work?', k: ['study room', 'room', 'friends', 'together', 'group', 'join', 'room code', 'code', 'seat'],
-      a: 'Pick a name, share the room code with up to 4 friends and join. Up to five people, timers synced live, room chat. If anyone opens a social app on App Gate, everyone sees the strike in real time. Staying 10 minutes pays +10 pts.', l: ['Open Study Room', '/study-room.html'] },
+      a: "pick a name, share the room code with up to 4 friends and join. up to five people, timers synced live, room chat. if anyone opens a social app on App Gate, everyone sees the strike instantly 👀 stay 10 minutes for +10 pts.", l: ['Open Study Room', '/study-room.html'] },
     { id: 'strikes', q: 'What are strikes?', k: ['strike', 'strikes', 'struck out', 'kicked', 'three strikes', 'removed from room'],
-      a: 'Each social app you open on App Gate during a room session is a strike that everyone sees. Three strikes and the room ends your seat, costing 30 points. Take a breath and come back focused.', l: ['Open Study Room', '/study-room.html'] },
-    { id: 'room-stuck', q: "Study Room won't connect", k: ['room not working', 'connecting', 'cant join', 'not connecting', 'room stuck', 'friends cant see'],
-      a: 'Check everyone typed exactly the same room code, and that you are online. Rooms run through a public relay, so a school or office network that blocks it can stop the connection; try mobile data. Still stuck? Email the team.', mail: true },
+      a: "every social app you open on App Gate during a room session is a strike everyone can see. three strikes and you're out, which costs 30 points. take a breath and come back locked in.", l: ['Open Study Room', '/study-room.html'] },
+    { id: 'room-stuck', q: "Study Room won't connect", k: ['wont connect', 'room wont connect', 'study room not connecting', 'room not working', 'connecting', 'cant join', 'not connecting', 'room stuck', 'friends cant see'],
+      a: "check everyone typed the exact same room code and that you're online. rooms run through a public relay, so a school or office network that blocks it can break the connection. try mobile data. still stuck? email the team.", mail: true },
 
     // Stats
-    { id: 'stats', q: 'How do Screen Stats work?', k: ['stats', 'screen time', 'statistics', 'usage', 'log', 'track screen', 'chart', 'weekly'],
-      a: 'Enter your screen time for each app by hand and save the day. You get today\'s total, a 7-day average and weekly charts. If your week comes in under your average you get +50 pts. The data never leaves your device.', l: ['Open Stats', '/stats.html'] },
-    { id: 'stats-auto', q: 'Why is screen time manual?', k: ['automatic', 'automatically', 'track automatically', 'auto track', 'why manual', 'import', 'digital wellbeing', 'screen time api'],
-      a: 'Social apps do not share usage data with other apps or websites, so Stats is logged by hand and kept on your device. On a computer, the Chrome extension counts time on blocked sites for Screen Stats.' },
+    { id: 'stats', q: 'How do Screen Stats work?', k: ['screen stats', 'stats', 'screen time', 'statistics', 'usage', 'log', 'track screen', 'chart', 'weekly'],
+      a: "type in your screen time for each app and save the day. you get today's total, a 7-day average and weekly charts. week under your average = +50 pts. the data never leaves your device.", l: ['Open Stats', '/stats.html'] },
+    { id: 'stats-auto', q: 'Why is screen time manual?', k: ['screen time manual', 'why is it manual', 'automatic', 'automatically', 'track automatically', 'auto track', 'why manual', 'import', 'screen time api'],
+      a: "social apps don't share usage data with other apps or websites, so Stats is logged by hand and kept on your device. on a computer, the Chrome extension counts time on blocked sites for Screen Stats." },
 
     // Wellness / Sports
     { id: 'wellness', q: 'What is Wellness?', k: ['wellness', 'meal', 'meal plan', 'diet', 'food', 'hydration', 'water', 'sleep', 'health'],
-      a: 'Wellness gives you a private 7-day meal plan from 80+ Indian meals (swap any meal), a daily protein and water guide based on ICMR-NIN guidelines, and four daily checks: meals, hydration, activity and sleep. Each check pays +25 pts, up to +100 a day. Your plan and checks stay on your device.', l: ['Open Wellness', '/wellness/wellness.html'] },
+      a: "Wellness builds you a private 7-day meal plan from 80+ Indian meals (swap any meal), a daily protein and water guide based on ICMR-NIN guidelines, and four daily checks: meals, hydration, activity and sleep. each check pays +25 pts, up to +100 a day. your plan stays on your device.", l: ['Open Wellness', '/wellness/wellness.html'] },
     { id: 'sports', q: 'What is Sports Corner?', k: ['sports', 'sport', 'event', 'tournament', 'match', 'camp', 'sports corner', 'outdoor'],
-      a: 'Sports Corner lists local tournaments, camps and meet-ups posted by signed-in users. Filter by city, sport and date. Registration always happens on the organiser\'s own site.', l: ['Open Sports Corner', '/sports.html'] },
+      a: "Sports Corner lists local tournaments, camps and meet-ups posted by signed-in users. filter by city, sport and date. registration always happens on the organiser's own site. touch grass, literally ⚽", l: ['Open Sports Corner', '/sports.html'] },
 
     // Android
-    { id: 'android', q: 'Is there an Android app?', k: ['android', 'apk', 'phone app', 'mobile app', 'download', 'install', 'play store', 'ios', 'iphone'],
-      a: 'Yes, Android 5.1 and above. It runs App Gate, Hard Lock and Maatram Shield natively, so blocking keeps working outside the browser. It is not on the Play Store; download the APK from the site. There is no iPhone app.', l: ['Get the app', '/download.html'] },
+    { id: 'android', q: 'Is there an Android app?', k: ['android', 'apk', 'phone app', 'mobile app', 'download', 'install', 'play store'],
+      a: "yes, Android 5.1 and above. it runs App Gate, Hard Lock and Maatram Shield natively, so blocking keeps working outside the browser. it's not on the Play Store, grab the APK from the site. no iPhone app yet.", l: ['Get the app', '/download.html'] },
     { id: 'not-installed', q: '"App not installed" error', k: ['app not installed', 'not installed', 'install failed', 'wont install', 'cant install', 'installation error'],
-      a: 'An older Maatram is still on the phone. Version 1.1 is signed with a different key, so uninstall the old copy first, then install again. Open the APK from the Files app, not a chat preview.', l: ['Install guide', '/download.html'] },
+      a: "an older Maatram is still on the phone. version 1.1 is signed with a different key, so uninstall the old one first, then install again. open the APK from the Files app, not a chat preview.", l: ['Install guide', '/download.html'] },
     { id: 'playprotect', q: 'Blocked by Play Protect', k: ['play protect', 'blocked', 'harmful', 'unsafe', 'warning', 'virus', 'download anyway'],
-      a: 'Play Protect warns about anything not from the Play Store. Tap More details, then Install anyway. It is a warning about the source, not the file. You can check the file\'s SHA-256 on the download page.', l: ['Install guide', '/download.html'] },
-    { id: 'shield', q: 'Hard Lock does nothing on my phone', k: ['shield', 'maatram shield', 'accessibility', 'not blocking', 'doesnt block', 'lock not working', 'hard lock not working'],
-      a: 'Maatram Shield is off, or the system killed it. Open Settings → Accessibility → Maatram Shield and turn it on. Without Shield the timers run but nothing gets blocked.', l: ['Install guide', '/download.html'] },
+      a: "Play Protect warns about anything not from the Play Store. tap More details → Install anyway. it's a warning about the source, not the file. you can check the file's SHA-256 on the download page if you're sus.", l: ['Install guide', '/download.html'] },
+    { id: 'shield', q: 'Hard Lock does nothing on my phone', k: ['nothing on my phone', 'hard lock does nothing', 'not blocking on phone', 'shield', 'maatram shield', 'accessibility', 'not blocking', 'doesnt block', 'lock not working', 'hard lock not working'],
+      a: "Maatram Shield is off, or the system killed it. go to Settings → Accessibility → Maatram Shield and turn it on. without Shield the timers run but nothing actually gets blocked.", l: ['Install guide', '/download.html'] },
     { id: 'restricted', q: 'Shield switch is greyed out', k: ['restricted setting', 'restricted', 'greyed out', 'grayed out', 'cant enable', 'financial information', 'allow restricted'],
-      a: 'On Android 13 and above, go to Settings → Apps → Maatram → ⋮ → Allow restricted settings. Then come back and turn on Maatram Shield in Accessibility.' },
-    { id: 'samsung', q: 'Shield keeps turning off (Samsung)', k: ['samsung', 'turns off', 'stops working', 'killed', 'battery', 'sleeping apps', 'keeps stopping'],
-      a: 'On Samsung, keep the service alive: lock Maatram in Recents, set Battery to Unrestricted, and remove it from Sleeping apps. Then re-enable Shield in Accessibility.' },
+      a: 'on Android 13+, go to Settings → Apps → Maatram → ⋮ → Allow restricted settings. then come back and turn on Maatram Shield in Accessibility.' },
+    { id: 'samsung', q: 'Shield keeps turning off (Samsung)', k: ['shield turning off', 'keeps turning off', 'samsung', 'turns off', 'stops working', 'killed', 'battery', 'sleeping apps', 'keeps stopping'],
+      a: "Samsung loves killing apps lol. keep it alive: lock Maatram in Recents, set Battery to Unrestricted, and remove it from Sleeping apps. then re-enable Shield in Accessibility." },
 
     // Misc
     { id: 'lag', q: 'The site is slow or laggy', k: ['slow', 'lag', 'laggy', 'performance', 'battery drain', 'heavy', 'hang', 'freeze'],
-      a: 'Turn off ⚡ Performance (bottom-left button). That stops the background animations while keeping every tool working. It is off by default on smaller phones.' },
-    { id: 'theme', q: 'Can I change the look?', k: ['theme', 'dark mode', 'light mode', 'colors', 'customize', 'minimal', 'neon', 'design'],
-      a: 'Yes. Tap the ◐ Customize UI button at the bottom-right to switch the whole site between Neon and Minimal Glass.' },
-    { id: 'contact', q: 'Contact the team', k: ['contact', 'email', 'support', 'help me', 'human', 'report', 'bug', 'feedback', 'complaint', 'suggestion'],
-      a: 'Email the team at ' + MAIL + ', or send a message from the feedback form on the Socials page.', l: ['Socials & feedback', '/socials.html'], mail: true },
-    { id: 'socials', q: 'Maatram socials', k: ['instagram page', 'twitter', 'x account', 'linkedin', 'reddit', 'github', 'social handles', 'follow', 'source code'],
-      a: 'Instagram @maatram_official97, X @maatram_97, Reddit u/Maatram97, LinkedIn maatram.exe, and the source code on GitHub (MaatramReelsBlocking/maatram).', l: ['All socials', '/socials.html'] },
+      a: "turn off ⚡ Performance (bottom-left button). that kills the background animations but every tool keeps working. it's already off by default on smaller phones." },
+    { id: 'theme', q: 'Can I change the look?', k: ['change the look', 'change look', 'theme', 'dark mode', 'light mode', 'colors', 'customize', 'minimal', 'neon', 'design'],
+      a: 'yep. tap ◐ Customize UI at the bottom-right to flip the whole site between Neon and Minimal Glass ✨' },
+    { id: 'contact', q: 'Contact the team', k: ['contact the team', 'contact team', 'contact', 'email', 'support', 'help me', 'human', 'report', 'bug', 'feedback', 'complaint', 'suggestion'],
+      a: 'hit up the team at ' + MAIL + ', or send a message from the feedback form on the Socials page.', l: ['Socials & feedback', '/socials.html'], mail: true },
+    { id: 'socials', q: 'Maatram socials', k: ['maatram socials', 'your socials', 'instagram page', 'twitter', 'x account', 'linkedin', 'reddit', 'github', 'social handles', 'follow'],
+      a: 'Instagram @maatram_official97, X @maatram_97, Reddit u/Maatram97, LinkedIn maatram.exe, and the source code on GitHub (MaatramReelsBlocking/maatram). follow us (then close the app and study 😅)', l: ['All socials', '/socials.html'] },
 
-    // Study / focus tips — written for Focuz
+    // Study / focus tips
     { id: 'tip-start', q: "I can't start studying", k: ['cant start', 'procrastinate', 'procrastination', 'lazy', 'motivation', 'no motivation', 'dont feel like'],
-      a: 'Shrink the first step until it feels silly: open the book and read one page. Start one Pomodoro for that one page. Starting is the hard part; most people keep going once the timer is running.', l: ['Start a Pomodoro', '/timers.html'] },
-    { id: 'tip-phone', q: 'How do I stop checking my phone?', k: ['phone addiction', 'keep checking', 'scrolling', 'reels', 'shorts', 'doomscroll', 'distracted', 'addicted', 'cant stop'],
-      a: 'Put distance between you and the phone: another room, or face down out of reach. Arm a Hard Lock for the length of your study block, and log your screen time daily so you can see it drop.', l: ['Arm Hard Lock', '/app-gate.html'] },
+      a: "shrink the first step till it feels silly: open the book and read ONE page. start one Pomodoro just for that page. starting is the hard part, once the timer's running you usually keep going.", l: ['Start a Pomodoro', '/timers.html'] },
+    { id: 'tip-phone', q: 'How do I stop checking my phone?', k: ['stop checking my phone', 'checking my phone', 'checking phone', 'phone addiction', 'keep checking', 'scrolling', 'reels', 'shorts', 'doomscroll', 'distracted', 'addicted', 'cant stop'],
+      a: "put distance between you and the phone: another room, or face down out of reach. arm a Hard Lock for your whole study block, and log screen time daily so you can watch it drop 📉", l: ['Arm Hard Lock', '/app-gate.html'] },
     { id: 'tip-focus', q: 'How do I focus longer?', k: ['focus longer', 'concentrate', 'concentration', 'attention span', 'lose focus', 'mind wanders'],
-      a: 'Build it up. Do Pomodoros for a week, then try one Deep Work block a day for your hardest subject. Keep a notepad next to you: when a random thought pops up, write it down and get back to work.', l: ['Open Timers', '/timers.html'] },
-    { id: 'tip-exam', q: 'Tips for exam prep', k: ['exam', 'exams', 'test', 'revision', 'revise', 'boards', 'board exam', 'syllabus', 'study plan'],
-      a: 'Test yourself instead of re-reading: close the book and write what you remember, then check. Spread revision over several days rather than one long night. Plan tomorrow\'s topics before you stop today.' },
-    { id: 'tip-sleep', q: 'I study late and feel tired', k: ['tired', 'sleepy', 'late night', 'night study', 'sleep schedule', 'exhausted'],
-      a: 'Sleep is when your brain stores what you studied, so cutting it costs you marks. Keep the phone out of bed and stop screens a while before sleeping. Wellness has a daily sleep check to keep you honest.', l: ['Open Wellness', '/wellness/wellness.html'] },
+      a: "build it up like a muscle. Pomodoros for a week, then one Deep Work block a day for your hardest subject. keep a notepad nearby: random thought pops up → write it down → back to work.", l: ['Open Timers', '/timers.html'] },
+    { id: 'tip-exam', q: 'Tips for exam prep', k: ['exam prep', 'exam', 'exams', 'test', 'revision', 'revise', 'boards', 'board exam', 'syllabus', 'study plan'],
+      a: "test yourself instead of re-reading: close the book, write what you remember, then check. spread revision over several days instead of one long night. and plan tomorrow's topics before you stop today." },
+    { id: 'tip-sleep', q: 'I study late and feel tired', k: ['study late', 'feel tired', 'tired', 'sleepy', 'late night', 'night study', 'sleep schedule', 'exhausted'],
+      a: "sleep is literally when your brain saves what you studied, so cutting it costs you marks. phone out of bed, screens off a while before sleeping. Wellness has a daily sleep check to keep you honest.", l: ['Open Wellness', '/wellness/wellness.html'] },
     { id: 'tip-group', q: 'Studying with friends keeps going off track', k: ['study with friends', 'group study', 'friends distract', 'study group'],
-      a: 'Agree on one goal before you start, then use a Study Room: shared timer, and everyone sees who opens a social app. Chat in the breaks, not during focus.', l: ['Open Study Room', '/study-room.html'] }
+      a: "agree on one goal before you start, then use a Study Room: shared timer, and everyone sees who opens a social app. chat in the breaks, not during focus.", l: ['Open Study Room', '/study-room.html'] }
   ];
 
   /* Chips shown when the panel opens, per page */
@@ -125,8 +125,8 @@
   var SYN = { mobile: 'phone', cell: 'phone', insta: 'instagram', ig: 'instagram', yt: 'youtube', pts: 'points', point: 'points',
     signin: 'sign in', login: 'sign in', lb: 'leaderboard', pomo: 'pomodoro', laptop: 'computer', pc: 'computer',
     apk: 'android', blocking: 'block', blocked: 'block', blocks: 'block', locking: 'lock', rooms: 'room', timers: 'timer',
-    exams: 'exam', studying: 'study', distracted: 'distract', distraction: 'distract', distractions: 'distract' };
-  var STOP = /^(the|a|an|is|are|do|does|i|my|me|to|of|in|on|it|how|what|can|you|for|and|or|this|that|with|be|there|any|please|pls|plz|hi|hey|hello|maatram)$/;
+    exams: 'exam', studying: 'study', u: 'you', r: 'are', ur: 'your', ya: 'you', distracted: 'distract', distraction: 'distract', distractions: 'distract' };
+  var STOP = /^(the|a|an|is|are|do|does|i|my|me|to|of|in|on|it|how|what|can|you|for|and|or|this|that|with|be|there|any|please|pls|plz|hi|hey|hello|maatram|focuz)$/;
 
   function norm(s) {
     return (' ' + String(s).toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9 ]+/g, ' ') + ' ')
@@ -160,10 +160,11 @@
     entry.k.forEach(function (kw) {
       var nk = norm(kw).trim();
       if (!nk || seen[nk]) return; seen[nk] = 1;
+      if (text.trim() === nk) s += 3; // the whole message is exactly this keyword ("lol", "bye")
       if (nk.indexOf(' ') > 0) { if (text.indexOf(' ' + nk + ' ') >= 0) s += 2 + nk.split(' ').length; else {
         var parts = nk.split(' ').filter(function (p) { return !STOP.test(p); }), hit = 0;
         parts.forEach(function (p) { hit += wordHit(p, words); });
-        if (parts.length && hit / parts.length >= 0.99) s += 1.5 + parts.length * 0.5;
+        if (parts.length > 1 && hit / parts.length >= 0.89) s += 1.5 + parts.length * 0.5;
       } }
       else if (!STOP.test(nk)) s += wordHit(nk, words) * (nk.length <= 3 ? 1.2 : 1.5);
     });
@@ -171,12 +172,14 @@
   }
   function match(q) {
     var text = norm(q), words = text.trim().split(' ').filter(function (w) { return w && !STOP.test(w); });
-    if (!words.length) return / maatram /.test(' ' + String(q).toLowerCase() + ' ') ? [{ e: KB[0], s: 2 }] : [];
-    return KB.map(function (e) { return { e: e, s: score(e, text, words) }; })
+    var r = KB.map(function (e) { return { e: e, s: score(e, text, words) }; })
       .filter(function (r) { return r.s > 0; })
       .sort(function (a, b) { return b.s - a.s; });
+    // stopword-only text ("how are you") can still hit a full phrase; else a bare "maatram" means the intro
+    if (!r.length && !words.length && / maatram /.test(' ' + String(q).toLowerCase() + ' ')) return [{ e: KB[0], s: 2 }];
+    return r;
   }
-  window.__focuzMatch = match; // exposed for tests
+  window.__focuzMatch = match; window.__focuzKB = KB; // exposed for tests
 
   /* ---- UI (built on first open) ---- */
   var CSS =
@@ -184,10 +187,21 @@
     'background:linear-gradient(135deg,#34D399,#4E9BFF);color:#04120F;display:grid;place-items:center;cursor:pointer;' +
     'box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 4px rgba(52,211,153,.12);transition:transform .2s ease;padding:0}' +
     '#fz-btn:hover{transform:translateY(-2px) scale(1.04)}#fz-btn svg{width:100%;height:100%}' +
-    /* Mascot: focus eye inside a target, blinks every few seconds */
+    /* Mascot: Mini Ronin. Blinks; on hover (or tap) the katana slices a phone in half; headband flutters while thinking */
     '.fz-av{display:block;width:100%;height:100%}.fz-av .w{fill:#F4FFFB}.fz-av .d{fill:#04120F}' +
-    '.fz-av .ring{fill:none;stroke:#04120F;stroke-opacity:.3;stroke-width:2}.fz-av .tk{fill:none;stroke:#04120F;stroke-width:3.2;stroke-linecap:round}' +
-    '.fz-av .eye{transform-box:view-box;transform-origin:32px 32px;animation:fzblink 5s infinite}' +
+    '.fz-av .bl{fill:none;stroke:#F4FFFB;stroke-width:3;stroke-linecap:round}.fz-av .hd{fill:none;stroke:#04120F;stroke-width:4.5;stroke-linecap:round}' +
+    '.fz-av .tl{fill:none;stroke:#F4FFFB;stroke-width:2.6;stroke-linecap:round}.fz-av .br{fill:none;stroke:#F4FFFB;stroke-width:2;stroke-linecap:round}' +
+    '.fz-av .eye{transform-box:view-box;transform-origin:32px 38px;animation:fzblink 5s infinite}' +
+    '.fz-av .kat{transform-box:view-box;transform-origin:32px 35px}.fz-av .ph{opacity:0;transform-box:fill-box;transform-origin:center}' +
+    '.fz-av .tail{transform-box:view-box;transform-origin:18px 29px}' +
+    '#fz-btn:hover .kat,#fz-btn.slash .kat{animation:fzswing .9s cubic-bezier(.3,.7,.2,1)}' +
+    '#fz-btn:hover .ph1,#fz-btn.slash .ph1{animation:fzph1 .9s ease-out}#fz-btn:hover .ph2,#fz-btn.slash .ph2{animation:fzph2 .9s ease-out}' +
+    '.fz-busy .fz-hav .tail{animation:fzflut .35s ease-in-out infinite alternate}' +
+    '@keyframes fzswing{0%{transform:none}28%{transform:rotate(-28deg)}52%{transform:rotate(78deg)}100%{transform:none}}' +
+    '@keyframes fzph1{0%,22%{opacity:0;transform:scale(.5)}34%,50%{opacity:1;transform:none}100%{opacity:0;transform:translate(5px,-6px) rotate(-28deg)}}' +
+    '@keyframes fzph2{0%,22%{opacity:0;transform:scale(.5)}34%,50%{opacity:1;transform:none}100%{opacity:0;transform:translate(-2px,8px) rotate(18deg)}}' +
+    '@keyframes fzflut{from{transform:rotate(-6deg)}to{transform:rotate(9deg)}}' +
+    '.fz-b.md>a{display:inline-block;margin-top:6px}' +
     '@keyframes fzblink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}' +
     '#fz-head .fz-hav{width:30px;height:30px;border-radius:50%;flex:none;opacity:1;overflow:hidden;background:linear-gradient(135deg,#34D399,#4E9BFF)}.fz-hav .eye{animation-delay:-2.5s}' +
     '#fz-btn:focus-visible,#fz-panel :focus-visible{outline:2px solid #fff;outline-offset:2px}' +
@@ -226,13 +240,20 @@
     '#fz-panel{left:8px;right:8px;bottom:8px;width:auto;max-width:none;height:min(78dvh,620px);border-radius:20px}}' +
     /* Lift the bubble above the guest sign-in bar (gate.js #mguest) on phones */
     '@media(max-width:640px){body:has(#mguest) #fz-btn{bottom:124px}}' +
-    'html.minimal .fz-av .d{fill:#0B0C0B}html.minimal .fz-av .w{fill:#F4F7F6}html.minimal .fz-av .ring,html.minimal .fz-av .tk{stroke:#0B0C0B}' +
-    'html.fz-perf #fz-panel{backdrop-filter:none;-webkit-backdrop-filter:none}html.fz-perf .fz-av .eye{animation:none}' +
-    '@media(prefers-reduced-motion:reduce){#fz-btn,#fz-panel{transition:none}.fz-av .eye{animation:none}}';
+    'html.minimal .fz-av .d{fill:#0B0C0B}html.minimal .fz-av .w{fill:#F4F7F6}html.minimal .fz-av .hd{stroke:#0B0C0B}html.minimal .fz-av .bl,html.minimal .fz-av .tl,html.minimal .fz-av .br{stroke:#F4F7F6}' +
+    'html.fz-perf #fz-panel{backdrop-filter:none;-webkit-backdrop-filter:none}html.fz-perf .fz-av .eye,html.fz-perf .fz-av .kat,html.fz-perf .fz-av .ph,html.fz-perf .fz-av .tail{animation:none!important}' +
+    '@media(prefers-reduced-motion:reduce){#fz-btn,#fz-panel{transition:none}.fz-av .eye,.fz-av .kat,.fz-av .ph,.fz-av .tail{animation:none!important}}';
 
   var ICON = '<svg class="fz-av" viewBox="0 0 64 64" aria-hidden="true" focusable="false">' +
-    '<circle class="ring" cx="32" cy="32" r="23"/><path class="tk" d="M32 6v6M32 52v6M6 32h6M52 32h6"/>' +
-    '<g class="eye"><path class="w" d="M14 32q18-17 36 0q-18 17-36 0z"/><circle class="d" cx="32" cy="32" r="8"/><circle class="w" cx="35" cy="29" r="2.6"/></g></svg>';
+    '<g class="kat"><path class="bl" d="M21 46L58 9"/><path class="hd" d="M11 56l9-9"/><path class="hd" d="M17.5 45.5l5 5"/></g>' +
+    '<g class="ph ph1"><rect class="w" x="44" y="42" width="10" height="8" rx="2"/><rect class="d" x="45.6" y="43.6" width="6.8" height="6.4" rx="1"/></g>' +
+    '<g class="ph ph2"><rect class="w" x="44" y="50" width="10" height="8" rx="2"/><rect class="d" x="45.6" y="50" width="6.8" height="5" rx="1"/></g>' +
+    '<circle class="d" cx="32" cy="35" r="16"/>' +
+    '<path class="w" d="M18.1 27h27.8l1.8 5H16.3z"/>' +
+    '<g class="tail"><path class="tl" d="M18 28q-7-1-12-8"/><path class="tl" d="M18 31q-8 2-13-2"/></g>' +
+    '<path class="br" d="M22 33.6l7 1.8M42 33.6l-7 1.8"/>' +
+    '<g class="eye"><ellipse class="w" cx="26.5" cy="38.6" rx="3.3" ry="2.5"/><ellipse class="w" cx="37.5" cy="38.6" rx="3.3" ry="2.5"/>' +
+    '<circle class="d" cx="27.2" cy="38.8" r="1.4"/><circle class="d" cx="36.8" cy="38.8" r="1.4"/></g></svg>';
 
   /* AI chat additions: wider panel, markdown, typing dots, toolbar, textarea */
   CSS +=
@@ -306,6 +327,13 @@
     return html;
   }
   window.__focuzMd = md; // exposed for tests
+  function pick(a) { return Array.isArray(a) ? a[Math.floor(Math.random() * a.length)] : a; }
+  /* 150+ extra topics live in focuz-kb.js, fetched the first time the chat opens */
+  window.__focuzAddKB = function (list) { KB.push.apply(KB, list); };
+  function loadKB() {
+    if (document.getElementById('fz-kb')) return;
+    var sc = el('script'); sc.id = 'fz-kb'; sc.src = '/focuz-kb.js?v=1'; sc.async = true; document.head.appendChild(sc);
+  }
 
   function actions(m, text) {
     var bar = el('div', 'fz-act'), c = el('button', null, 'Copy'); c.type = 'button';
@@ -334,27 +362,28 @@
   }
   /* instant offline answer from the help-centre KB */
   function answer(e) {
-    var m = say(e.a, 'b'), extra = '';
+    var text = pick(e.a), m = el('div', 'fz-m fz-b md'), extra = '';
+    m.innerHTML = md(text); log.appendChild(m); scrollEnd();
     if (e.l) {
       var a = el('a', null, e.l[0] + ' →'); a.href = e.l[1];
       if (/^https?:/.test(e.l[1])) { a.target = '_blank'; a.rel = 'noopener'; }
-      m.appendChild(document.createElement('br')); m.appendChild(a);
+      m.appendChild(a);
       extra = ' [' + e.l[0] + '](' + e.l[1] + ')';
     }
     if (e.mail && !e.l) {
       var ml = el('a', null, 'Email ' + MAIL + ' →'); ml.href = 'mailto:' + MAIL;
-      m.appendChild(document.createElement('br')); m.appendChild(ml);
+      m.appendChild(ml);
     }
-    remember('assistant', e.a + extra);
+    remember('assistant', text + extra);
   }
   function offline(q, r) {
     if (r.length && r[0].s >= 1.5 && (!r[1] || r[0].s >= r[1].s * 1.25)) {
       answer(r[0].e);
     } else if (r.length) {
-      say('Not fully sure what you mean. Did you mean one of these?', 'b');
+      say(pick(["hmm not 100% sure what you mean. one of these?", "wait, did you mean one of these?", "lowkey lost me there. try one of these?"]), 'b');
       chips(r.slice(0, 3).map(function (x) { return x.e.id; }), 'Did you mean');
     } else {
-      var m = say("Focuz AI is busy right now. Ask again in a moment and I'll answer properly. For Maatram questions you can also tap one below, or email " + MAIL + '.', 'b');
+      var m = say(pick(["ngl my AI brain is taking a nap rn 😴 ask again in a sec and I'll answer properly.", "can't reach my AI side right now, give it a moment and try again."]) + ' for Maatram stuff tap one below, or email ' + MAIL + '.', 'b');
       var a = el('a', null, 'Open Socials & feedback →'); a.href = '/socials.html';
       m.appendChild(document.createElement('br')); m.appendChild(a);
       chips(['points', 'hardlock', 'room', 'android'], 'Popular questions');
@@ -365,6 +394,7 @@
   }
   function setBusy(ctrl) {
     busy = ctrl;
+    if (panel) panel.classList.toggle('fz-busy', !!ctrl);
     send.classList.toggle('stop', !!ctrl);
     send.textContent = ctrl ? '■' : '➤';
     send.setAttribute('aria-label', ctrl ? 'Stop answer' : 'Send');
@@ -375,7 +405,7 @@
     say(q, 'u'); remember('user', q);
     var r = match(q);
     if (!window.fetch || !window.TextDecoder) { offline(q, r); return; }
-    var ctx = r.slice(0, 3).map(function (x) { return '- ' + x.e.q + ' ' + x.e.a + (x.e.l ? ' (' + x.e.l[1] + ')' : ''); }).join('\n');
+    var ctx = r.slice(0, 3).map(function (x) { return '- ' + x.e.q + ' ' + [].concat(x.e.a)[0] + (x.e.l ? ' (' + x.e.l[1] + ')' : ''); }).join('\n');
     var m = el('div', 'fz-m fz-b md'); m.innerHTML = '<span class="fz-typing" aria-label="Focuz is typing"><i></i><i></i><i></i></span>';
     log.appendChild(m); scrollEnd();
     var ctrl = window.AbortController ? new AbortController() : null, text = '', raf = 0;
@@ -419,7 +449,7 @@
   }
 
   function build() {
-    built = true;
+    built = true; loadKB();
     panel = el('div'); panel.id = 'fz-panel';
     panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'false'); panel.setAttribute('aria-labelledby', 'fz-title');
     panel.hidden = true;
@@ -482,7 +512,8 @@
     btn = el('button'); btn.id = 'fz-btn'; btn.type = 'button';
     btn.setAttribute('aria-label', 'Open Focuz AI help'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'fz-panel');
     btn.title = 'Focuz — ask anything'; btn.innerHTML = ICON;
-    btn.addEventListener('click', function () { isOpen ? close() : open(); });
+    btn.addEventListener('click', function () { btn.classList.remove('slash'); void btn.offsetWidth; btn.classList.add('slash'); isOpen ? close() : open(); });
+    btn.addEventListener('animationend', function (e) { if (e.animationName === 'fzswing') btn.classList.remove('slash'); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });
     document.body.appendChild(btn);
   }
