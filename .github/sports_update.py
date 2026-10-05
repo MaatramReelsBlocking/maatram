@@ -23,7 +23,7 @@ LISTS = ["/races/india/tamil-nadu", "/races/india/puducherry",
          "/races/india/karnataka/bengaluru", "/races/india/kerala/kochi"]
 MAX_PAGES = 6          # per list
 HORIZON_DAYS = 183     # about 6 months ahead
-MAX_EVENTS = 60
+MAX_EVENTS = 150
 UA = "MaatramSportsBot/1.0 (+https://maatram.co.in/sports.html)"
 
 # Must match CITIES in sports.html. Only exact names or same-place aliases.
@@ -39,7 +39,8 @@ CITY = {c.lower(): c for c in CITIES}
 CITY.update(ALIAS)
 
 SKIP = re.compile(r"duathlon|triathlon|aquathlon|swim", re.I)
-CYCLE = re.compile(r"cycl|bike|bicycle", re.I)
+CYCLE = re.compile(r"cycl|bike|bicycle|\bmtb\b", re.I)
+OTHER = re.compile(r"obstacle|orienteering|adventure|trek|hike|hiking", re.I)
 
 
 def get(path):
@@ -106,7 +107,7 @@ def parse_race(page_html, today):
     if not url:
         return None
     venue = html.unescape(str(loc.get("name", ""))).strip() if isinstance(loc, dict) else ""
-    return {"title": title, "sport": "Cycling" if CYCLE.search(title) else "Running",
+    return {"title": title, "sport": "Cycling" if CYCLE.search(title) else "Other" if OTHER.search(title) else "Running",
             "city": city, "date": date, "venue": venue,
             "org": html.unescape(str(org.get("name", ""))).strip() if isinstance(org, dict) else "",
             "url": url}
