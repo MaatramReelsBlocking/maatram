@@ -572,7 +572,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
   <footer>MAATRAM · <b>Action ⟹ Value</b> · Built by Team Maatram, SSVM School of Excellence</footer>
 </div>
 
-<script src="/sakura.js?v=1"></script>
+<script src="/sakura.js?v=2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.3.5/mqtt.min.js"></script>
 <script>
 /* ============ storage (works as downloaded file; falls back in sandboxed views) ============ */
@@ -655,13 +655,11 @@ function skRender(){
   if(!SK) return;
   skLast=Date.now();
   const r=skCanvas.getBoundingClientRect(), dpr=Math.min(devicePixelRatio||1,2), w=Math.max(200,r.width), h=w/1.05;
-  skCanvas.width=Math.round(w*dpr); skCanvas.height=Math.round(h*dpr);
-  const c=skCanvas.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0);
   const cur=SK.garden.current(), plants=SK.garden.plants(), locked=body.classList.contains('locked');
   const st=document.getElementById('skStage'), sub=document.getElementById('skSub'), lv=document.getElementById('skLeaves');
   if(locked && cur){
     const p=Math.min(1,Math.max(0,1-(cur.end-Date.now())/(cur.end-cur.start)));
-    SK.draw(c,w,h,p,cur.leaves,SK.hourNow(),false);
+    SK.live(skCanvas,w,h,dpr,p,cur.leaves,SK.hourNow(),false);
     st.textContent=skStage(p); sub.textContent='Your sakura grows while the lock runs. Stay locked and it blooms.';
     const tries=Object.keys(cur.tries).sort((a,b)=>cur.tries[b]-cur.tries[a]).slice(0,3).map(k=>k+' '+cur.tries[k]+'x').join(', ');
     lv.hidden=false; lv.className='sk-leaves'+(cur.leaves?'':' ok');
@@ -671,7 +669,7 @@ function skRender(){
   } else {
     const last=plants[plants.length-1];
     lv.hidden=true;
-    SK.draw(c,w,h,last?1:0,last?last.leaves:0,SK.hourNow(),!!last);
+    SK.live(skCanvas,w,h,dpr,last?1:0,last?last.leaves:0,SK.hourNow(),!!last);
     st.textContent=last?'Last tree in full bloom':'Waiting for a seed';
     sub.textContent=last?'Last lock: '+last.minutes+' min, '+(last.leaves?last.leaves+(last.leaves===1?' leaf':' leaves')+' lost.':'no leaves lost.')+' Start another Hard Lock to plant a new seed.'
       :'Start a Hard Lock and a seed is planted. It grows into a blooming sakura while you focus, and the sky follows the real time of day.';
