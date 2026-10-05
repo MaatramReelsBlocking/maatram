@@ -319,7 +319,7 @@
     },
     {
       "title": "Devils Circuit Bengaluru 2026",
-      "sport": "Running",
+      "sport": "Other",
       "city": "Bengaluru",
       "date": "2026-12-12",
       "venue": "Bengaluru",
@@ -372,15 +372,6 @@
       "url": "https://theyoddharace.com/findRace"
     },
     {
-      "title": "Coimbatore Marathon 2026",
-      "sport": "Running",
-      "city": "Coimbatore",
-      "date": "2026-12-20",
-      "venue": "Coimbatore",
-      "org": "Coimbatore Cancer Foundation",
-      "url": "https://coimbatoremarathon.com/"
-    },
-    {
       "title": "Thump Celebration Bengaluru Half Marathon and 10K 2026",
       "sport": "Running",
       "city": "Bengaluru",
@@ -418,7 +409,7 @@
     },
     {
       "title": "Devils Circuit Kochi 2027",
-      "sport": "Running",
+      "sport": "Other",
       "city": "Kochi",
       "date": "2027-01-24",
       "venue": "Kochi",
@@ -472,7 +463,7 @@
     },
     {
       "title": "Devils Circuit Chennai 2027",
-      "sport": "Running",
+      "sport": "Other",
       "city": "Chennai",
       "date": "2027-02-07",
       "venue": "Chennai",

@@ -40,7 +40,7 @@ CITY.update(ALIAS)
 
 SKIP = re.compile(r"duathlon|triathlon|aquathlon|swim", re.I)
 CYCLE = re.compile(r"cycl|bike|bicycle|\bmtb\b", re.I)
-OTHER = re.compile(r"obstacle|orienteering|adventure|trek|hike|hiking", re.I)
+OTHER = re.compile(r"obstacle|devils circuit|orienteering|adventure|trek|hike|hiking", re.I)
 
 
 def get(path):
