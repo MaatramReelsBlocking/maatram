@@ -183,6 +183,7 @@
 
   /* ---- UI (built on first open) ---- */
   var CSS =
+    '#fz-btn,#fz-panel{cursor:auto}body:has(#fz-btn:hover,#fz-panel:hover) #cursor{opacity:0}' +
     '#fz-btn{position:fixed;right:18px;bottom:74px;z-index:10000;width:52px;height:52px;border-radius:50%;border:1px solid rgba(52,211,153,.55);' +
     'background:linear-gradient(135deg,#34D399,#4E9BFF);color:#04120F;display:grid;place-items:center;cursor:pointer;' +
     'box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 4px rgba(52,211,153,.12);transition:transform .2s ease;padding:0}' +
@@ -286,7 +287,7 @@
 
   var API = '/api/focuz', KEY = 'focuz_chat_v2';
   var btn, panel, log, input, send, status, built = false, isOpen = false, lastFocus = null;
-  var hist = [], busy = null;
+  var hist = [], busy = null, gen = 0;
   var page = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
   if (page === 'index') page = '';
 
@@ -303,7 +304,7 @@
       .replace(/`([^`\n]+)`/g, '<code>$1</code>')
       .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
       .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?:;]|$)/g, '$1<em>$2</em>')
-      .replace(/\[([^\]\n]+)\]\(((?:https?:\/\/|\/)[^)\s"]+)\)/g, function (m, t, u) {
+      .replace(/\[([^\]\n]+)\]\(((?:https?:\/\/|\/(?!\/))[^)\s"]+)\)/g, function (m, t, u) {
         var ext = /^https?:/.test(u) && u.indexOf(location.origin) !== 0;
         return '<a href="' + u + '"' + (ext ? ' target="_blank" rel="noopener nofollow"' : '') + '>' + t + '</a>';
       });
@@ -408,7 +409,7 @@
     var ctx = r.slice(0, 3).map(function (x) { return '- ' + x.e.q + ' ' + [].concat(x.e.a)[0] + (x.e.l ? ' (' + x.e.l[1] + ')' : ''); }).join('\n');
     var m = el('div', 'fz-m fz-b md'); m.innerHTML = '<span class="fz-typing" aria-label="Focuz is typing"><i></i><i></i><i></i></span>';
     log.appendChild(m); scrollEnd();
-    var ctrl = window.AbortController ? new AbortController() : null, text = '', raf = 0;
+    var ctrl = window.AbortController ? new AbortController() : null, text = '', raf = 0, my = gen;
     function stopped() { return !!(ctrl && ctrl.signal.aborted); }
     setBusy(ctrl || {});
     function paint() { raf = 0; var near = log.scrollHeight - log.scrollTop - log.clientHeight < 80; m.innerHTML = md(text); if (near) scrollEnd(); }
@@ -434,6 +435,7 @@
       if (!text) { setStatus(false); m.remove(); offline(q, r); throw 'handled'; }
     }).then(function () {
       if (raf) cancelAnimationFrame(raf);
+      if (my !== gen) return; // chat was reset mid-answer
       if (!text) { m.remove(); if (!stopped()) { setStatus(false); offline(q, r); } return; }
       if (stopped()) text += ' …';
       setStatus(true); m.innerHTML = md(text); actions(m, text); scrollEnd();
@@ -442,6 +444,7 @@
   }
 
   function reset() {
+    gen++;
     if (busy && busy.abort) busy.abort();
     hist = []; save(); log.innerHTML = '';
     say(GREET, 'b');

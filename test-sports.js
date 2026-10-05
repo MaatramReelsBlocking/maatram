@@ -214,7 +214,7 @@ ok('events read skips old listings', /F\.where\('date','>=',isoDay\(from\)\),F\.
 
 /* ── 11. flat delivery (he uploads to the repo root) ── */
 const files = fs.readdirSync(__dirname).filter(f => f !== 'node_modules' && f !== 'package.json' && f !== 'package-lock.json');
-ok('no unexpected subfolders in package', files.every(f => ['wellness','docs','chrome-extension'].includes(f) || f.startsWith('.') || !fs.statSync(path.join(__dirname, f)).isDirectory()));
+ok('no unexpected subfolders in package', files.every(f => ['wellness','docs','chrome-extension','api'].includes(f) || f.startsWith('.') || !fs.statSync(path.join(__dirname, f)).isDirectory()));
 
 /* ── 12. coach's corner ── */
 ok('coach section exists', !!D.getElementById('coach'));

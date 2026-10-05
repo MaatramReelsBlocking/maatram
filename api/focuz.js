@@ -89,10 +89,12 @@ module.exports = async function handler(req, res) {
 
   const messages = [{ role: 'system', content: system(input.page, input.ctx) }, ...input.messages];
   let upstream = null;
+  const t0 = Date.now();
   outer: for (const p of PROVIDERS) {
     const key = p.key || (p.oidc && req.headers['x-vercel-oidc-token']);
     if (!key) continue;
-    for (const model of [...new Set(p.models.filter(Boolean))]) for (let attempt = 0; attempt < 3; attempt++) {
+    for (const model of [...new Set(p.models.filter(Boolean))]) for (let attempt = 0; attempt < 2; attempt++) {
+      if (Date.now() - t0 > 20000) break outer; // stay under the function time limit
       if (attempt) await new Promise((r) => setTimeout(r, 1500 * attempt)); // busy model: retry with backoff
       try {
         upstream = await fetch(p.url, {
@@ -112,7 +114,7 @@ module.exports = async function handler(req, res) {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no' });
   const reader = upstream.body.getReader(), dec = new TextDecoder();
   let buf = '';
-  req.on('close', () => reader.cancel().catch(() => {}));
+  res.on('close', () => reader.cancel().catch(() => {}));
   try {
     for (;;) {
       const { done, value } = await reader.read();
