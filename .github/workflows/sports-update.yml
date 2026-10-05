@@ -1,0 +1,52 @@
+# Refreshes sports-auto.json from RacesIndia every Monday ~6:15 am IST.
+# Manual run: Actions tab -> Sports auto-update -> Run workflow.
+# Commits only when the event list changed. Fails (writes nothing) if the
+# source layout changed and no race data could be read.
+name: Sports auto-update
+
+on:
+  schedule:
+    - cron: '45 0 * * 1'   # Monday 00:45 UTC = 06:15 IST
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit the result (untick for a dry run)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sports-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch races
+        run: python3 .github/sports_update.py sports-auto.json
+
+      - name: Validate JSON
+        run: python3 -m json.tool sports-auto.json > /dev/null
+
+      - name: Show result
+        run: git diff --stat; git diff sports-auto.json | head -200
+
+      - name: Commit if changed
+        if: github.event_name == 'schedule' || inputs.commit
+        run: |
+          git diff --quiet sports-auto.json && { echo "No changes."; exit 0; }
+          git config user.name "maatram-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sports-auto.json
+          git commit -m "Sports: auto-update events ($(TZ=Asia/Kolkata date +%F))"
+          git push

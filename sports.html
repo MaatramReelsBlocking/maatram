@@ -523,7 +523,7 @@ $('locBtn').onclick=()=>{
 /* ---------- data ---------- */
 let events=[];
 /* sports-auto.json: marathons and football tournaments found automatically from
-   public event pages, refreshed daily. Public, so it shows even when signed out. */
+   public race listings, refreshed weekly by .github/workflows/sports-update.yml. Public, so it shows even when signed out. */
 let autoEvents=[];
 const sameEv=(a,b)=>a.date===b.date&&a.title.trim().toLowerCase()===b.title.trim().toLowerCase();
 fetch('sports-auto.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
