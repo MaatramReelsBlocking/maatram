@@ -120,7 +120,19 @@
         if (s > h * 0.0042) glow(c, x, y, s * 5, '#BFD4FF', al * 0.25);
       }
     }
-    var sx = w * (0.08 + 0.84 * L.tt), sy = h * (0.66 - 0.52 * Math.sin(PI * clamp(L.tt))), r = h * 0.045;
+    /* clouds: soft puffs, lit from the sun's side */
+    var CL = [[0.16, 0.15, 0.11], [0.6, 0.09, 0.15], [0.88, 0.25, 0.08], [0.4, 0.3, 0.07]];
+    var ccol = L.night > 0.5 ? mix('#3C4470', '#262C52', L.night) : mix('#FFFFFF', '#FFC2A6', L.warm);
+    var cal = L.night > 0.5 ? 0.45 : 0.7 - L.warm * 0.1;
+    CL.forEach(function (cl, j) {
+      var R = rng(31 + j), cx = cl[0] * w, cy = cl[1] * h, s = cl[2] * w;
+      for (var k = 0; k < 7; k++) {
+        var ox = (R() - 0.5) * s * 1.6, oy = (R() - 0.5) * s * 0.35, pr = s * (0.35 + R() * 0.35);
+        puff(c, cx + ox, cy + oy + pr * 0.22, pr * 1.05, mix(ccol, L.top, 0.4), cal * 0.55);
+        puff(c, cx + ox, cy + oy, pr, ccol, cal);
+      }
+    });
+    var sx = w * (0.08 + 0.84 * L.tt), sy = h * (L.day ? 0.66 - 0.52 * Math.sin(PI * clamp(L.tt)) : 0.45 - 0.38 * Math.sin(PI * clamp(L.tt))), r = h * 0.045;
     if (L.day) {
       var near = clamp(1 - Math.sin(PI * clamp(L.tt)) * 1.6);       // low sun: bigger, warmer
       glow(c, sx, sy, r * (7 + near * 4), mix('#FFE7B0', '#FF9E62', near), 0.42);
@@ -136,18 +148,19 @@
       disc(c, sx + r * 0.25, sy + r * 0.12, r * 0.18, 'rgba(150,145,130,0.35)');
       disc(c, sx - r * 0.3, sy + r * 0.32, r * 0.11, 'rgba(150,145,130,0.3)');
     }
-    /* clouds: soft puffs, lit from the sun's side */
-    var CL = [[0.16, 0.15, 0.11], [0.6, 0.09, 0.15], [0.88, 0.25, 0.08], [0.4, 0.3, 0.07]];
-    var ccol = L.night > 0.5 ? mix('#3C4470', '#262C52', L.night) : mix('#FFFFFF', '#FFC2A6', L.warm);
-    var cal = L.night > 0.5 ? 0.45 : 0.7 - L.warm * 0.1;
-    CL.forEach(function (cl, j) {
-      var R = rng(31 + j), cx = cl[0] * w, cy = cl[1] * h, s = cl[2] * w;
-      for (var k = 0; k < 7; k++) {
-        var ox = (R() - 0.5) * s * 1.6, oy = (R() - 0.5) * s * 0.35, pr = s * (0.35 + R() * 0.35);
-        puff(c, cx + ox, cy + oy + pr * 0.22, pr * 1.05, mix(ccol, L.top, 0.4), cal * 0.55);
-        puff(c, cx + ox, cy + oy, pr, ccol, cal);
+    if (L.day) {                                  // light shafts from the sun, strongest when it is low
+      var near2 = clamp(1 - Math.sin(PI * clamp(L.tt)) * 1.3), Rr = rng(808);
+      c.save(); c.globalCompositeOperation = 'lighter';
+      for (var q = 0; q < 16; q++) {
+        var ang = PI / 2 + (Rr() - 0.5) * 2.2, spread = 0.012 + Rr() * 0.03, len2 = h * (0.6 + Rr() * 0.6);
+        var lg = c.createLinearGradient(sx, sy, sx + Math.cos(ang) * len2, sy + Math.sin(ang) * len2);
+        lg.addColorStop(0, rgba('#FFE6BE', 0.018 + near2 * 0.04)); lg.addColorStop(1, rgba('#FFE6BE', 0));
+        c.fillStyle = lg; c.beginPath(); c.moveTo(sx, sy);
+        c.lineTo(sx + Math.cos(ang - spread) * len2, sy + Math.sin(ang - spread) * len2);
+        c.lineTo(sx + Math.cos(ang + spread) * len2, sy + Math.sin(ang + spread) * len2); c.closePath(); c.fill();
       }
-    });
+      c.restore();
+    }
     /* layered mountains fading into haze */
     ridge(c, w, h, 101, 0.7, 0.1, mix(L.hor, mix('#2E3D63', L.top, 0.4), 0.38));
     band(c, w, h, 0.6, 0.8, L.hor, 0.5);
@@ -163,9 +176,10 @@
     c.lineTo(w, h); c.lineTo(0, h); c.closePath(); c.fill();
     var R = rng(404), blade = tint(L, '#2D4F2A'), tipc = tint(L, '#8FBF6E');
     c.lineCap = 'round';
-    for (var k = 0; k < 140; k++) {
-      var x = R() * w, xf = x / w - 0.5, y = gy + h * 0.03 - h * 0.09 * (0.25 - xf * xf) + R() * h * 0.12, len = h * (0.012 + R() * 0.02);
-      c.strokeStyle = R() < 0.3 ? tipc : blade; c.lineWidth = Math.max(1, h * 0.0025);
+    var mid2 = tint(L, '#4E7A3A');
+    for (var k = 0; k < 260; k++) {
+      var x = R() * w, xf = x / w - 0.5, y = gy + h * 0.03 - h * 0.09 * (0.25 - xf * xf) + R() * h * 0.12, len = h * (0.01 + R() * 0.022);
+      var pick = R(); c.strokeStyle = pick < 0.25 ? tipc : pick < 0.6 ? mid2 : blade; c.lineWidth = Math.max(1, h * 0.0025);
       c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + len * 0.2, y - len * 0.6, x + (R() - 0.3) * len * 0.6, y - len); c.stroke();
     }
     var n = Math.round(46 * bloom), pc = [tint(L, '#F7C3D3'), tint(L, '#F29BB6'), tint(L, '#FFE4EC')];
@@ -174,8 +188,8 @@
       leafShape(c, w * (0.24 + ((m * 41) % 52) / 100), gy + h * (0.04 + ((m * 23) % 9) / 100), h * 0.034, 1.3 + (m % 3) * 0.55, tint(L, m % 2 ? '#B98E3E' : '#9C6E2E'));
   }
 
-  /* one limb: a curved, tapering shape with a sunlit edge, grown to fraction t */
-  function limb(c, s, t, sc, cx, by, gw, col, hi, side) {
+  /* one limb: a curved, tapering cylinder (shadow edge, sunlit side) grown to fraction t, with cherry bark */
+  function limb(c, s, t, sc, cx, by, gw, col, hi, dark, side, si) {
     var x0 = s[0], y0 = s[1], qx = s[2], qy = s[3], x1 = s[4], y1 = s[5];
     var bx = x0 + (qx - x0) * t, byy = y0 + (qy - y0) * t;            // de Casteljau split at t
     var mx = qx + (x1 - qx) * t, my = qy + (y1 - qy) * t;
@@ -183,22 +197,57 @@
     var r0 = s[6] * gw * sc, r1 = (s[6] + (s[7] - s[6]) * t) * gw * sc, rm = (r0 + r1) / 2;
     function nrm(ax, ay, bx2, by2) { var dx = bx2 - ax, dy = by2 - ay, l = Math.sqrt(dx * dx + dy * dy) || 1; return [-dy / l, dx / l]; }
     var n0 = nrm(x0, y0, bx, byy), n1 = nrm(bx, byy, ex, ey), nm = nrm(x0, y0, ex, ey);
-    function P(x, y) { return [cx + x * sc, by + y * sc]; }
-    function shape(off, w0, wm, w1) {
-      var a = P(x0, y0), b = P(bx, byy), e = P(ex, ey);
-      c.beginPath();
-      c.moveTo(a[0] + n0[0] * w0 + off, a[1] + n0[1] * w0);
-      c.quadraticCurveTo(b[0] + nm[0] * wm + off, b[1] + nm[1] * wm, e[0] + n1[0] * w1 + off, e[1] + n1[1] * w1);
-      c.lineTo(e[0] - n1[0] * w1 + off, e[1] - n1[1] * w1);
-      c.quadraticCurveTo(b[0] - nm[0] * wm + off, b[1] - nm[1] * wm, a[0] - n0[0] * w0 + off, a[1] - n0[1] * w0);
-      c.closePath(); c.fill();
-      c.beginPath(); c.arc(e[0] + off, e[1], w1, 0, PI * 2); c.fill();
+    var ax = cx + x0 * sc, ay = by + y0 * sc, qpx = cx + bx * sc, qpy = by + byy * sc, px = cx + ex * sc, py = by + ey * sc;
+    var hx = (ax + px) / 2, hy = (ay + py) / 2, fill = col;
+    if (rm > 1.6) {                                   // shade across the limb: a round branch, lit from the sun's side
+      var hl = side > 0 ? 0.7 : 0.3, gr = c.createLinearGradient(hx - nm[0] * rm, hy - nm[1] * rm, hx + nm[0] * rm, hy + nm[1] * rm);
+      gr.addColorStop(0, side > 0 ? dark : mix(dark, col, 0.35)); gr.addColorStop(clamp(hl - 0.28), col);
+      gr.addColorStop(hl, hi); gr.addColorStop(clamp(hl + 0.24), col); gr.addColorStop(1, side > 0 ? mix(dark, col, 0.35) : dark);
+      fill = gr;
     }
-    c.fillStyle = col; shape(0, r0, rm, r1);
-    if (r0 > 1.2) {                                   // round it: shadow side, then the sunlit side
-      c.globalAlpha = 0.45; c.fillStyle = '#1E120E'; shape(-side * r0 * 0.5, r0 * 0.45, rm * 0.45, r1 * 0.45);
-      c.globalAlpha = 0.75; c.fillStyle = hi; shape(side * r0 * 0.36, r0 * 0.4, rm * 0.4, r1 * 0.4);
-      c.globalAlpha = 1;
+    c.fillStyle = fill;
+    c.beginPath(); c.arc(ax, ay, r0, 0, PI * 2); c.fill();      // joint: hides the seam with the parent limb
+    c.beginPath();
+    c.moveTo(ax + n0[0] * r0, ay + n0[1] * r0);
+    c.quadraticCurveTo(qpx + nm[0] * rm, qpy + nm[1] * rm, px + n1[0] * r1, py + n1[1] * r1);
+    c.lineTo(px - n1[0] * r1, py - n1[1] * r1);
+    c.quadraticCurveTo(qpx - nm[0] * rm, qpy - nm[1] * rm, ax - n0[0] * r0, ay - n0[1] * r0);
+    c.closePath(); c.fill();
+    c.beginPath(); c.arc(px, py, r1, 0, PI * 2); c.fill();
+    if (rm > 3 && s[8] <= 3) {                        // bark: horizontal lenticels and a few dark fissures
+      var R = rng(2000 + si), len = Math.sqrt((px - ax) * (px - ax) + (py - ay) * (py - ay)), n = Math.floor(len / Math.max(3, rm * 0.55));
+      c.lineCap = 'round';
+      for (var k = 0; k < n; k++) {
+        var u = (k + R()) / n, lx = ax + (px - ax) * u, ly = ay + (py - ay) * u, rr = r0 + (r1 - r0) * u, off = (R() - 0.5) * 1.3 * rr, ln = rr * (0.18 + R() * 0.3);
+        c.strokeStyle = R() < 0.55 ? rgba(hi, 0.45) : rgba(dark, 0.5); c.lineWidth = Math.max(0.6, rr * 0.07);
+        c.beginPath(); c.moveTo(lx + nm[0] * (off - ln), ly + nm[1] * (off - ln)); c.lineTo(lx + nm[0] * (off + ln), ly + nm[1] * (off + ln)); c.stroke();
+      }
+      c.strokeStyle = rgba(dark, 0.35); c.lineWidth = Math.max(0.6, rm * 0.05);
+      for (var f = 0; f < 3; f++) {
+        var o2 = (R() - 0.5) * 1.2, a0 = R() * 0.4, a1 = a0 + 0.3 + R() * 0.5;
+        c.beginPath(); c.moveTo(ax + (px - ax) * a0 + nm[0] * o2 * r0, ay + (py - ay) * a0 + nm[1] * o2 * r0);
+        c.lineTo(ax + (px - ax) * a1 + nm[0] * o2 * rm, ay + (py - ay) * a1 + nm[1] * o2 * rm); c.stroke();
+      }
+    }
+  }
+
+  /* one sakura flower: five notched petals, a deeper pink eye and stamens */
+  function blossom(c, x, y, r, col, eye, rot) {
+    c.fillStyle = col; c.beginPath();
+    for (var k = 0; k < 5; k++) {
+      var a = rot + k * 1.2566, ca = Math.cos(a), sa = Math.sin(a), w = r * 0.62;
+      function P(u, v) { return [x + ca * u - sa * v, y + sa * u + ca * v]; }
+      var p1 = P(r * 0.5, -w), p2 = P(r * 0.95, -w * 0.5), p3 = P(r * 0.82, 0), p4 = P(r * 0.95, w * 0.5), p5 = P(r * 0.5, w);
+      c.moveTo(x, y); c.quadraticCurveTo(p1[0], p1[1], p2[0], p2[1]); c.lineTo(p3[0], p3[1]); c.lineTo(p4[0], p4[1]); c.quadraticCurveTo(p5[0], p5[1], x, y);
+    }
+    c.fill();
+    disc(c, x, y, r * 0.3, eye);
+    if (r > 2.2) {
+      c.strokeStyle = eye; c.lineWidth = Math.max(0.5, r * 0.05);
+      c.beginPath();
+      for (var j = 0; j < 7; j++) { var b = rot + j * 0.8976; c.moveTo(x, y); c.lineTo(x + Math.cos(b) * r * 0.48, y + Math.sin(b) * r * 0.48); }
+      c.stroke();
+      for (var m = 0; m < 7; m++) { var b2 = rot + m * 0.8976; disc(c, x + Math.cos(b2) * r * 0.5, y + Math.sin(b2) * r * 0.5, r * 0.06, '#F4D27A'); }
     }
   }
 
@@ -212,7 +261,7 @@
     ground(c, w, h, L, bloom, lost);
     var gy = h * 0.84, cx = w / 2, by = gy - h * 0.012;
     var sc = Math.min(h * 0.6 / -minY, w * 0.8 / (maxX - minX)), g = clamp((p - 0.05) / 0.95);
-    var side = L.tt < 0.5 ? -1 : 1, bark = tint(L, '#3E2A24'), barkHi = tint(L, '#7A5644');
+    var side = L.tt < 0.5 ? -1 : 1, bark = tint(L, '#4A3530'), barkHi = tint(L, '#9C7A68'), barkDk = tint(L, '#1C110D');
     var sh = c.createRadialGradient(cx, by + h * 0.01, 0, cx, by + h * 0.01, w * 0.32 * Math.max(0.15, g));
     sh.addColorStop(0, 'rgba(0,0,0,0.35)'); sh.addColorStop(1, 'rgba(0,0,0,0)');
     c.fillStyle = sh; c.save(); c.translate(cx, by + h * 0.01); c.scale(1, 0.18); c.translate(-cx, -(by + h * 0.01));
@@ -242,15 +291,19 @@
     var cr = h * 0.05, back = tintBloom(L, '#B86A8C'), mid = tintBloom(L, '#E79AB6');
     open.forEach(function (o) {                 // canopy depth behind the limbs
       if (o[3] <= 0) return;
-      glow(c, o[0] - cr * 0.3, o[1] - cr * 0.2, cr * 1.35 * (0.5 + o[3] * 0.5), back, 0.5 * o[3]);
+      glow(c, o[0] - cr * 0.2, o[1] - cr * 0.1, cr * 0.95 * (0.5 + o[3] * 0.5), back, 0.4 * o[3]);
     });
     var rr = segs[0][6] * gw * sc;                // root flare where the trunk meets the ground
-    c.fillStyle = sap < 1 ? mix(tint(L, '#6F9F5C'), bark, sap) : bark; c.beginPath();
+    var fl = c.createLinearGradient(cx - rr * 2, 0, cx + rr * 2, 0), bk0 = sap < 1 ? mix(tint(L, '#6F9F5C'), bark, sap) : bark;
+    fl.addColorStop(0, side > 0 ? barkDk : mix(barkDk, bk0, 0.35)); fl.addColorStop(side > 0 ? 0.55 : 0.2, bk0);
+    fl.addColorStop(side > 0 ? 0.68 : 0.32, barkHi); fl.addColorStop(side > 0 ? 0.8 : 0.45, bk0); fl.addColorStop(1, side > 0 ? mix(barkDk, bk0, 0.35) : barkDk);
+    c.fillStyle = fl; c.beginPath();
     c.moveTo(cx - rr * 2.3, by + h * 0.008); c.quadraticCurveTo(cx - rr * 0.95, by - rr * 0.2, cx - rr * 0.85, by - rr * 2.2);
     c.lineTo(cx + rr * 0.85, by - rr * 2.2); c.quadraticCurveTo(cx + rr * 0.95, by - rr * 0.2, cx + rr * 2.3, by + h * 0.008); c.closePath(); c.fill();
-    segs.forEach(function (s) {
+    segs.forEach(function (s, si) {
       var local = clamp((g - s[8] * 0.115) / 0.115); if (local <= 0) return;
-      limb(c, s, local, sc, cx, by, gw, sap < 1 ? mix(tint(L, '#6F9F5C'), bark, sap) : bark, sap < 1 ? mix(tint(L, '#A8D488'), barkHi, sap) : barkHi, side);
+      limb(c, s, local, sc, cx, by, gw, sap < 1 ? mix(tint(L, '#6F9F5C'), bark, sap) : bark, sap < 1 ? mix(tint(L, '#A8D488'), barkHi, sap) : barkHi,
+        sap < 1 ? mix(tint(L, '#3F6232'), barkDk, sap) : barkDk, side, si);
       if (sap < 1 && local < 1 && local > 0.15) {          // a sapling's growing shoots carry two small leaves
         var t2 = local, qx = s[2], qy = s[3];
         var ex = (1 - t2) * (1 - t2) * s[0] + 2 * (1 - t2) * t2 * qx + t2 * t2 * s[4], ey = (1 - t2) * (1 - t2) * s[1] + 2 * (1 - t2) * t2 * qy + t2 * t2 * s[5];
@@ -259,21 +312,35 @@
         leafShape(c, cx + ex * sc, by + ey * sc, lsz, 0.8, tint(L, '#86B862'));
       }
     });
-    var pal = ['#FFE9EF', '#FBD0DD', '#F6B6CA', '#F09BB4', '#FFF5F7'].map(function (x) { return tintBloom(L, x); });
+    /* the crown is lit as one volume: bright on top and toward the sun, deep mauve underneath and inside */
+    var ty = 1e9, byB = -1e9, lx = 1e9, rx = -1e9;
+    open.forEach(function (o) { ty = Math.min(ty, o[1]); byB = Math.max(byB, o[1]); lx = Math.min(lx, o[0]); rx = Math.max(rx, o[0]); });
+    var ccx = (lx + rx) / 2, chw = Math.max(1, (rx - lx) / 2), chh = Math.max(1, byB - ty);
+    var pal = ['#8E4F6E', '#B86E8E', '#DC93AE', '#F2B9CB', '#FBD9E3', '#FFF1F5'].map(function (x) { return tintBloom(L, x); });
+    var eyeC = tintBloom(L, '#C2456E');
+    function shadeAt(fx, fy) { return clamp(0.95 - (fy - ty) / chh * 0.7 + side * (fx - ccx) / chw * 0.28 - 0.18 * (1 - Math.abs(fx - ccx) / chw)); }
     open.forEach(function (o) {
       var R = rng(1000 + o[2]), bt = o[3], x = o[0], y = o[1];
       if (bt < 1) {                              // fresh green leaves before the blossoms open
         var lf = tint(L, '#86B862'), ls = h * 0.028 * o[5] * (1 - bt * 0.7);
         for (var k = 0; k < 3; k++) leafShape(c, x, y, ls, -1.4 + k * 1.4 + o[4], k === 1 ? tint(L, '#9BCB78') : lf);
       }
-      if (bt <= 0) return;
-      var crr = cr * (0.75 + o[4] * 0.6) * (o[6] < 5 ? 1.35 : 1);
-      glow(c, x, y, crr * (0.6 + bt * 0.6), mid, 0.55 * bt);
-      var nb = Math.round(11 * bt);
+      if (bt <= 0 || (o[4] > 0.9 && o[6] >= 5)) return;   // a few gaps let sky and branches show through
+      var crr = cr * (0.75 + o[4] * 0.6) * (o[6] < 5 ? 1.35 : 1), base = shadeAt(x, y);
+      glow(c, x, y + crr * 0.1, crr * (0.5 + bt * 0.45), pal[Math.min(5, Math.floor(base * 3))], 0.75 * bt);
+      var nb = Math.round(30 * bt);
       for (var b = 0; b < nb; b++) {
-        var a = R() * 6.283, d = Math.sqrt(R()) * crr * (0.55 + bt * 0.5), fx = x + Math.cos(a) * d, fy = y + Math.sin(a) * d * 0.8;
-        var lit = clamp(0.5 - (fy - y) / (cr * 2) + side * (fx - x) / (cr * 4));
-        flower(c, fx, fy, h * (0.0095 + R() * 0.007) * (0.6 + bt * 0.4), pal[Math.min(4, Math.floor((1 - lit) * 4 + R() * 1.2))], R() * 6.283);
+        var a = R() * 6.283, d = Math.sqrt(R()) * crr * (0.5 + bt * 0.5), fx = x + Math.cos(a) * d, fy = y + Math.sin(a) * d * 0.78;
+        var lit = clamp(shadeAt(fx, fy) - (fy - y) / (crr * 3) + (R() - 0.5) * 0.3), col = pal[Math.min(5, Math.floor(lit * 5.99))];
+        var fr = h * (0.0042 + R() * 0.0042) * (0.6 + bt * 0.4), rot = R() * 6.283;
+        if (b % 6 === 5) blossom(c, fx, fy, fr * 1.9, col, mix(eyeC, col, 0.35), rot);
+        else {                                     // a little bunch of petals: three overlapping, tilted
+          c.fillStyle = col; c.beginPath();
+          for (var q = 0; q < 3; q++) { var aa = rot + q * 2.094; c.moveTo(fx + Math.cos(aa) * fr * 0.55 + fr * 0.7, fy + Math.sin(aa) * fr * 0.55);
+            c.arc(fx + Math.cos(aa) * fr * 0.55, fy + Math.sin(aa) * fr * 0.55, fr * 0.7, 0, PI * 2); }
+          c.fill();
+          disc(c, fx - fr * 0.2, fy - fr * 0.3, fr * 0.35, rgba(pal[5], 0.4 * lit));
+        }
       }
     });
     if (done) {                                   // a finished tree lets a few petals go
@@ -288,6 +355,8 @@
     var v = c.createRadialGradient(w / 2, h * 0.45, Math.min(w, h) * 0.35, w / 2, h * 0.45, Math.max(w, h) * 0.78);
     v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.38)');
     c.fillStyle = v; c.fillRect(0, 0, w, h);
+    var R = rng(909), n = Math.round(w * h / 260);   // fine film grain, like a photo
+    for (var k = 0; k < n; k++) { c.fillStyle = R() < 0.5 ? 'rgba(255,255,255,0.045)' : 'rgba(0,0,0,0.05)'; c.fillRect(R() * w, R() * h, 1, 1); }
   }
 
   /* drifting petals over the scene: sec = time in seconds, amount 0..1 */
@@ -306,9 +375,13 @@
   var lives = typeof WeakMap === 'function' ? new WeakMap() : null;
   function live(canvas, w, h, dpr, progress, leaves, hour, done) {
     var old = lives && lives.get(canvas); if (old) cancelAnimationFrame(old.raf);
-    var layer = document.createElement('canvas'); layer.width = Math.round(w * dpr); layer.height = Math.round(h * dpr);
-    var lc = layer.getContext('2d'); lc.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw(lc, w, h, progress, leaves, hour, done);
+    var q = Math.round(clamp(progress || 0) * 200) / 200, hq = Math.round(hour * 4) / 4;   // redraw only when the scene visibly changes
+    var key = [w, h, dpr, q, leaves | 0, hq, !!done].join('|'), layer = old && old.key === key ? old.layer : null;
+    if (!layer) {
+      layer = document.createElement('canvas'); layer.width = Math.round(w * dpr); layer.height = Math.round(h * dpr);
+      var lc = layer.getContext('2d'); lc.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw(lc, w, h, q, leaves, hq, done);
+    }
     canvas.width = layer.width; canvas.height = layer.height;
     var c = canvas.getContext('2d'), p = clamp(progress || 0), amount = done || p >= 1 ? 1 : clamp((p - 0.6) / 0.4);
     var still = window.MAATRAM_PERF === true || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -321,7 +394,7 @@
         frame(t);
       });
     }
-    var st = { raf: 0 }; if (lives) lives.set(canvas, st);
+    var st = { raf: 0, key: key, layer: layer }; if (lives) lives.set(canvas, st);
     frame(still ? 9 * 1000 : performance.now());
   }
 
