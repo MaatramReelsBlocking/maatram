@@ -1077,7 +1077,20 @@ async function pullFromExtension(){
   }catch(_){ syncSites(getSites()); }
 }
 pullFromExtension();
-document.addEventListener('visibilitychange',()=>{ if(!document.hidden) pullFromExtension(); });
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ pullFromExtension(); pullLock(); } });
+/* A lock started from the Chrome popup shows here too (and a longer one extends this page's lock). */
+async function pullLock(){
+  if(document.hidden) return;
+  try{
+    const r=await sendToMaatramExtension({action:'GET_STATUS'});
+    if(!r || !r.success || !r.active) return;
+    const end=Number(r.endTime); if(!(end>Date.now()+3000) || end<=lockEnd+5000) return;
+    const total=r.startTime ? Math.max(60,Math.round((end-Number(r.startTime))/1000)) : Math.ceil((end-Date.now())/1000);
+    store.set('maatram_lock_end',end); store.set('maatram_lock_total',total);
+    if(body.classList.contains('locked')){ lockEnd=end; lockTotal=total; } else engage(end,total);
+  }catch(_){}
+}
+setTimeout(pullLock,800); setInterval(pullLock,10000);
 
 /* restore lock across refresh */
 (function(){
