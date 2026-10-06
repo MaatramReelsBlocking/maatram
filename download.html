@@ -278,7 +278,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       .then(m=>{ doc=m.doc; onSnapshot=m.onSnapshot; runTransaction=m.runTransaction; db=m.getFirestore(app); }));
     let unsub=null;
     /* ══ Maatram points engine (all pages) ══ */
-    let __mtUser=null;
+    let __mtUser=null, __mtAuthKnown=false;
     window.maatramAward=async function(pts,reason){
       pts=Math.round(pts); if(!pts) return;
       /* local bank (works offline / signed-out) */
@@ -291,7 +291,8 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       mtToast(pts,reason);
       /* cloud write: queued per account, paced to match firestore.rules
          (gains: at most 1 point per 6 s since the last gain, 100 per write) */
-      if(__mtUser){
+      if(!__mtAuthKnown){ try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){} }
+      else if(__mtUser){
         const K='maatram_pend_'+__mtUser.uid;
         try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){}
         mtFlush();
@@ -337,6 +338,9 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 
     onAuthStateChanged(auth,async u=>{
       __mtUser=u;
+      if(!__mtAuthKnown){ __mtAuthKnown=true; let e=0;   /* points earned before sign-in was known go to this account */
+        try{ e=+localStorage.getItem('maatram_pend_early')||0; localStorage.removeItem('maatram_pend_early'); }catch(_){}
+        if(u&&e){ const K='maatram_pend_'+u.uid; try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+e)); }catch(_){} } }
       if(u) mtFlush();
       if(unsub){unsub();unsub=null;}
       if(u){
@@ -410,16 +414,16 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
     </article>
 
     <article class="app wide" aria-labelledby="appExt">
-      <span class="tag live">New · 1.3.0</span>
+      <span class="tag live">New · 1.3.1</span>
       <h2 id="appExt">Maatram Hard Lock for Chrome</h2>
-      <p>Blocks YouTube, Instagram, X, Facebook, TikTok, Snapchat and your own sites on the computer during a Hard Lock. New in 1.3.0: link it with the website and the phone app, so one Hard Lock locks all of them. The Chrome Web Store update is in review; until then, install this copy by hand.</p>
+      <p>Blocks YouTube, Instagram, X, Facebook, TikTok, Snapchat and your own sites on the computer during a Hard Lock. New in 1.3: link it with the website and the phone app, so one Hard Lock locks all of them. The Chrome Web Store update is in review; until then, install this copy by hand.</p>
       <ul class="chips">
-        <li>Version <b>1.3.0</b></li>
+        <li>Version <b>1.3.1</b></li>
         <li><b>62 KB</b></li>
         <li>Chrome, Edge, Brave (desktop)</li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtnExt" href="maatram-hard-lock-extension-1.3.0.zip" download type="application/zip">
+        <a class="dl" id="dlBtnExt" href="maatram-hard-lock-extension-1.3.1.zip" download type="application/zip">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/>

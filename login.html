@@ -261,7 +261,7 @@ body{padding-top:52px!important}
       <div id="nameMsg" role="status"></div>
     </form>
     <div class="act">
-      <button id="goApp" onclick="location.href='index.html'">Enter Maatram</button>
+      <button id="goApp" onclick="var n='';try{n=sessionStorage.getItem('maatram_next')||'';sessionStorage.removeItem('maatram_next')}catch(e){}location.href=/^[a-z0-9-]+\.html$/.test(n)?n:'index.html'">Enter Maatram</button>
       <button id="signOut">Sign out</button>
     </div>
   </div>
@@ -320,7 +320,7 @@ async function boot(){
         await setDoc(ref,{
           name:picked||cleanName(user.displayName),
           photo:user.photoURL||'',
-          points:snap.exists()?(snap.data().points||0):0,
+          ...(snap.exists()?{}:{points:0}),
           lastLogin:serverTimestamp()
         },{merge:true});
       }catch(e){ console.warn('profile write',e); }
@@ -440,7 +440,7 @@ if(!reduced)requestAnimationFrame(loop);else loop(0);
     const auth=getAuth(app),db=getFirestore(app);
     let unsub=null;
     /* ══ Maatram points engine (all pages) ══ */
-    let __mtUser=null;
+    let __mtUser=null, __mtAuthKnown=false;
     window.maatramAward=async function(pts,reason){
       pts=Math.round(pts); if(!pts) return;
       /* local bank (works offline / signed-out) */
@@ -453,7 +453,8 @@ if(!reduced)requestAnimationFrame(loop);else loop(0);
       mtToast(pts,reason);
       /* cloud write: queued per account, paced to match firestore.rules
          (gains: at most 1 point per 6 s since the last gain, 100 per write) */
-      if(__mtUser){
+      if(!__mtAuthKnown){ try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){} }
+      else if(__mtUser){
         const K='maatram_pend_'+__mtUser.uid;
         try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){}
         mtFlush();
@@ -498,6 +499,9 @@ if(!reduced)requestAnimationFrame(loop);else loop(0);
 
     onAuthStateChanged(auth,u=>{
       __mtUser=u;
+      if(!__mtAuthKnown){ __mtAuthKnown=true; let e=0;   /* points earned before sign-in was known go to this account */
+        try{ e=+localStorage.getItem('maatram_pend_early')||0; localStorage.removeItem('maatram_pend_early'); }catch(_){}
+        if(u&&e){ const K='maatram_pend_'+u.uid; try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+e)); }catch(_){} } }
       if(u) mtFlush();
       if(unsub){unsub();unsub=null;}
       if(u){

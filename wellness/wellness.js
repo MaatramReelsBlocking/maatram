@@ -210,7 +210,7 @@ function wlSync(){
 }
 function updateDailyReward(award=true){
   wlSync();
-  Object.entries(WL_TARGETS).forEach(([habit,max])=>{const n=Math.min(wellnessTrack[habit],max),button=$(`[data-habit="${habit}"]`);$('#'+habit+'Progress').textContent=`${n} / ${max}`;button.disabled=n>=max;if(n>=max)button.textContent='COMPLETE ✓';button.closest('.habit-card').classList.toggle('done',n>=max);});
+  Object.entries(WL_TARGETS).forEach(([habit,max])=>{const n=Math.min(wellnessTrack[habit],max),button=$(`[data-habit="${habit}"]`);$('#'+habit+'Progress').textContent=`${n} / ${max}`;button.disabled=n>=max;button.dataset.label??=button.textContent;button.textContent=n>=max?'COMPLETE ✓':button.dataset.label;button.closest('.habit-card').classList.toggle('done',n>=max);});
   const done=Object.entries(WL_TARGETS).filter(([h,max])=>wellnessTrack[h]>=max).length,earned=done*25,owed=earned-wellnessTrack.paid,status=$('#rewardStatus');
   if(award&&wlUid&&owed>0&&window.maatramAward){wellnessTrack.paid=earned;wlSave();window.maatramAward(owed,`Wellness ${done}/4`);status.classList.remove('bump');void status.offsetWidth;status.classList.add('bump');}
   status.classList.toggle('unlocked',done===4);

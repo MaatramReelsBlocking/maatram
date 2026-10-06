@@ -304,7 +304,7 @@ body{padding-top:52px!important}
       .then(m=>{ doc=m.doc; onSnapshot=m.onSnapshot; runTransaction=m.runTransaction; db=m.getFirestore(app); }));
     let unsub=null;
     /* ══ Maatram points engine (all pages) ══ */
-    let __mtUser=null;
+    let __mtUser=null, __mtAuthKnown=false;
     window.maatramAward=async function(pts,reason){
       pts=Math.round(pts); if(!pts) return;
       /* local bank (works offline / signed-out) */
@@ -317,7 +317,8 @@ body{padding-top:52px!important}
       mtToast(pts,reason);
       /* cloud write: queued per account, paced to match firestore.rules
          (gains: at most 1 point per 6 s since the last gain, 100 per write) */
-      if(__mtUser){
+      if(!__mtAuthKnown){ try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){} }
+      else if(__mtUser){
         const K='maatram_pend_'+__mtUser.uid;
         try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){}
         mtFlush();
@@ -363,6 +364,9 @@ body{padding-top:52px!important}
 
     onAuthStateChanged(auth,async u=>{
       __mtUser=u;
+      if(!__mtAuthKnown){ __mtAuthKnown=true; let e=0;   /* points earned before sign-in was known go to this account */
+        try{ e=+localStorage.getItem('maatram_pend_early')||0; localStorage.removeItem('maatram_pend_early'); }catch(_){}
+        if(u&&e){ const K='maatram_pend_'+u.uid; try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+e)); }catch(_){} } }
       if(u) mtFlush();
       if(unsub){unsub();unsub=null;}
       if(u){

@@ -31,9 +31,9 @@ global.setTimeout=(f,ms)=>{timers.push({at:NOW+ms,f});return timers.length}; glo
 const mtToast=()=>{};
 const path=require('path');
 const page=process.argv[2]||'timers.html', src=fs.readFileSync(path.join(__dirname,page),'utf8');
-const code=src.slice(src.indexOf('    let __mtUser=null;'),src.indexOf('    function mtToast')).replace(/await import\('https:\/\/www\.gstatic[^']*'\)/,'({serverTimestamp:()=>TS})');
+const code=src.slice(src.indexOf('    let __mtUser=null'),src.indexOf('    function mtToast')).replace(/await import\('https:\/\/www\.gstatic[^']*'\)/,'({serverTimestamp:()=>TS})');
 const api=new Function('db','doc','runTransaction','TS','mtToast','localStorage','navigator','setTimeout','clearTimeout',
-  code+'\nreturn {setUser:u=>{__mtUser=u}, flush:async()=>{await mtFlush(); await mtFlush.q;}, award:async(p)=>{await window.maatramAward(p); await mtFlush.q; await mtFlush.q;}};');
+  code+'\nreturn {setUser:u=>{__mtUser=u;__mtAuthKnown=true}, flush:async()=>{await mtFlush(); await mtFlush.q;}, award:async(p)=>{await window.maatramAward(p); await mtFlush.q; await mtFlush.q;}};');
 global.window=global;
 const A=api(db,doc,runTransaction,TS,mtToast,localStorage,navigator,setTimeout,clearTimeout);
 async function tick(sec){ NOW+=sec*1000; const due=timers.filter(t=>t.at<=NOW); timers.splice(0,timers.length,...timers.filter(t=>t.at>NOW)); for(const t of due) await t.f(); await new Promise(r=>setImmediate(r)); }

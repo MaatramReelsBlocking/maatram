@@ -225,6 +225,7 @@ body{padding-top:52px!important}
 <script>
 /* stub so feature code can always call it; hosted engine overrides */
 window.maatramAward=window.maatramAward||function(pts,reason){
+  try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){}
   try{const c=+localStorage.getItem('maatram_points')||0;
       localStorage.setItem('maatram_points',Math.max(0,c+Math.round(pts)));}catch(_){}
   try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
@@ -610,7 +611,7 @@ if(!reduced)requestAnimationFrame(loop);else loop(0);
       .then(m=>{ doc=m.doc; onSnapshot=m.onSnapshot; runTransaction=m.runTransaction; db=m.getFirestore(app); }));
     let unsub=null;
     /* ══ Maatram points engine (all pages) ══ */
-    let __mtUser=null;
+    let __mtUser=null, __mtAuthKnown=false;
     window.maatramAward=async function(pts,reason){
       pts=Math.round(pts); if(!pts) return;
       /* local bank (works offline / signed-out) */
@@ -623,7 +624,8 @@ if(!reduced)requestAnimationFrame(loop);else loop(0);
       mtToast(pts,reason);
       /* cloud write: queued per account, paced to match firestore.rules
          (gains: at most 1 point per 6 s since the last gain, 100 per write) */
-      if(__mtUser){
+      if(!__mtAuthKnown){ try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){} }
+      else if(__mtUser){
         const K='maatram_pend_'+__mtUser.uid;
         try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){}
         mtFlush();
@@ -669,6 +671,9 @@ if(!reduced)requestAnimationFrame(loop);else loop(0);
 
     onAuthStateChanged(auth,async u=>{
       __mtUser=u;
+      if(!__mtAuthKnown){ __mtAuthKnown=true; let e=0;   /* points earned before sign-in was known go to this account */
+        try{ e=+localStorage.getItem('maatram_pend_early')||0; localStorage.removeItem('maatram_pend_early'); }catch(_){}
+        if(u&&e){ const K='maatram_pend_'+u.uid; try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+e)); }catch(_){} } }
       if(u) mtFlush();
       /* the real engine is installed and the account is known: the weekly bonus may run */
       dispatchEvent(new CustomEvent('maatram:user',{detail:u?u.uid:null}));

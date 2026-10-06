@@ -123,6 +123,8 @@ function showActive(endTime) {
 
   lockControlElement.hidden = true;
 
+  clearInterval(timerInterval);
+
 
   function updateTimer() {
 
@@ -398,6 +400,8 @@ linkForm.addEventListener("submit", async e => {
   if (!response || !response.success) linkError.textContent = (response && response.error) || "Could not save the code.";
   else if (!response.code) linkStatus.textContent = "Not linked.";
   renderLink();
+  loadStatus();
+  renderSites();
 });
 
 renderLink();
