@@ -301,7 +301,7 @@
 
   // ---------- More Maatram ----------
   { id: 'hardlock-app', q: 'What is the Maatram Hard Lock app?', k: ['maatram hard lock app', 'hard lock app', 'lock app', 'hard lock android app', 'hard lock app', 'hardlock apk', 'maatram hard lock android', 'lighter app', 'com maatram hardlock', 'clear all'],
-    a: 'Maatram Hard Lock is the lighter Android app: Hard Lock only. it locks just the apps you pick and keeps running even when you hit "Clear all". version 2.4 alpha, 2.82 MB, Android 8.0 and above. it sorts apps to lock by your screen time, and grows a sakura while you lock: any finished lock gives a blooming tree, a 90-minute lock gives a full tree. there is a home-screen widget too. you can install it next to the full app, they don\'t clash.', l: ['Download', '/download.html'] },
+    a: 'Maatram Hard Lock is the lighter Android app: Hard Lock only. it locks just the apps you pick and keeps running even when you hit "Clear all". version 2.4.1 alpha, 2.82 MB, Android 8.0 and above. it sorts apps to lock by your screen time, and grows a sakura while you lock: any finished lock gives a blooming tree, a 90-minute lock gives a full tree. there is a home-screen widget too. you can install it next to the full app, they don\'t clash.', l: ['Download', '/download.html'] },
   { id: 'full-app', q: 'What is in the full Maatram app?', k: ['full app', 'maatram full app', 'version 1 1', 'com maatram app', 'which apk'],
     a: 'the full Maatram app has every feature from the website plus native app blocking. version 1.1, 2.90 MB, Android 5.1 and above. it\'s stable but not getting updates; the Hard Lock app is the one being kept up to date.', l: ['Download', '/download.html'] },
   { id: 'iphone', q: 'Does Maatram work on iPhone?', k: ['work on iphone', 'iphone', 'ios app', 'apple', 'ipad', 'mac'],
@@ -317,7 +317,7 @@
   { id: 'delete-data', q: 'How do I delete my account or data?', k: ['delete account', 'delete my data', 'remove account', 'erase data', 'clear my data'],
     a: "Stats, Wellness and other on-device data clear when you clear this site's data in your browser. for your signed-in account, check the privacy page or email the team at maatram97@gmail.com.", l: ['Privacy policy', '/privacy.html'], mail: true },
   { id: 'friction', q: 'What happens when I open a social app on App Gate?', k: ['open a social app on app gate', 'social app on app gate', 'friction', 'pause before app', 'worth it', 'reopen app', 'open instagram on app gate'],
-    a: "you don't just get blocked, you pay: opening a social app costs 10 points plus a short pause that grows the more you reopen it, and afterwards an honest \"was it worth it?\" check-in. annoying on purpose 😌", l: ['Open App Gate', '/app-gate.html'] },
+    a: "you don't just get blocked, you pay: opening a social app costs 10 points, and if you're in a Study Room everyone sees the strike. annoying on purpose 😌", l: ['Open App Gate', '/app-gate.html'] },
   { id: 'class-code', q: 'Where are class codes and roles?', k: ['class code', 'roles', 'teacher', 'parent', 'student role', 'role picker'],
     a: 'the role picker and class codes were removed. now every tool just opens without an account, and signing in with Google saves your points.', l: ['Updates', '/blog.html'] },
   { id: 'updates', q: "What's new on Maatram?", k: ['whats new', 'updates', 'changelog', 'new features', 'latest update', 'blog'],

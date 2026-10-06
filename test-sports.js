@@ -187,7 +187,7 @@ ok('events created only by author', /request\.resource\.data\.by == request\.aut
 ok('events edited only by author', /resource\.data\.by == request\.auth\.uid/.test(rules));
 ok('event title length capped', /title\.size\(\) <= 80/.test(rules));
 ok('reset branch allows zeroing', /neu\(\)\.points == 0/.test(rules));
-ok('reset branch requires a cycle change', /neu\(\)\.cycle != old\(\)\.get\('cycle', ?''\)/.test(rules));
+ok('reset branch requires a cycle change (forward only)', /neu\(\)\.cycle > old\(\)\.get\('cycle', ?''\)/.test(rules));
 ok('normal caps still enforced', /old\(\)\.get\('points', ?0\) \+ 100/.test(rules));
 ok('normal play cannot touch cycle or lifetime', /!touched\(\['lifetime', 'cycle'\]\)/.test(rules));
 ok('a cycle is always YYYY-MM', /cycleOk\(v\) \{ return v is string && v\.matches\('\^\[0-9\]\{4\}-\[0-9\]\{2\}\$'\)/.test(rules)

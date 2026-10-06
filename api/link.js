@@ -23,7 +23,7 @@ function limited(ip) {
   const now = Date.now(), list = (hits.get(ip) || []).filter((t) => now - t < 6e4);
   list.push(now); hits.set(ip, list);
   if (hits.size > 5000) hits.clear();
-  return list.length > 40;
+  return list.length > 300;   // a whole school on one Wi-Fi IP polls a few times a minute each
 }
 
 async function read(code) {
@@ -56,6 +56,7 @@ module.exports = async function handler(req, res) {
       if (cur.end > now && cur.end >= end) return res.status(409).json({ ...cur, now, error: 'A lock is already running.' });
       const body = { fields: { end: { integerValue: String(end) }, minutes: { integerValue: String(minutes) }, by: { stringValue: by }, at: { integerValue: String(now) } } };
       const w = await fetch(DOC(code), { method: 'PATCH', headers: HDR, body: JSON.stringify(body) });
+      if (w.status === 403) { const c2 = await read(code); return res.status(409).json({ ...c2, now, error: 'A lock is already running.' }); }   // another device won the race
       if (!w.ok) throw new Error('write ' + w.status + ' ' + (await w.text()).slice(0, 200));
       return res.status(200).json({ end, minutes, by, now });
     }

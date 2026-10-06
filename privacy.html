@@ -131,7 +131,7 @@
   background:transparent;border:none;color:#eafff6;font-family:inherit;font-size:12px;font-weight:600;text-decoration:none;transition:background .2s}
 #mnavMenu button:hover,#mnavMenu a:hover{background:rgba(55,182,255,.12)}
 #mnavMenu .out{color:#ff5d73}
-@media(max-width:860px){#mnav{overflow-x:auto;scrollbar-width:none}#mnav::-webkit-scrollbar{display:none}
+@media(max-width:860px){#mnav,html.minimal #mnav{overflow-x:auto;scrollbar-width:none;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(2,10,8,.96)!important}#mnavMenu{position:fixed;top:52px;right:8px}#mnav::-webkit-scrollbar{display:none}
   #mnav .mn-logo b{display:none}#mnavChip .nm{display:none}}
 body{padding-top:52px!important}
 
@@ -233,7 +233,7 @@ body{padding-top:52px!important}
 
   <div class="hero">
     <h1>PRIVACY POLICY</h1>
-    <p>Last updated 28 September 2026</p>
+    <p>Last updated 6 October 2026</p>
   </div>
 
   <section class="contact">
@@ -248,6 +248,9 @@ body{padding-top:52px!important}
     <b>Sports Corner listings:</b> if you sign in and list an event, we store its title, sport, city, date, venue, organiser, registration link, the time it was created and your user ID as the author. Listings are visible to signed-in users on the Sports Corner page. If you let the browser share your location, it is only used on your device to pick the nearest city; your coordinates are not sent to us.<br><br>
     <b>Study Rooms:</b> room names, avatars, chat messages, timer state and strike events are sent through a public MQTT relay (broker.emqx.io) so everyone in the room sees them live. The room code acts as the channel, so anyone who knows the code can see that traffic. They are not stored in Firestore. Do not share personal information in Study Room chat.<br><br>
     <b>Wellness:</b> your meal-plan answers, 7-day plan and daily checks stay in your browser on this device. Only the points you earn from the daily checks are added to your Maatram points.<br><br>
+    <b>Linked devices:</b> if you link devices, the lock's end time, length and which device started it are stored in our database under your link code. Nothing else is attached to the code.<br><br>
+    <b>Focuz chat:</b> questions you type are sent to an AI provider (Google Gemini, NVIDIA or Vercel AI Gateway) to write the answer. Maatram does not save them.<br><br>
+    <b>Feedback form:</b> messages are delivered to our email by FormSubmit (formsubmit.co).<br><br>
     We do not collect payment information, location history, contacts, or anything from apps outside Maatram itself.<br><br>
     <b>Maatram Hard Lock Chrome extension (optional):</b> while installed, it counts the minutes you spend on Instagram, Snapchat, TikTok, YouTube, X and Facebook in Chrome (only while that tab is active, Chrome is focused and you are not idle). It cannot see any other website. The minute totals are kept in the extension's local storage for 35 days and are only passed to maatram.co.in on your own computer when you open the Stats page, where they stay in your browser. They are not uploaded to our servers.<br><br>
     <b>Site analytics (Microsoft Clarity):</b> on maatram.co.in we use Microsoft Clarity to see, without names, how pages are used — clicks, scrolls and anonymised session replays — so we can fix confusing parts of the site. Text you type is masked and never recorded. Clarity sets its own cookies; see <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener">Microsoft's privacy statement</a>.<br><br>
@@ -256,7 +259,7 @@ body{padding-top:52px!important}
 
   <section class="contact">
     <h2 class="c-h">Where it's stored</h2>
-    <p class="c-sub">Your sign-in (Google account email, name and photo) is handled by Firebase Authentication, and your profile and Sports Corner listings live in Google Firebase Firestore; both are third-party services run by Google. Your name, photo and points are visible to other signed-in users on the Leaderboard. Screen-time figures you type into the Stats page, timer sessions and streaks, App Gate and Hard Lock activity, your Wellness plan and checks, and settings such as Performance mode or theme are stored only in your browser's local storage and are not uploaded.</p>
+    <p class="c-sub">Your sign-in (Google account email, name and photo) is handled by Firebase Authentication, and your profile and Sports Corner listings live in Google Firebase Firestore; both are third-party services run by Google. Your name, photo and points are visible to other signed-in users on the Leaderboard. Screen-time figures you type into the Stats page, timer sessions and streaks, App Gate and Hard Lock activity (except a linked-device lock time), your Wellness plan and checks, and settings such as Performance mode or theme are stored only in your browser's local storage and are not uploaded.</p>
   </section>
 
   <section class="contact">

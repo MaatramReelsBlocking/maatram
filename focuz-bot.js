@@ -58,7 +58,7 @@
 
     // Stats
     { id: 'stats', q: 'How do Screen Stats work?', k: ['screen stats', 'stats', 'screen time', 'statistics', 'usage', 'log', 'track screen', 'chart', 'weekly'],
-      a: "type in your screen time for each app and save the day. you get today's total, a 7-day average and weekly charts. week under your average = +50 pts. the data never leaves your device.", l: ['Open Stats', '/stats.html'] },
+      a: "type in your screen time for each app and save the day. you get today's total, a 7-day average and weekly charts. log at least 3 days in each of two weeks; if last week's daily average beats the week before, +50 pts. the data never leaves your device.", l: ['Open Stats', '/stats.html'] },
     { id: 'stats-auto', q: 'Why is screen time manual?', k: ['screen time manual', 'why is it manual', 'automatic', 'automatically', 'track automatically', 'auto track', 'why manual', 'import', 'screen time api'],
       a: "social apps don't share usage data with other apps or websites, so Stats is logged by hand and kept on your device. on a computer, the Chrome extension counts time on blocked sites for Screen Stats." },
 

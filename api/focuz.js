@@ -15,7 +15,7 @@ const PROVIDERS = [
   { name: 'gateway', key: env.AI_GATEWAY_API_KEY || env.VERCEL_OIDC_TOKEN, oidc: true, url: 'https://ai-gateway.vercel.sh/v1/chat/completions',
     models: [env.FOCUZ_MODEL, 'anthropic/claude-haiku-4.5'] },
 ];
-const ALLOWED = /^https:\/\/(www\.)?maatram\.co\.in$|^https:\/\/maatram-website[\w-]*\.vercel\.app$|^http:\/\/localhost(:\d+)?$/;
+const ALLOWED = /^https:\/\/(www\.)?maatram\.co\.in$|^https:\/\/maatram-website\.vercel\.app$|^http:\/\/localhost(:\d+)?$/;
 
 const CORE = `Facts about Maatram (only state Maatram facts that appear here or in the page context below):
 - Maatram (maatram.co.in) is a free, open-source (MIT) focus and screen-time platform for students, built by a team of five class 10B students at SSVM School of Excellence, Coimbatore. Slogan: "Bringing a change in you". Inspired by Gen Z, made by Gen Z, made for Gen Z. No ads, no paid tier.

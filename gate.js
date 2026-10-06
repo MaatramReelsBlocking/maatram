@@ -43,7 +43,7 @@
     reveal();
     try{ if(sessionStorage.getItem('maatram_guest_x')==='1') return; }catch(e){}
     var b=document.createElement('div'); b.id='mguest'; b.setAttribute('role','region'); b.setAttribute('aria-label','Sign in');
-    b.textContent='Browsing as a guest. Sign in to save points and join rooms.';
+    b.textContent='Browsing as a guest. Sign in to save your points.';
     var a=document.createElement('a'); a.href='login.html'; a.textContent='Sign in';
     a.onclick=function(){ try{ sessionStorage.setItem('maatram_next',PAGE); }catch(e){} };
     var x=document.createElement('button'); x.type='button'; x.textContent='\u00d7';
