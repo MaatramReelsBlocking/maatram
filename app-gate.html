@@ -660,7 +660,13 @@ chips.addEventListener('click', e=>{
   const c = e.target.closest('.chip'); if(!c || body.classList.contains('locked')) return;
   chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
   c.classList.add('active'); selMin=+c.dataset.min;
+  /* the Chrome popup picks the same time */
+  sendToMaatramExtension({action:'SET_PREFERRED_MINUTES',minutes:selMin}).catch(()=>{});
 });
+function pickChip(min){
+  const c=chips.querySelector('.chip[data-min="'+min+'"]'); if(!c || body.classList.contains('locked')) return;
+  chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); c.classList.add('active'); selMin=min;
+}
 
 function fmt(s){ const m=Math.floor(s/60), r=s%60; return m+':'+String(r).padStart(2,'0'); }
 
@@ -1057,7 +1063,21 @@ document.getElementById('siteForm').addEventListener('submit',e=>{
   msg.textContent=''; inp.value=''; saveSites(list.concat(d));
 });
 renderSites();
-syncSites(getSites());
+/* The extension holds the master copy (sites and time can also be changed in its popup).
+   On load / coming back to this tab: take its list and time. Older extensions or a first
+   run with an empty extension list: send this page's list instead. */
+async function pullFromExtension(){
+  try{
+    const r=await sendToMaatramExtension({action:'GET_SETTINGS'});
+    if(!r || !r.success) throw 0;
+    const ext=(r.sites||[]).filter(normSite), mine=getSites();
+    if(!r.set && !ext.length && mine.length){ syncSites(mine); }
+    else { store.set(SITES_KEY,JSON.stringify(ext)); renderSites(); }
+    if(r.minutes) pickChip(Number(r.minutes));
+  }catch(_){ syncSites(getSites()); }
+}
+pullFromExtension();
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) pullFromExtension(); });
 
 /* restore lock across refresh */
 (function(){
