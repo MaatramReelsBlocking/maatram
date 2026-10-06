@@ -301,7 +301,7 @@
 
   // ---------- More Maatram ----------
   { id: 'hardlock-app', q: 'What is the Maatram Hard Lock app?', k: ['maatram hard lock app', 'hard lock app', 'lock app', 'hard lock android app', 'hard lock app', 'hardlock apk', 'maatram hard lock android', 'lighter app', 'com maatram hardlock', 'clear all'],
-    a: 'Maatram Hard Lock is the lighter Android app: Hard Lock only. it locks just the apps you pick and keeps running even when you hit "Clear all". version 2.0, 2.29 MB, Android 8.0 and above. 2.0 adds a sakura that grows during the lock and a home-screen widget. you can install it next to the full app, they don\'t clash.', l: ['Download', '/download.html'] },
+    a: 'Maatram Hard Lock is the lighter Android app: Hard Lock only. it locks just the apps you pick and keeps running even when you hit "Clear all". version 2.3 alpha, 2.81 MB, Android 8.0 and above. it sorts apps to lock by your screen time, and grows a sakura while you lock: any finished lock gives a blooming tree, a 90-minute lock gives a full tree. there is a home-screen widget too. you can install it next to the full app, they don\'t clash.', l: ['Download', '/download.html'] },
   { id: 'full-app', q: 'What is in the full Maatram app?', k: ['full app', 'maatram full app', 'version 1 1', 'com maatram app', 'which apk'],
     a: 'the full Maatram app has every feature from the website plus native app blocking. version 1.1, 2.90 MB, Android 5.1 and above. it\'s stable but not getting updates; the Hard Lock app is the one being kept up to date.', l: ['Download', '/download.html'] },
   { id: 'iphone', q: 'Does Maatram work on iPhone?', k: ['work on iphone', 'iphone', 'ios app', 'apple', 'ipad', 'mac'],
