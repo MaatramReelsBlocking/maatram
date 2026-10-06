@@ -243,6 +243,17 @@
   .ext-link svg{width:18px;height:18px}
   .ext-link.need{background:linear-gradient(90deg,var(--green),var(--blue));color:#04130c;border-color:transparent}
   .ext-link.on{pointer-events:none}
+  /* linked devices: one Hard Lock for this site, the phone app and the Chrome extension */
+  .link-box{margin:-8px 0 22px;padding:14px 16px;border-radius:18px;border:1px solid rgba(55,182,255,.3);background:rgba(55,182,255,.05);font-size:14px;line-height:1.5}
+  .link-box b{color:var(--ink)}
+  .link-box .lk-code{font-family:ui-monospace,Menlo,monospace;font-size:20px;letter-spacing:3px;color:var(--blue);font-weight:700}
+  .link-box .lk-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .link-box button,.link-box input{min-height:44px;border-radius:999px;font:inherit;font-size:14px}
+  .link-box button{padding:0 16px;border:1px solid rgba(55,182,255,.45);background:rgba(55,182,255,.1);color:var(--ink);cursor:pointer}
+  .link-box button.pri{background:linear-gradient(90deg,var(--green),var(--blue));color:#04130c;border-color:transparent;font-weight:700}
+  .link-box input{padding:0 16px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);color:var(--ink);width:150px;text-transform:uppercase;letter-spacing:2px}
+  .link-box .lk-dim{color:var(--dim);font-size:13px}
+  .link-box .lk-err{color:#ff6e8a;font-size:13px}
 
   .chips{display:flex;flex-wrap:wrap;gap:10px}
   .chip{
@@ -518,6 +529,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path id="extIcon" d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
         <span id="extLabel">Step 1: Add Maatram Hard Lock to Chrome (desktop)</span>
       </a>
+      <div class="link-box" id="linkBox" aria-live="polite"></div>
       <div class="chips" id="chips">
         <button class="chip" data-min="5">5 min</button>
         <button class="chip" data-min="10">10 min</button>
@@ -817,6 +829,63 @@ async function checkExtension(){
 }
 checkExtension();
 addEventListener('focus',checkExtension); /* re-check when user returns from the Web Store tab */
+
+/* ============ Linked devices: one Hard Lock for this site, the phone app and Chrome ============
+   A link code (8 letters/digits) is shared by your devices. Starting a lock on any of them stores
+   its end time under the code (api/link.js); the others check every minute and lock too. */
+const LINK_KEY='maatram_link_code', LINK_ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function linkCode(){ const c=String(store.get(LINK_KEY)||''); return /^[A-HJ-NP-Z2-9]{8}$/.test(c)?c:''; }
+function newCode(){ const a=new Uint32Array(8); crypto.getRandomValues(a); return [...a].map(n=>LINK_ABC[n%LINK_ABC.length]).join(''); }
+const fmtCode=c=>c.slice(0,4)+'-'+c.slice(4);
+let linkMsg='';
+function renderLink(){
+  const box=document.getElementById('linkBox'), c=linkCode(); box.innerHTML='';
+  const p=(html,cls)=>{ const e=document.createElement('div'); if(cls) e.className=cls; e.innerHTML=html; box.appendChild(e); return e; };
+  if(c){
+    p('<b>Devices linked.</b> A Hard Lock started here, in the Maatram Hard Lock app or in the Chrome extension locks all of them. Your code:');
+    const row=p('<span class="lk-code">'+fmtCode(c)+'</span>','lk-row');
+    const copy=document.createElement('button'); copy.type='button'; copy.textContent='Copy code';
+    copy.onclick=()=>{ (navigator.clipboard?navigator.clipboard.writeText(fmtCode(c)):Promise.reject()).then(()=>{copy.textContent='Copied';setTimeout(()=>copy.textContent='Copy code',1500);},()=>{}); };
+    const un=document.createElement('button'); un.type='button'; un.textContent='Unlink this browser';
+    un.onclick=()=>{ if(body.classList.contains('locked')) return; store.del(LINK_KEY); renderLink(); };
+    row.appendChild(copy); row.appendChild(un);
+    p('Type this code in the phone app (Link devices) and in the Chrome extension popup. Keep it private: anyone with it can start a lock on your devices, but nobody can stop one.','lk-dim');
+  } else {
+    p('<b>Lock your phone and other computers too.</b> Create a code, then type it in the Maatram Hard Lock app and the Chrome extension.');
+    const row=p('','lk-row');
+    const mk=document.createElement('button'); mk.type='button'; mk.className='pri'; mk.textContent='Create link code';
+    mk.onclick=()=>{ store.set(LINK_KEY,newCode()); linkMsg=''; renderLink(); pollLink(); };
+    const inp=document.createElement('input'); inp.placeholder='ABCD-2345'; inp.maxLength=9; inp.setAttribute('aria-label','Link code from another device');
+    const use=document.createElement('button'); use.type='button'; use.textContent='Use code';
+    use.onclick=()=>{ const v=inp.value.toUpperCase().replace(/[^A-Z0-9]/g,''); if(!/^[A-HJ-NP-Z2-9]{8}$/.test(v)){ linkMsg='That code should be 8 letters or digits, like ABCD-2345.'; renderLink(); return; } store.set(LINK_KEY,v); linkMsg=''; renderLink(); pollLink(); };
+    row.appendChild(mk); row.appendChild(inp); row.appendChild(use);
+  }
+  if(linkMsg) p(linkMsg,'lk-err');
+}
+async function pushLink(min){
+  const c=linkCode(); if(!c) return;
+  try{
+    const r=await fetch('/api/link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:c,minutes:min,by:'web'})});
+    linkMsg=r.ok||r.status===409?'':'Could not reach your other devices. They will not lock this time.';
+  }catch(_){ linkMsg='Offline: your other devices will not lock this time.'; }
+  renderLink();
+}
+/* a lock started on the phone or in Chrome locks this page too (clock-corrected with the server's time) */
+async function pollLink(){
+  const c=linkCode(); if(!c || document.hidden) return;
+  try{
+    const r=await fetch('/api/link?code='+c,{cache:'no-store'}); if(!r.ok) return;
+    const d=await r.json(), end=d.end+(Date.now()-d.now);
+    if(d.end>d.now+3000 && end>lockEnd+5000){
+      const total=d.minutes*60;
+      store.set('maatram_lock_end',end); store.set('maatram_lock_total',total);
+      if(body.classList.contains('locked')){ lockEnd=end; lockTotal=total; } else engage(end,total);
+    }
+  }catch(_){}
+}
+renderLink();
+setInterval(pollLink,30000); setTimeout(pollLink,1500);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) pollLink(); });
 lockBtn.addEventListener('click', async ()=>{
 
   if(body.classList.contains('locked')){
@@ -867,6 +936,8 @@ lockBtn.addEventListener('click', async ()=>{
 
     }
 
+    if(linkCode()) pushLink(selMin);
+
 
     /* Start the existing Maatram webpage lock */
 
@@ -894,6 +965,13 @@ lockBtn.addEventListener('click', async ()=>{
       "Maatram Hard Lock:",
       error
     );
+
+    /* Linked devices: no extension in this browser is fine, the phone and other computers still lock */
+    if(linkCode()){
+      store.set('maatram_lock_end', end); store.set('maatram_lock_total', total);
+      engage(end, total); pushLink(selMin);
+      return;
+    }
 
 
     if (confirm(

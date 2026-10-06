@@ -376,3 +376,28 @@ siteForm.addEventListener("submit", async event => {
 });
 
 renderSites();
+
+/* Linked devices: the code from maatram.co.in. A lock on any linked device locks this computer too. */
+const linkForm = document.getElementById("linkForm");
+const linkInput = document.getElementById("linkInput");
+const linkError = document.getElementById("linkError");
+const linkStatus = document.getElementById("linkStatus");
+
+async function renderLink() {
+  const { linkCode } = await chrome.storage.local.get("linkCode");
+  if (linkCode) {
+    linkInput.value = linkCode.slice(0, 4) + "-" + linkCode.slice(4);
+    linkStatus.textContent = "Linked. A Hard Lock on the website or your phone locks this computer within a minute, and a lock you start here locks them too.";
+  }
+}
+
+linkForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  linkError.textContent = "";
+  const response = await chrome.runtime.sendMessage({ action: "SET_LINK_CODE", code: linkInput.value });
+  if (!response || !response.success) linkError.textContent = (response && response.error) || "Could not save the code.";
+  else if (!response.code) linkStatus.textContent = "Not linked.";
+  renderLink();
+});
+
+renderLink();

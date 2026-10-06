@@ -151,6 +151,26 @@ service cloud.firestore {
                     || (request.auth != null && resource.data.by == request.auth.uid);
     }
 
+    /* Linked devices (api/link.js): one Hard Lock for the website, phone app and Chrome extension.
+       Anyone holding a code can read it or start a lock on it (that is what linking means), but a
+       running lock can only be extended — never shortened or cancelled — and is capped at 90 min.
+       Codes cannot be listed. */
+    match /links/{code} {
+      allow get:    if code.matches('^[A-HJ-NP-Z2-9]{8}$');
+      allow list, delete: if false;
+      allow create, update: if code.matches('^[A-HJ-NP-Z2-9]{8}$')
+                    && request.resource.data.keys().hasOnly(['end','minutes','by','at'])
+                    && request.resource.data.end is int
+                    && request.resource.data.minutes is int
+                    && request.resource.data.minutes >= 1 && request.resource.data.minutes <= 90
+                    && request.resource.data.end > request.time.toMillis()
+                    && request.resource.data.end <= request.time.toMillis() + 91 * 60 * 1000
+                    && request.resource.data.by in ['web','phone','chrome']
+                    && (resource == null
+                        || resource.data.end <= request.time.toMillis()
+                        || request.resource.data.end >= resource.data.end);
+    }
+
     /* Nothing else is reachable from a browser. */
     match /{document=**} {
       allow read, write: if false;
