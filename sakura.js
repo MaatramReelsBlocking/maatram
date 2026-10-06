@@ -2,7 +2,7 @@
    try a locked app, the garden of finished locks, and a sky that follows the real time of day.
    Same art and rules as the Maatram Hard Lock Android app (PlantArt.kt / Garden.kt): both use the
    same seeded random source, so the tree, mountains and clouds are identical on web and phone.
-   Exposes window.MaatramSakura = { draw, live, petals, garden, hourNow }. Garden lives in this browser. */
+   Exposes window.MaatramSakura = { draw, live, scene, frame, petals, garden, hourNow }. Garden lives in this browser. */
 (function () {
   'use strict';
   var MAX_LEAVES = 12, DEPTH = 6, PI = Math.PI;
@@ -108,31 +108,17 @@
   }
 
   /* ---- sky, sun/moon, clouds, mountains, mist ---- */
-  function sky(c, w, h, L) {
+  /* ---- the sky is drawn in parts so the live scene can move some of them ---- */
+  var CL = [[0.16, 0.15, 0.11], [0.6, 0.09, 0.15], [0.88, 0.25, 0.08], [0.4, 0.3, 0.07]];
+  function sunPos(L, w, h) {
+    var u = Math.sin(PI * clamp(L.tt));
+    return [w * (0.08 + 0.84 * L.tt), h * (L.day ? 0.66 - 0.52 * u : 0.45 - 0.38 * u)];
+  }
+  function skyBase(c, w, h, L) {                 // gradient, sun or moon
     var g = c.createLinearGradient(0, 0, 0, h * 0.8);
     g.addColorStop(0, L.top); g.addColorStop(0.55, L.mid); g.addColorStop(1, L.hor);
     c.fillStyle = g; c.fillRect(0, 0, w, h);
-    if (L.night > 0) {
-      var R = rng(7);
-      for (var k = 0; k < 70; k++) {
-        var x = R() * w, y = R() * h * 0.62, s = (0.4 + R() * 1.1) * h * 0.0032, al = L.night * (0.35 + R() * 0.65) * (1 - y / (h * 0.7));
-        disc(c, x, y, s, 'rgba(255,255,255,' + al.toFixed(3) + ')');
-        if (s > h * 0.0042) glow(c, x, y, s * 5, '#BFD4FF', al * 0.25);
-      }
-    }
-    /* clouds: soft puffs, lit from the sun's side */
-    var CL = [[0.16, 0.15, 0.11], [0.6, 0.09, 0.15], [0.88, 0.25, 0.08], [0.4, 0.3, 0.07]];
-    var ccol = L.night > 0.5 ? mix('#3C4470', '#262C52', L.night) : mix('#FFFFFF', '#FFC2A6', L.warm);
-    var cal = L.night > 0.5 ? 0.45 : 0.7 - L.warm * 0.1;
-    CL.forEach(function (cl, j) {
-      var R = rng(31 + j), cx = cl[0] * w, cy = cl[1] * h, s = cl[2] * w;
-      for (var k = 0; k < 7; k++) {
-        var ox = (R() - 0.5) * s * 1.6, oy = (R() - 0.5) * s * 0.35, pr = s * (0.35 + R() * 0.35);
-        puff(c, cx + ox, cy + oy + pr * 0.22, pr * 1.05, mix(ccol, L.top, 0.4), cal * 0.55);
-        puff(c, cx + ox, cy + oy, pr, ccol, cal);
-      }
-    });
-    var sx = w * (0.08 + 0.84 * L.tt), sy = h * (L.day ? 0.66 - 0.52 * Math.sin(PI * clamp(L.tt)) : 0.45 - 0.38 * Math.sin(PI * clamp(L.tt))), r = h * 0.045;
+    var sp = sunPos(L, w, h), sx = sp[0], sy = sp[1], r = h * 0.045;
     if (L.day) {
       var near = clamp(1 - Math.sin(PI * clamp(L.tt)) * 1.6);       // low sun: bigger, warmer
       glow(c, sx, sy, r * (7 + near * 4), mix('#FFE7B0', '#FF9E62', near), 0.42);
@@ -148,44 +134,102 @@
       disc(c, sx + r * 0.25, sy + r * 0.12, r * 0.18, 'rgba(150,145,130,0.35)');
       disc(c, sx - r * 0.3, sy + r * 0.32, r * 0.11, 'rgba(150,145,130,0.3)');
     }
-    if (L.day) {                                  // light shafts from the sun, strongest when it is low
-      var near2 = clamp(1 - Math.sin(PI * clamp(L.tt)) * 1.3), Rr = rng(808);
-      c.save(); c.globalCompositeOperation = 'lighter';
-      for (var q = 0; q < 16; q++) {
-        var ang = PI / 2 + (Rr() - 0.5) * 2.2, spread = 0.012 + Rr() * 0.03, len2 = h * (0.6 + Rr() * 0.6);
-        var lg = c.createLinearGradient(sx, sy, sx + Math.cos(ang) * len2, sy + Math.sin(ang) * len2);
-        lg.addColorStop(0, rgba('#FFE6BE', 0.018 + near2 * 0.04)); lg.addColorStop(1, rgba('#FFE6BE', 0));
-        c.fillStyle = lg; c.beginPath(); c.moveTo(sx, sy);
-        c.lineTo(sx + Math.cos(ang - spread) * len2, sy + Math.sin(ang - spread) * len2);
-        c.lineTo(sx + Math.cos(ang + spread) * len2, sy + Math.sin(ang + spread) * len2); c.closePath(); c.fill();
-      }
-      c.restore();
+  }
+  function stars(c, w, h, L, t) {                // twinkling stars and, now and then, a shooting star
+    if (L.night <= 0) return;
+    var R = rng(7);
+    for (var k = 0; k < 70; k++) {
+      var x = R() * w, y = R() * h * 0.62, s = (0.4 + R() * 1.1) * h * 0.0032, al = L.night * (0.35 + R() * 0.65) * (1 - y / (h * 0.7));
+      al *= 0.7 + 0.3 * Math.sin(t * (1.3 + (k % 5) * 0.37) + k * 1.7);
+      disc(c, x, y, s, 'rgba(255,255,255,' + clamp(al).toFixed(3) + ')');
+      if (s > h * 0.0042) glow(c, x, y, s * 5, '#BFD4FF', al * 0.25);
     }
-    /* layered mountains fading into haze */
+    var u = (t % 19) / 19;
+    if (t > 0 && u < 0.05 && L.night > 0.6) {
+      var f = u / 0.05, n = Math.floor(t / 19), x0 = w * (0.15 + ((n * 37) % 60) / 100), y0 = h * (0.06 + ((n * 23) % 20) / 100);
+      var x1 = x0 + w * 0.22 * f, y1 = y0 + h * 0.1 * f, lg = c.createLinearGradient(x1 - w * 0.08, y1 - h * 0.036, x1, y1);
+      lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(1, 'rgba(255,255,255,' + (0.8 * (1 - f)).toFixed(3) + ')');
+      c.strokeStyle = lg; c.lineWidth = h * 0.003; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(x1 - w * 0.08, y1 - h * 0.036); c.lineTo(x1, y1); c.stroke();
+    }
+  }
+  function cloudCol(L) { return L.night > 0.5 ? mix('#3C4470', '#262C52', L.night) : mix('#FFFFFF', '#FFC2A6', L.warm); }
+  function cloud(c, j, cx, cy, w, L) {           // one cloud of soft puffs, centred at cx,cy
+    var R = rng(31 + j), s = CL[j][2] * w, ccol = cloudCol(L), cal = L.night > 0.5 ? 0.45 : 0.7 - L.warm * 0.1;
+    for (var k = 0; k < 7; k++) {
+      var ox = (R() - 0.5) * s * 1.6, oy = (R() - 0.5) * s * 0.35, pr = s * (0.35 + R() * 0.35);
+      puff(c, cx + ox, cy + oy + pr * 0.22, pr * 1.05, mix(ccol, L.top, 0.4), cal * 0.55);
+      puff(c, cx + ox, cy + oy, pr, ccol, cal);
+    }
+  }
+  function cloudX(j, w, t) {                     // clouds drift with the wind and come back round
+    var span = w * 1.6, x = CL[j][0] * w + t * w * 0.006 * (1 + j * 0.35) + w * 0.3;
+    return ((x % span) + span) % span - w * 0.3;
+  }
+  function rays(c, w, h, L, t) {                 // light shafts from the sun, strongest when it is low
+    if (!L.day) return;
+    var sp = sunPos(L, w, h), sx = sp[0], sy = sp[1], near2 = clamp(1 - Math.sin(PI * clamp(L.tt)) * 1.3), Rr = rng(808);
+    c.save(); c.globalCompositeOperation = 'lighter';
+    for (var q = 0; q < 16; q++) {
+      var ang = PI / 2 + (Rr() - 0.5) * 2.2, spread = 0.012 + Rr() * 0.03, len2 = h * (0.6 + Rr() * 0.6);
+      var al = (0.018 + near2 * 0.04) * (0.7 + 0.3 * Math.sin(t * 0.5 + q * 1.3));
+      var lg = c.createLinearGradient(sx, sy, sx + Math.cos(ang) * len2, sy + Math.sin(ang) * len2);
+      lg.addColorStop(0, rgba('#FFE6BE', al)); lg.addColorStop(1, rgba('#FFE6BE', 0));
+      c.fillStyle = lg; c.beginPath(); c.moveTo(sx, sy);
+      c.lineTo(sx + Math.cos(ang - spread) * len2, sy + Math.sin(ang - spread) * len2);
+      c.lineTo(sx + Math.cos(ang + spread) * len2, sy + Math.sin(ang + spread) * len2); c.closePath(); c.fill();
+    }
+    c.restore();
+  }
+  function birds(c, w, h, L, t) {                // a few birds crossing the day sky
+    if (!L.day || L.night > 0.3) return;
+    c.strokeStyle = rgba(tint(L, '#2B2A33'), 0.7); c.lineCap = 'round';
+    for (var i = 0; i < 3; i++) {
+      var u = ((t + i * 13) / (38 + i * 7)) % 1, x = w * (-0.1 + 1.2 * u), y = h * (0.12 + 0.07 * i) + Math.sin(t * 0.8 + i) * h * 0.012;
+      var s = h * 0.013 * (1 - i * 0.2), f = Math.sin(t * 8 + i * 2);
+      c.lineWidth = Math.max(1, s * 0.16); c.beginPath();
+      c.moveTo(x - s, y - s * 0.35 * f); c.quadraticCurveTo(x - s * 0.45, y - s * 0.55 * f - s * 0.2, x, y);
+      c.quadraticCurveTo(x + s * 0.45, y - s * 0.55 * f - s * 0.2, x + s, y - s * 0.35 * f); c.stroke();
+    }
+  }
+  function far(c, w, h, L) {                     // layered mountains fading into haze
     ridge(c, w, h, 101, 0.7, 0.1, mix(L.hor, mix('#2E3D63', L.top, 0.4), 0.38));
     band(c, w, h, 0.6, 0.8, L.hor, 0.5);
     ridge(c, w, h, 202, 0.77, 0.06, mix(L.hor, '#1F2C3E', 0.62));
     band(c, w, h, 0.72, 0.88, L.hor, 0.55);
   }
 
-  /* ---- ground: grassy hill, blades, fallen petals and leaves ---- */
-  function ground(c, w, h, L, bloom, lost) {
+  /* ---- ground: grassy hill, fallen petals and leaves; grass blades bend in the wind ---- */
+  function groundBase(c, w, h, L, bloom, lost) {
     var gy = h * 0.84, g = c.createLinearGradient(0, gy - h * 0.04, 0, h);
     g.addColorStop(0, tint(L, '#6E9A5C')); g.addColorStop(0.35, tint(L, '#3F6B3A')); g.addColorStop(1, tint(L, '#1B2E1A'));
     c.fillStyle = g; c.beginPath(); c.moveTo(0, gy + h * 0.03); c.quadraticCurveTo(w / 2, gy - h * 0.06, w, gy + h * 0.03);
     c.lineTo(w, h); c.lineTo(0, h); c.closePath(); c.fill();
-    var R = rng(404), blade = tint(L, '#2D4F2A'), tipc = tint(L, '#8FBF6E');
-    c.lineCap = 'round';
-    var mid2 = tint(L, '#4E7A3A');
-    for (var k = 0; k < 260; k++) {
-      var x = R() * w, xf = x / w - 0.5, y = gy + h * 0.03 - h * 0.09 * (0.25 - xf * xf) + R() * h * 0.12, len = h * (0.01 + R() * 0.022);
-      var pick = R(); c.strokeStyle = pick < 0.25 ? tipc : pick < 0.6 ? mid2 : blade; c.lineWidth = Math.max(1, h * 0.0025);
-      c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + len * 0.2, y - len * 0.6, x + (R() - 0.3) * len * 0.6, y - len); c.stroke();
-    }
-    var n = Math.round(46 * bloom), pc = [tint(L, '#F7C3D3'), tint(L, '#F29BB6'), tint(L, '#FFE4EC')];
+    var R = rng(405), n = Math.round(46 * bloom), pc = [tint(L, '#F7C3D3'), tint(L, '#F29BB6'), tint(L, '#FFE4EC')];
     for (var j = 0; j < n; j++) petal(c, w * (0.12 + R() * 0.76), gy + h * (0.015 + R() * 0.13), h * (0.011 + R() * 0.006), R() * 6.28, pc[j % 3]);
     for (var m = 0; m < Math.min(lost, MAX_LEAVES); m++)
       leafShape(c, w * (0.24 + ((m * 41) % 52) / 100), gy + h * (0.04 + ((m * 23) % 9) / 100), h * 0.034, 1.3 + (m % 3) * 0.55, tint(L, m % 2 ? '#B98E3E' : '#9C6E2E'));
+  }
+  function grass(c, w, h, L, t, wind) {
+    var gy = h * 0.84, R = rng(404), blade = tint(L, '#2D4F2A'), tipc = tint(L, '#8FBF6E'), mid2 = tint(L, '#4E7A3A');
+    c.lineCap = 'round'; c.lineWidth = Math.max(1, h * 0.0025);
+    for (var k = 0; k < 260; k++) {
+      var x = R() * w, xf = x / w - 0.5, y = gy + h * 0.03 - h * 0.09 * (0.25 - xf * xf) + R() * h * 0.12, len = h * (0.01 + R() * 0.022);
+      var pick = R(); c.strokeStyle = pick < 0.25 ? tipc : pick < 0.6 ? mid2 : blade;
+      var bend = len * 0.4 * wind * (0.6 + 0.4 * Math.sin(t * 1.9 + x * 0.045));
+      c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + len * 0.2 + bend * 0.4, y - len * 0.6, x + (R() - 0.3) * len * 0.6 + bend, y - len); c.stroke();
+    }
+  }
+  function fireflies(c, w, h, L, t) {            // fireflies drift over the grass at night
+    if (L.night < 0.4) return;
+    var R = rng(616);
+    for (var k = 0; k < 18; k++) {
+      var bx = w * (0.08 + 0.84 * R()), byy = h * (0.6 + 0.3 * R()), a = 0.3 + R() * 0.5, ph = R() * 6.28;
+      var x = bx + Math.sin(t * a + ph) * w * 0.035, y = byy + Math.cos(t * a * 1.3 + ph) * h * 0.025;
+      var pulse = Math.pow(0.5 + 0.5 * Math.sin(t * (1.1 + a) + ph * 2), 2) * L.night;
+      if (pulse < 0.03) continue;
+      glow(c, x, y, h * 0.016, '#DFFF8A', 0.45 * pulse); disc(c, x, y, h * 0.0024, rgba('#F6FFD0', pulse));
+    }
   }
 
   /* one limb: a curved, tapering cylinder (shadow edge, sunlit side) grown to fraction t, with cherry bark */
@@ -252,13 +296,9 @@
   }
 
   /* progress 0 = seed .. 1 = full bloom; leaves = dropped by temptation; done = petals drifting */
-  function draw(c, w, h, progress, leaves, hour, done) {
-    var p = clamp(progress || 0), lost = Math.max(0, Math.min(MAX_LEAVES, leaves | 0));
-    if (hour == null) hour = hourNow();
-    var L = light(hour), bloom = done || p >= 1 ? 1 : clamp((p - 0.55) / 0.45);
+  /* the tree on its own layer (with its shadow), so the live scene can sway it in the wind */
+  function treeLayer(c, w, h, p, lost, L, done) {
     c.save();
-    sky(c, w, h, L);
-    ground(c, w, h, L, bloom, lost);
     var gy = h * 0.84, cx = w / 2, by = gy - h * 0.012;
     var sc = Math.min(h * 0.6 / -minY, w * 0.8 / (maxX - minX)), g = clamp((p - 0.05) / 0.95);
     var side = L.tt < 0.5 ? -1 : 1, bark = tint(L, '#4A3530'), barkHi = tint(L, '#9C7A68'), barkDk = tint(L, '#1C110D');
@@ -277,7 +317,7 @@
         leafShape(c, cx, by - h * 0.03 - sl, h * 0.03 * (t - 0.5) * 2, -0.9, tint(L, '#9BCB78'));
         leafShape(c, cx, by - h * 0.03 - sl, h * 0.03 * (t - 0.5) * 2, 0.9, tint(L, '#8DBF6A'));
       }
-      vignette(c, w, h); c.restore(); return;
+      c.restore(); return;
     }
 
     var gw = 0.15 + 0.85 * g, open = [], sap = clamp(g / 0.32);
@@ -343,15 +383,10 @@
         }
       }
     });
-    if (done) {                                   // a finished tree lets a few petals go
-      var Rd = rng(77);
-      for (var k = 0; k < 16; k++) petal(c, w * (0.1 + Rd() * 0.8), h * (0.18 + Rd() * 0.6), h * (0.012 + Rd() * 0.006), Rd() * 6.28, rgba(pal[k % 4], 0.85));
-    }
-    if (L.day) glow(c, w * (0.08 + 0.84 * L.tt), h * (0.66 - 0.52 * Math.sin(PI * clamp(L.tt))), w * 0.7, '#FFE2B8', 0.1 + L.warm * 0.12);
-    vignette(c, w, h);
     c.restore();
   }
-  function vignette(c, w, h) {
+  function overlay(c, w, h, L) {                 // warm light, vignette, film grain
+    if (L.day) { var sp = sunPos(L, w, h); glow(c, sp[0], sp[1], w * 0.7, '#FFE2B8', 0.1 + L.warm * 0.12); }
     var v = c.createRadialGradient(w / 2, h * 0.45, Math.min(w, h) * 0.35, w / 2, h * 0.45, Math.max(w, h) * 0.78);
     v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.38)');
     c.fillStyle = v; c.fillRect(0, 0, w, h);
@@ -359,43 +394,90 @@
     for (var k = 0; k < n; k++) { c.fillStyle = R() < 0.5 ? 'rgba(255,255,255,0.045)' : 'rgba(0,0,0,0.05)'; c.fillRect(R() * w, R() * h, 1, 1); }
   }
 
-  /* drifting petals over the scene: sec = time in seconds, amount 0..1 */
-  function petals(c, w, h, sec, amount) {
-    var n = Math.round(22 * clamp(amount)); if (!n) return;
+  function donePetals(c, w, h, L) {              // a finished tree lets a few petals go (still picture)
+    var Rd = rng(77), pal = ['#FFE9EF', '#FBD0DD', '#F6B6CA', '#F09BB4'].map(function (x) { return tintBloom(L, x); });
+    for (var k = 0; k < 16; k++) petal(c, w * (0.1 + Rd() * 0.8), h * (0.18 + Rd() * 0.6), h * (0.012 + Rd() * 0.006), Rd() * 6.28, rgba(pal[k % 4], 0.85));
+  }
+
+  /* progress 0 = seed .. 1 = full bloom; leaves = dropped by temptation; done = petals drifting. One still picture. */
+  function draw(c, w, h, progress, leaves, hour, done) {
+    var p = clamp(progress || 0), lost = Math.max(0, Math.min(MAX_LEAVES, leaves | 0));
+    if (hour == null) hour = hourNow();
+    var L = light(hour), bloom = done || p >= 1 ? 1 : clamp((p - 0.55) / 0.45);
+    skyBase(c, w, h, L); stars(c, w, h, L, 0);
+    for (var j = 0; j < CL.length; j++) cloud(c, j, cloudX(j, w, 0), CL[j][1] * h, w, L);
+    rays(c, w, h, L, 0); far(c, w, h, L);
+    groundBase(c, w, h, L, bloom, lost); grass(c, w, h, L, 0, 0.3);
+    treeLayer(c, w, h, p, lost, L, done);
+    if (done) donePetals(c, w, h, L);
+    overlay(c, w, h, L);
+  }
+
+  /* wind: slow gusts that make the tree sway, the grass bend and the petals drift */
+  function wind(t) { return 0.55 + 0.3 * Math.sin(t * 0.21) + 0.15 * Math.sin(t * 0.67 + 1.3); }
+  function sway(t, wd) { return (0.013 * Math.sin(t * 1.05) + 0.004 * Math.sin(t * 2.6 + 0.7)) * wd; }
+
+  /* drifting petals over the scene: sec = time in seconds, amount 0..1; they leave the crown and ride the wind */
+  function petals(c, w, h, sec, amount, wd) {
+    var n = Math.round(26 * clamp(amount)); if (!n) return;
+    if (wd == null) wd = 0.6;
     var R = rng(555), cols = ['#FBD0DD', '#F6B6CA', '#FFE9EF'];
     for (var k = 0; k < n; k++) {
-      var sp = 0.035 + R() * 0.05, ph = R(), sway = 0.03 + R() * 0.05, x0 = R(), s = h * (0.011 + R() * 0.008), spin = 0.6 + R() * 1.4;
-      var f = (ph + sec * sp) % 1, x = (x0 + f * 0.35 + Math.sin(sec * 0.7 + k) * sway) % 1, y = -0.05 + f * 1.1;
+      var sp = 0.035 + R() * 0.05, ph = R(), sw = 0.03 + R() * 0.05, x0 = 0.12 + R() * 0.76, s = h * (0.011 + R() * 0.008), spin = 0.6 + R() * 1.4;
+      var f = (ph + sec * sp) % 1, x = x0 + f * (0.15 + 0.35 * wd) + Math.sin(sec * 0.7 + k) * sw, y = 0.18 + f * 0.82;
+      x = ((x % 1.1) + 1.1) % 1.1 - 0.05;
       c.save(); c.translate(x * w, y * h); c.rotate(sec * spin + k); c.scale(Math.cos(sec * spin * 1.3 + k), 1);
-      petal(c, 0, 0, s, 0, rgba(cols[k % 3], 0.9 * Math.min(1, (1 - f) * 6))); c.restore();
+      petal(c, 0, 0, s, 0, rgba(cols[k % 3], 0.9 * Math.min(1, (1 - f) * 6, f * 10))); c.restore();
     }
   }
 
-  /* web: draw the scene once into a cached layer, then let petals drift over it (static when Performance mode or reduced motion is on) */
+  /* web: the scene is cut into still layers (sky, hills, tree, light) drawn once, and every frame the
+     clouds drift, stars twinkle, birds or fireflies move, grass bends and the tree sways in the wind.
+     Static when Performance mode or reduced motion is on. */
   var lives = typeof WeakMap === 'function' ? new WeakMap() : null;
+  function scene(w, h, dpr, q, leaves, hq, done) {
+    function mk(W, H, fn) {
+      var cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(W * dpr)); cv.height = Math.max(1, Math.round(H * dpr));
+      var x = cv.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0); fn(x); return cv;
+    }
+    var L = light(hq), lost = Math.max(0, Math.min(MAX_LEAVES, leaves | 0)), bloom = done || q >= 1 ? 1 : clamp((q - 0.55) / 0.45);
+    return {
+      w: w, h: h, dpr: dpr, L: L, by: h * 0.828, amount: done || q >= 1 ? 1 : clamp((q - 0.6) / 0.4),
+      sky: mk(w, h, function (c) { skyBase(c, w, h, L); }),
+      clouds: CL.map(function (cl, j) { var s = cl[2] * w; return mk(s * 3.2, s * 2.2, function (c) { cloud(c, j, s * 1.6, s * 1.1, w, L); }); }),
+      land: mk(w, h, function (c) { far(c, w, h, L); groundBase(c, w, h, L, bloom, lost); }),
+      tree: mk(w, h, function (c) { treeLayer(c, w, h, q, lost, L, done); }),
+      over: mk(w, h, function (c) { overlay(c, w, h, L); })
+    };
+  }
+  function frame(c, S, t) {
+    var w = S.w, h = S.h, L = S.L, wd = wind(t);
+    c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(S.sky, 0, 0);
+    c.setTransform(S.dpr, 0, 0, S.dpr, 0, 0);
+    stars(c, w, h, L, t);
+    for (var j = 0; j < CL.length; j++) { var s = CL[j][2] * w; c.drawImage(S.clouds[j], cloudX(j, w, t) - s * 1.6, CL[j][1] * h - s * 1.1, s * 3.2, s * 2.2); }
+    rays(c, w, h, L, t); birds(c, w, h, L, t);
+    c.drawImage(S.land, 0, 0, w, h);
+    grass(c, w, h, L, t, wd);
+    var k = sway(t, wd); c.save(); c.transform(1, 0, -k, 1, k * S.by, 0); c.drawImage(S.tree, 0, 0, w, h); c.restore();
+    fireflies(c, w, h, L, t);
+    if (S.amount > 0) petals(c, w, h, t, S.amount * 0.75, wd);
+    c.drawImage(S.over, 0, 0, w, h);
+  }
   function live(canvas, w, h, dpr, progress, leaves, hour, done) {
     var old = lives && lives.get(canvas); if (old) cancelAnimationFrame(old.raf);
-    var q = Math.round(clamp(progress || 0) * 200) / 200, hq = Math.round(hour * 4) / 4;   // redraw only when the scene visibly changes
-    var key = [w, h, dpr, q, leaves | 0, hq, !!done].join('|'), layer = old && old.key === key ? old.layer : null;
-    if (!layer) {
-      layer = document.createElement('canvas'); layer.width = Math.round(w * dpr); layer.height = Math.round(h * dpr);
-      var lc = layer.getContext('2d'); lc.setTransform(dpr, 0, 0, dpr, 0, 0);
-      draw(lc, w, h, q, leaves, hq, done);
-    }
-    canvas.width = layer.width; canvas.height = layer.height;
-    var c = canvas.getContext('2d'), p = clamp(progress || 0), amount = done || p >= 1 ? 1 : clamp((p - 0.6) / 0.4);
+    var q = Math.round(clamp(progress || 0) * 200) / 200, hq = Math.round(hour * 4) / 4;   // rebuild layers only when the scene visibly changes
+    var key = [w, h, dpr, q, leaves | 0, hq, !!done].join('|'), S = old && old.key === key ? old.S : scene(w, h, dpr, q, leaves, hq, done);
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    var c = canvas.getContext('2d'), st = { raf: 0, key: key, S: S, t0: old && old.t0 || performance.now(), last: 0 };
+    if (lives) lives.set(canvas, st);
     var still = window.MAATRAM_PERF === true || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
-    function frame(ts) {
-      c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(layer, 0, 0);
-      if (amount > 0) { c.setTransform(dpr, 0, 0, dpr, 0, 0); petals(c, w, h, (ts || 0) / 1000, amount * 0.75); }
-      if (still || amount <= 0) return;
-      st.raf = requestAnimationFrame(function (t) {
-        if (!canvas.isConnected) return;
-        frame(t);
-      });
-    }
-    var st = { raf: 0, key: key, layer: layer }; if (lives) lives.set(canvas, st);
-    frame(still ? 9 * 1000 : performance.now());
+    if (still) { frame(c, S, 0); return; }
+    (function loop(ts) {
+      if (!canvas.isConnected) return;
+      if (!document.hidden && ts - st.last >= 30) { st.last = ts; frame(c, S, (ts - st.t0) / 1000 + 4); }   // ~30 fps is plenty
+      st.raf = requestAnimationFrame(loop);
+    })(performance.now() + 31);
   }
 
   /* ---- garden (same rules as the app) ---- */
@@ -433,5 +515,5 @@
       for (var i = 0; i < n; i++) { out.push(by[dayKey(+d)] || 0); d.setDate(d.getDate() + 1); } return out;
     }
   };
-  window.MaatramSakura = { draw: draw, live: live, petals: petals, garden: garden, hourNow: hourNow };
+  window.MaatramSakura = { draw: draw, live: live, scene: scene, frame: frame, petals: petals, garden: garden, hourNow: hourNow };
 })();
