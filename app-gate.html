@@ -726,13 +726,21 @@ function engage(endTs, totalSec){
 
 function claimLock(end,total){
   /* +10 for every full 5 minutes survived — awarded exactly once per lock */
-  if(store.get('maatram_lock_claimed')===String(end)) return;
+  /* same lock seen by two tabs/devices can differ by a few ms: treat ends within a minute as one lock */
+  if(Math.abs((+store.get('maatram_lock_claimed')||0)-end)<60000) return;
   store.set('maatram_lock_claimed', String(end));
   /* stats.html: minutes kept off socials, per local day */
   try{ const d=new Date(end), k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     const s=JSON.parse(store.get('maatram_saved_v1')||'{}'); s[k]=(s[k]||0)+Math.round(total/60); store.set('maatram_saved_v1',JSON.stringify(s)); }catch(_){}
   const earned=Math.floor(total/300)*10;
   if(earned>0) window.maatramAward(earned,'Hard Lock '+Math.floor(total/60)+'m');
+}
+/* a lock from a linked device or the extension: start it, or stretch the running one
+   keeping its original start (so points and the ring count the whole lock) */
+function extendLock(end,total){
+  if(body.classList.contains('locked')){ total=Math.round((end-(lockEnd-lockTotal*1000))/1000); lockEnd=end; lockTotal=total; }
+  store.set('maatram_lock_end',end); store.set('maatram_lock_total',total);
+  if(!body.classList.contains('locked')) engage(end,total);
 }
 function release(){
   clearInterval(tick); tick=null;
@@ -884,11 +892,10 @@ async function pollLink(){
     const r=await fetch('/api/link?code='+c,{cache:'no-store'}); if(!r.ok) return;
     const d=await r.json(), end=d.end+(Date.now()-d.now);
     if(d.end>d.now+3000 && end>lockEnd+5000){
-      const total=d.minutes*60;
-      store.set('maatram_lock_end',end); store.set('maatram_lock_total',total);
-      if(body.classList.contains('locked')){ lockEnd=end; lockTotal=total; } else engage(end,total);
-      /* lock the sites in this Chrome too, even if the extension here has no link code */
-      sendToMaatramExtension({action:'START_HARD_LOCK',durationMinutes:Math.max(1,Math.ceil((end-Date.now())/60000))}).catch(()=>{});
+      extendLock(end,d.minutes*60);
+      /* lock the sites in this Chrome too, even if the extension here has no link code.
+         Round down so Chrome never outlasts the shared lock (rounding up re-locked this page after it ended). */
+      sendToMaatramExtension({action:'START_HARD_LOCK',durationMinutes:Math.max(1,Math.floor((end-Date.now())/60000))}).catch(()=>{});
     }
   }catch(_){}
 }
@@ -1074,7 +1081,15 @@ async function pullFromExtension(){
     if(!r.set && !ext.length && mine.length){ syncSites(mine); }
     else { store.set(SITES_KEY,JSON.stringify(ext)); renderSites(); }
     if(r.minutes) pickChip(Number(r.minutes));
-  }catch(_){ syncSites(getSites()); }
+  }catch(_){
+    /* extension without GET_SETTINGS (1.3.2): read its list first so sites added in the popup aren't wiped */
+    try{
+      const r=await sendToMaatramExtension({action:'GET_CUSTOM_SITES'});
+      const ext=(r&&r.success&&r.sites||[]).filter(normSite);
+      if(ext.length){ store.set(SITES_KEY,JSON.stringify(ext)); renderSites(); return; }
+    }catch(_){}
+    syncSites(getSites());
+  }
 }
 pullFromExtension();
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ pullFromExtension(); pullLock(); } });
@@ -1085,9 +1100,9 @@ async function pullLock(){
     const r=await sendToMaatramExtension({action:'GET_STATUS'});
     if(!r || !r.success || !r.active) return;
     const end=Number(r.endTime); if(!(end>Date.now()+3000) || end<=lockEnd+5000) return;
-    const total=r.startTime ? Math.max(60,Math.round((end-Number(r.startTime))/1000)) : Math.ceil((end-Date.now())/1000);
-    store.set('maatram_lock_end',end); store.set('maatram_lock_total',total);
-    if(body.classList.contains('locked')){ lockEnd=end; lockTotal=total; } else engage(end,total);
+    /* extension 1.3.2 sends no startTime: count whole minutes left (a just-started popup lock pays in full) */
+    const total=r.startTime ? Math.max(60,Math.round((end-Number(r.startTime))/1000)) : Math.ceil((end-Date.now())/60000)*60;
+    extendLock(end,total);
   }catch(_){}
 }
 setTimeout(pullLock,800); setInterval(pullLock,10000);

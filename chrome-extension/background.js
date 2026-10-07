@@ -187,11 +187,16 @@ async function lockUntil(endTime) {
    * read the correct remaining time.
    */
 
+  const running = cur.hardLockActive && Number(cur.hardLockEndTime) > Date.now();
+  const startInfo = running ? {} : { hardLockStartTime: Date.now() };   // kept when a lock is only extended
+
   await chrome.storage.local.set({
 
     hardLockActive: true,
 
-    hardLockEndTime: endTime
+    hardLockEndTime: endTime,
+
+    ...startInfo
 
   });
 
@@ -295,7 +300,9 @@ chrome.runtime.onMessageExternal.addListener(
 
               "hardLockActive",
 
-              "hardLockEndTime"
+              "hardLockEndTime",
+
+              "hardLockStartTime"
 
             ]);
 
@@ -318,6 +325,10 @@ chrome.runtime.onMessageExternal.addListener(
 
             endTime:
               data.hardLockEndTime ||
+              null,
+
+            startTime:
+              data.hardLockStartTime ||
               null
 
           });
@@ -331,6 +342,28 @@ chrome.runtime.onMessageExternal.addListener(
         if (message.action === "SET_CUSTOM_SITES") {
 
           sendResponse({ success: true, sites: await setCustomSites(message.sites) });
+
+          return;
+
+        }
+
+
+        /* App Gate reads the extension's list on load (sites can be added in the popup too) */
+        if (message.action === "GET_SETTINGS") {
+
+          const { customSites } = await chrome.storage.local.get("customSites");
+
+          sendResponse({ success: true, set: Array.isArray(customSites), sites: await getCustomSites(), minutes: null });
+
+          return;
+
+        }
+
+
+        /* the popup keeps its own time choice; accept the page's message so it doesn't error */
+        if (message.action === "SET_PREFERRED_MINUTES") {
+
+          sendResponse({ success: true });
 
           return;
 
