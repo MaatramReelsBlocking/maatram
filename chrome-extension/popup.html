@@ -86,8 +86,11 @@
       <div
         id="statusIcon"
         class="status-icon"
+        data-state="open"
+        aria-hidden="true"
       >
-        🔓
+        <svg class="ic-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>
+        <svg class="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
       </div>
 
 
@@ -195,6 +198,7 @@
 
         <select id="lockMinutes">
           <option value="5">5 minutes</option>
+          <option value="10">10 minutes</option>
           <option value="15">15 minutes</option>
           <option value="25" selected>25 minutes</option>
           <option value="45">45 minutes</option>
@@ -263,7 +267,7 @@
 
     <!-- WEBSITE CONTROL MESSAGE -->
 
-    <div class="control-box">
+    <a class="control-box" href="https://maatram.co.in" target="_blank" rel="noopener">
 
       <div class="control-icon">
         ↗
@@ -282,7 +286,7 @@
 
       </div>
 
-    </div>
+    </a>
 
 
     <!-- FOOTER -->

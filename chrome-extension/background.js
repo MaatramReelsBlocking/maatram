@@ -47,9 +47,17 @@ function createBlockingRules() {
 
 /*
  * Your own sites (added in the popup or on maatram.co.in).
- * They use a plain "block" rule, which needs no host permission,
- * so the extension's permissions stay exactly the same.
+ * With the user's OK for that site (asked in the popup), they get the same
+ * green lock screen as YouTube; without it, a plain "block" rule.
  */
+
+function siteOrigins(d) {
+  return ["*://" + d + "/*", "*://*." + d + "/*"];
+}
+
+async function hasSiteAccess(d) {
+  return chrome.permissions.contains({ origins: siteOrigins(d) }).catch(() => false);
+}
 
 function normalizeSite(value) {
 
@@ -88,20 +96,22 @@ async function setCustomSites(list) {
     throw new Error("You can add up to " + MAX_CUSTOM_SITES + " sites.");
   }
 
-  await chrome.storage.local.set({ customSites: clean });
+  await chrome.storage.local.set({ customSites: clean, customSitesSet: true });
   return clean;
 
 }
 
 
-function createCustomRules(sites) {
+async function createCustomRules(sites) {
 
-  return sites.map((domain, index) => ({
+  return Promise.all(sites.map(async (domain, index) => ({
     id: CUSTOM_RULE_START + index,
     priority: 100,
-    action: { type: "block" },
+    action: (await hasSiteAccess(domain))
+      ? { type: "redirect", redirect: { extensionPath: "/blocked.html?site=" + encodeURIComponent(domain) } }
+      : { type: "block" },
     condition: { requestDomains: [domain], resourceTypes: ["main_frame"] }
-  }));
+  })));
 
 }
 
@@ -118,7 +128,7 @@ async function enableBlocking() {
 
   const rules =
     createBlockingRules().concat(
-      createCustomRules(await getCustomSites())
+      await createCustomRules(await getCustomSites())
     );
 
   await chrome.declarativeNetRequest.updateDynamicRules({
@@ -177,8 +187,11 @@ async function startHardLock(minutes) {
 /* Locks until an exact time (used by the toolbar, the website and linked devices). */
 async function lockUntil(endTime) {
 
-  const cur = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime"]);
-  if (cur.hardLockActive && Number(cur.hardLockEndTime) > endTime) endTime = Number(cur.hardLockEndTime);
+  const cur = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime", "hardLockStartTime"]);
+  const running = cur.hardLockActive && Number(cur.hardLockEndTime) > Date.now();
+  if (running && Number(cur.hardLockEndTime) > endTime) endTime = Number(cur.hardLockEndTime);
+  // when this lock began (kept if it only extends a running one), so maatram.co.in can draw its ring
+  const startTime = running && cur.hardLockStartTime ? Number(cur.hardLockStartTime) : Date.now();
 
   /*
    * IMPORTANT:
@@ -187,16 +200,13 @@ async function lockUntil(endTime) {
    * read the correct remaining time.
    */
 
-  const running = cur.hardLockActive && Number(cur.hardLockEndTime) > Date.now();
-  const startInfo = running ? {} : { hardLockStartTime: Date.now() };   // kept when a lock is only extended
-
   await chrome.storage.local.set({
 
     hardLockActive: true,
 
     hardLockEndTime: endTime,
 
-    ...startInfo
+    hardLockStartTime: startTime
 
   });
 
@@ -204,7 +214,7 @@ async function lockUntil(endTime) {
   await enableBlocking();
 
   // Rules only catch new page loads: reload tabs already open on a protected site.
-  const open = await chrome.tabs.query({ url: BLOCKED_DOMAINS.flatMap(d => ["*://" + d + "/*", "*://*." + d + "/*"]) }).catch(() => []);
+  const open = await chrome.tabs.query({ url: BLOCKED_DOMAINS.concat(await getCustomSites()).flatMap(siteOrigins) }).catch(() => []);
   open.forEach(t => chrome.tabs.reload(t.id).catch(() => {}));
 
 
@@ -348,28 +358,6 @@ chrome.runtime.onMessageExternal.addListener(
         }
 
 
-        /* App Gate reads the extension's list on load (sites can be added in the popup too) */
-        if (message.action === "GET_SETTINGS") {
-
-          const { customSites } = await chrome.storage.local.get("customSites");
-
-          sendResponse({ success: true, set: Array.isArray(customSites), sites: await getCustomSites(), minutes: null });
-
-          return;
-
-        }
-
-
-        /* the popup keeps its own time choice; accept the page's message so it doesn't error */
-        if (message.action === "SET_PREFERRED_MINUTES") {
-
-          sendResponse({ success: true });
-
-          return;
-
-        }
-
-
         if (message.action === "GET_CUSTOM_SITES") {
 
           sendResponse({ success: true, sites: await getCustomSites() });
@@ -378,6 +366,20 @@ chrome.runtime.onMessageExternal.addListener(
 
         }
 
+
+        if (message.action === "SET_PREFERRED_MINUTES") {
+          const m = Number(message.minutes);
+          if (!Number.isInteger(m) || m < 1 || m > 180) throw new Error("Duration must be between 1 and 180 minutes.");
+          await chrome.storage.local.set({ preferredMinutes: m });
+          sendResponse({ success: true });
+          return;
+        }
+
+        if (message.action === "GET_SETTINGS") {
+          const d = await chrome.storage.local.get(["customSites", "customSitesSet", "preferredMinutes"]);
+          sendResponse({ success: true, sites: Array.isArray(d.customSites) ? d.customSites : [], minutes: d.preferredMinutes || null, set: Boolean(d.customSitesSet) });
+          return;
+        }
 
         if (message.action === "GET_USAGE") {
 
@@ -662,3 +664,15 @@ chrome.alarms.onAlarm.addListener(alarm => {
 });
 
 chrome.runtime.onStartup.addListener(() => pollLink().catch(() => {}));
+
+/* Site access granted mid-lock: switch that site from the plain block to the lock screen. */
+chrome.permissions.onAdded.addListener(async () => {
+  const data = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime"]);
+  if (data.hardLockActive && Number(data.hardLockEndTime) > Date.now()) await enableBlocking();
+});
+
+/* Site access taken away mid-lock: a redirect rule with no access lets the site through, so fall back to a plain block. */
+chrome.permissions.onRemoved.addListener(async () => {
+  const data = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime"]);
+  if (data.hardLockActive && Number(data.hardLockEndTime) > Date.now()) await enableBlocking();
+});
