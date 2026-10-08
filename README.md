@@ -10,6 +10,7 @@ It started as a school business project at SSVM School of Excellence (class 10B,
 five) and now runs as a live website, an Android app and a Chrome extension.
 
 - **Live:** https://maatram.co.in
+- **Blog:** [How to Stop Scrolling Reels: 5 Friction Tricks for Students](https://maatram.co.in/blog-stop-scrolling-reels.html) ([also on Medium](https://medium.com/@maatram97/how-to-stop-scrolling-reels-5-friction-tricks-for-students-433ddce8cfaa))
 - **Contact:** maatram97@gmail.com
 
 ---
