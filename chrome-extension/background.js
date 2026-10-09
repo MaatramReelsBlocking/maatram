@@ -13,9 +13,11 @@ const MAX_CUSTOM_SITES = 50;
 const LOCK_ALARM = "maatram-hard-lock";
 
 
-function createBlockingRules() {
+function createBlockingRules(sel) {
 
-  return BLOCKED_DOMAINS.map((domain, index) => {
+  return BLOCKED_DOMAINS.map((domain, index) => ({ domain, index }))
+    .filter(({ domain }) => !Array.isArray(sel) || sel.includes(domain))
+    .map(({ domain, index }) => {
 
     return {
       id: RULE_ID_START + index,
@@ -124,17 +126,62 @@ async function customRuleIds() {
 }
 
 
+
+/*
+ * App Selective Blocking (Premium Blocking on maatram.co.in).
+ * The website sends the list of sites to block. No list = the original six.
+ * Domains outside the six get a plain "block" rule (no extra permission needed).
+ */
+const SELECT_RULE_START = 3000;
+const MAX_SELECTED = 40;
+
+function normalizeSelected(list) {
+  return [...new Set((Array.isArray(list) ? list : []).map(v =>
+    String(v || "").trim().toLowerCase().replace(/^www\./, "")
+  ).filter(d => /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) && !/(^|\.)maatram\.co\.in$/.test(d)))].slice(0, MAX_SELECTED);
+}
+
+async function getSelected() {
+  const { selectedDomains = null } = await chrome.storage.local.get("selectedDomains");
+  return Array.isArray(selectedDomains) ? selectedDomains : null;
+}
+
+async function setSelected(list) {
+  const data = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime"]);
+  if (data.hardLockActive && Number(data.hardLockEndTime) > Date.now()) {
+    throw new Error("You can change your blocked apps after the lock ends.");
+  }
+  if (list === null) { await chrome.storage.local.remove("selectedDomains"); return null; }
+  const clean = normalizeSelected(list);
+  await chrome.storage.local.set({ selectedDomains: clean });
+  return clean;
+}
+
+function createSelectedRules(sel, custom) {
+  if (!Array.isArray(sel)) return [];
+  return sel.filter(d => !BLOCKED_DOMAINS.includes(d) && !custom.includes(d)).map((domain, i) => ({
+    id: SELECT_RULE_START + i,
+    priority: 100,
+    action: { type: "block" },
+    condition: { requestDomains: [domain], resourceTypes: ["main_frame"] }
+  }));
+}
+
 async function enableBlocking() {
 
+  const sel = await getSelected();
+  const custom = await getCustomSites();
   const rules =
-    createBlockingRules().concat(
-      await createCustomRules(await getCustomSites())
-    );
+    createBlockingRules(sel)
+      .concat(createSelectedRules(sel, custom))
+      .concat(await createCustomRules(custom));
 
   await chrome.declarativeNetRequest.updateDynamicRules({
 
     removeRuleIds:
-      rules.map(rule => rule.id).concat(await customRuleIds()),
+      rules.map(rule => rule.id)
+        .concat(BLOCKED_DOMAINS.map((_, i) => RULE_ID_START + i))
+        .concat(await customRuleIds()),
 
     addRules:
       rules
@@ -214,7 +261,9 @@ async function lockUntil(endTime) {
   await enableBlocking();
 
   // Rules only catch new page loads: reload tabs already open on a protected site.
-  const open = await chrome.tabs.query({ url: BLOCKED_DOMAINS.concat(await getCustomSites()).flatMap(siteOrigins) }).catch(() => []);
+  const sel = await getSelected();
+  const toReload = (Array.isArray(sel) ? sel : BLOCKED_DOMAINS).concat(await getCustomSites());
+  const open = await chrome.tabs.query({ url: toReload.flatMap(siteOrigins) }).catch(() => []);
   open.forEach(t => chrome.tabs.reload(t.id).catch(() => {}));
 
 
@@ -361,6 +410,15 @@ chrome.runtime.onMessageExternal.addListener(
         if (message.action === "GET_CUSTOM_SITES") {
 
           sendResponse({ success: true, sites: await getCustomSites() });
+
+          return;
+
+        }
+
+
+        if (message.action === "SET_BLOCK_SELECTION") {
+
+          sendResponse({ success: true, domains: await setSelected(message.domains === null ? null : message.domains) });
 
           return;
 

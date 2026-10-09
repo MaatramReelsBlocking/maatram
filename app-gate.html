@@ -222,6 +222,40 @@
   .app.custom .icon{background:linear-gradient(135deg,#1f3a31,#173048);font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--ink)}
   .app.custom .name{overflow-wrap:anywhere}
 
+  /* premium blocking: app selective blocking */
+  .prem{background:var(--card);border:1px solid rgba(55,182,255,.28);border-radius:26px;backdrop-filter:blur(16px);padding:32px 30px;margin:-12px 0 34px}
+  .prem-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:var(--font-display);font-size:24px;font-weight:700}
+  .prem-badge{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:5px 12px;border-radius:999px;color:#04120f;background:linear-gradient(90deg,var(--green),var(--blue))}
+  .prem .sub{margin:8px 0 22px;color:var(--dim);font-size:14px;line-height:1.55;max-width:560px}
+  .pmodes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:8px}
+  @media(max-width:620px){.pmodes{grid-template-columns:minmax(0,1fr)}}
+  .pm{text-align:left;min-height:96px;padding:18px 20px;border-radius:20px;border:1px solid var(--stroke);background:rgba(255,255,255,.03);color:var(--ink);font:inherit;cursor:pointer;transition:border-color .25s,background .25s,box-shadow .25s}
+  .pm b{display:block;font-family:var(--font-display);font-size:17px;margin-bottom:6px}
+  .pm span{font-size:13px;line-height:1.45;color:var(--dim)}
+  .pm:hover{border-color:rgba(55,182,255,.45)}
+  .pm[aria-checked="true"]{border-color:var(--green);background:rgba(47,227,143,.08);box-shadow:0 10px 30px -14px rgba(47,227,143,.5)}
+  .prem h4{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:26px 0 12px}
+  .prem h4 button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--stroke);background:transparent;color:var(--ink);font:inherit;font-size:13px;letter-spacing:0;text-transform:none;cursor:pointer}
+  .prem h4 button:hover{border-color:rgba(55,182,255,.45)}
+  .pcount{margin-left:auto;font-size:13px;letter-spacing:0;text-transform:none;color:var(--dim)}
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .pt{position:relative;display:grid;justify-items:center;align-content:center;gap:10px;min-height:156px;padding:20px 10px 16px;border-radius:22px;border:1.5px solid var(--stroke);background:rgba(255,255,255,.03);color:var(--ink);font:inherit;cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .25s,background .25s,box-shadow .25s}
+  .pt:hover{transform:translateY(-5px);border-color:rgba(55,182,255,.5)}
+  .pt .mono{width:68px;height:68px;border-radius:20px;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:1px;background:linear-gradient(135deg,#1f3a31,#173048);color:var(--ink)}
+  .pt .nm{font-family:var(--font-display);font-weight:600;font-size:15px;text-align:center;overflow-wrap:anywhere}
+  .pt .st{font-size:12px;letter-spacing:.6px;color:var(--dim)}
+  .pt[aria-pressed="true"]{border-color:var(--green);background:rgba(47,227,143,.1);box-shadow:0 14px 34px -16px rgba(47,227,143,.6)}
+  .pt[aria-pressed="true"] .mono{background:linear-gradient(135deg,var(--green),var(--blue));color:#04120f}
+  .pt[aria-pressed="true"] .st{color:var(--green);font-weight:700}
+  .pt[aria-pressed="true"]::after{content:"\2713";position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:800;color:#04120f;background:linear-gradient(135deg,var(--green),var(--blue))}
+  .pnote{margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--dim);max-width:640px}
+  .prem.all #premPick{display:none}
+  body.locked .prem .pmodes,body.locked .prem h4 button,body.locked .pgrid{opacity:.45;pointer-events:none}
+  body.locked .app.free{pointer-events:auto;filter:none}
+  body.locked .app.free .lock-badge{display:none}
+  body.locked .app.free .hint{color:var(--dim)}
+  @media(prefers-reduced-motion:reduce){.pt,.pm{transition:none}.pt:hover{transform:none}}
+
   /* hard lock panel */
   .panel{
     background:var(--card);
@@ -519,6 +553,22 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     <div class="site-chips" id="siteChips"></div>
   </section>
 
+  <section class="prem all" id="premium" aria-labelledby="premT">
+    <div class="prem-head"><span id="premT">Premium Blocking</span><span class="prem-badge">Premium</span></div>
+    <p class="sub"><b>App Selective Blocking.</b> Block every social media app, or pick exactly which apps and games Hard Lock blocks.</p>
+    <div class="pmodes" id="premModes" role="radiogroup" aria-label="Blocking mode">
+      <button type="button" class="pm" role="radio" aria-checked="true" data-mode="all"><b>Block all social media</b><span>Every social app below is locked during Hard Lock.</span></button>
+      <button type="button" class="pm" role="radio" aria-checked="false" data-mode="pick"><b>Choose apps &amp; games</b><span>Only the apps and games you tap stay locked.</span></button>
+    </div>
+    <div id="premPick">
+      <h4>Social media <button type="button" id="premSAll">Select all</button><button type="button" id="premSNone">Clear</button></h4>
+      <div class="pgrid" id="premSocial"></div>
+      <h4>Top 10 mobile games <button type="button" id="premGAll">Select all</button><button type="button" id="premGNone">Clear</button><span class="pcount" id="premCount" role="status" aria-live="polite"></span></h4>
+      <div class="pgrid" id="premGames"></div>
+      <p class="pnote">Games can only be blocked on a phone, not in a browser. Your game picks are saved on this device. Chrome blocks the social sites you pick.</p>
+    </div>
+  </section>
+
   <section class="panel">
     <div>
       <h3>
@@ -669,6 +719,65 @@ function pickChip(min){
 }
 
 function fmt(s){ const m=Math.floor(s/60), r=s%60; return m+':'+String(r).padStart(2,'0'); }
+
+/* ============ premium: app selective blocking ============ */
+const SEL=(function(){
+  const KEY='maatram_selective_apps', MODE='maatram_block_mode';
+  /* social app -> website that Chrome blocks */
+  const SOCIAL=[['Instagram','IG','instagram.com'],['Snapchat','SC','snapchat.com'],['TikTok','TT','tiktok.com'],['YouTube','YT','youtube.com'],['WhatsApp','WA','web.whatsapp.com'],['Facebook','FB','facebook.com'],['X','X','x.com'],['Reddit','RD','reddit.com'],['Threads','TH','threads.net'],['Pinterest','PN','pinterest.com'],['Telegram','TG','web.telegram.org'],['LinkedIn','IN','linkedin.com'],['Twitch','TW','twitch.tv']];
+  const GAMES=[['BGMI','BG'],['Free Fire MAX','FF'],['Call of Duty Mobile','CD'],['Minecraft','MC'],['Roblox','RB'],['Clash of Clans','CC'],['Clash Royale','CR'],['Brawl Stars','BS'],['Subway Surfers','SS'],['Candy Crush','CA']];
+  let sel; try{ sel=new Set(JSON.parse(store.get(KEY)||'[]')); }catch(_){ sel=new Set(); }
+  let mode=store.get(MODE)==='pick'?'pick':'all';
+  const sec=document.getElementById('premium');
+  function save(){ try{ store.set(KEY,JSON.stringify([...sel])); store.set(MODE,mode); }catch(_){} }
+  /* built-in app cards stay free during a lock when you chose "pick" and left them out */
+  function applyFree(){
+    document.querySelectorAll('#appGrid .app:not(.custom)').forEach(a=>{
+      const n=a.querySelector('.name').textContent;
+      a.classList.toggle('free', mode==='pick' && !sel.has(n));
+    });
+  }
+  function count(){
+    const g=GAMES.filter(x=>sel.has(x[0])).length, s=SOCIAL.filter(x=>sel.has(x[0])).length;
+    document.getElementById('premCount').textContent=s+' social, '+g+' of '+GAMES.length+' games selected';
+  }
+  function sync(){
+    sec.classList.toggle('all',mode==='all');
+    document.querySelectorAll('#premModes .pm').forEach(b=>b.setAttribute('aria-checked',b.dataset.mode===mode));
+    document.querySelectorAll('#premium .pt').forEach(b=>b.setAttribute('aria-pressed',sel.has(b.dataset.n)));
+    applyFree(); count();
+  }
+  function build(id,list){
+    const box=document.getElementById(id);
+    list.forEach(x=>{
+      const b=document.createElement('button'); b.type='button'; b.className='pt'; b.dataset.n=x[0];
+      b.innerHTML='<span class="mono"></span><span class="nm"></span><span class="st"></span>';
+      b.querySelector('.mono').textContent=x[1]; b.querySelector('.nm').textContent=x[0];
+      b.addEventListener('click',()=>{ if(body.classList.contains('locked')) return;
+        sel.has(x[0])?sel.delete(x[0]):sel.add(x[0]); save(); sync(); });
+      box.appendChild(b);
+    });
+  }
+  function setGroup(list,on){ if(body.classList.contains('locked')) return; list.forEach(x=>on?sel.add(x[0]):sel.delete(x[0])); save(); sync(); }
+  build('premSocial',SOCIAL); build('premGames',GAMES);
+  document.querySelectorAll('#premModes .pm').forEach(b=>b.addEventListener('click',()=>{
+    if(body.classList.contains('locked')) return; mode=b.dataset.mode; save(); sync(); }));
+  document.getElementById('premSAll').onclick=()=>setGroup(SOCIAL,true);
+  document.getElementById('premSNone').onclick=()=>setGroup(SOCIAL,false);
+  document.getElementById('premGAll').onclick=()=>setGroup(GAMES,true);
+  document.getElementById('premGNone').onclick=()=>setGroup(GAMES,false);
+  sync();
+  return {
+    /* sites Chrome must block: every social site, or just the picked ones */
+    domains(){ return SOCIAL.filter(x=>mode==='all'||sel.has(x[0])).map(x=>x[2]); },
+    refresh:applyFree
+  };
+})();
+async function syncSelection(){
+  for(const id of MAATRAM_EXTENSION_IDS){
+    try{ await sendToExtensionId(id,{action:'SET_BLOCK_SELECTION',domains:SEL.domains()}); }catch(_){}
+  }
+}
 
 /* ============ sakura ============ */
 const SK=window.MaatramSakura||null, skScene=document.getElementById('skScene');
@@ -930,6 +1039,7 @@ lockBtn.addEventListener('click', async ()=>{
     /* Start Chrome extension blocking (your sites first, so they lock too) */
 
     await syncSites(getSites());
+    await syncSelection();
 
     const response =
       await sendToMaatramExtension({
@@ -1002,6 +1112,8 @@ lockBtn.addEventListener('click', async ()=>{
 
 /* block clicks on apps while locked (belt & suspenders) + shake feedback */
 grid.addEventListener('click', e=>{
+  const card0=e.target.closest('.app');
+  if(card0 && card0.classList.contains('free')) return;   /* not in your block list */
   if(body.classList.contains('locked')){
     e.preventDefault(); e.stopPropagation();
     grid.classList.remove('deny'); void grid.offsetWidth; grid.classList.add('deny');
@@ -1069,7 +1181,7 @@ document.getElementById('siteForm').addEventListener('submit',e=>{
   if(list.length>=MAX_SITES){ msg.textContent='You can add up to '+MAX_SITES+' sites.'; return; }
   msg.textContent=''; inp.value=''; saveSites(list.concat(d));
 });
-renderSites();
+renderSites(); SEL.refresh();
 /* The extension holds the master copy (sites and time can also be changed in its popup).
    On load / coming back to this tab: take its list and time. Older extensions or a first
    run with an empty extension list: send this page's list instead. */
