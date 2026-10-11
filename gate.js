@@ -7,7 +7,8 @@
   var HOSTED = location.protocol==='http:'||location.protocol==='https:';
   if(!HOSTED) return;                       /* opened from a file: leave the page alone */
 
-  var PAGE=(location.pathname.split('/').pop()||'index.html');
+  /* keep the folder: a page in a subfolder (wellness/) must come back to itself, not to /<file> */
+  var PAGE=(location.pathname.replace(/^\/+/,'')||'index.html');
   if(PAGE==='login.html'||PAGE==='auth-bridge.html') return;
 
   /* html.mgate (page hidden, veil shown) is only ever set for a banned account */

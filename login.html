@@ -261,7 +261,7 @@ body{padding-top:52px!important}
       <div id="nameMsg" role="status"></div>
     </form>
     <div class="act">
-      <button id="goApp" onclick="var n='';try{n=sessionStorage.getItem('maatram_next')||'';sessionStorage.removeItem('maatram_next')}catch(e){}location.href=/^[a-z0-9-]+\.html$/.test(n)?n:'index.html'">Enter Maatram</button>
+      <button id="goApp" onclick="var n='';try{n=sessionStorage.getItem('maatram_next')||'';sessionStorage.removeItem('maatram_next')}catch(e){}location.href=/^(?:[a-z0-9-]+\/)?[a-z0-9-]+\.html$/.test(n)?n:'index.html'">Enter Maatram</button>
       <button id="signOut">Sign out</button>
     </div>
   </div>
