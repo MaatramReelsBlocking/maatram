@@ -245,6 +245,7 @@
   .pt .nm{font-family:var(--font-display);font-weight:600;font-size:15px;text-align:center;overflow-wrap:anywhere}
   .pt .st{font-size:12px;letter-spacing:.6px;color:var(--dim)}
   .pt[aria-pressed="true"]{border-color:var(--green);background:rgba(47,227,143,.1);box-shadow:0 14px 34px -16px rgba(47,227,143,.6)}
+  .pt .mono img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
   .pt[aria-pressed="true"] .mono{background:linear-gradient(135deg,var(--green),var(--blue));color:#04120f}
   .pt[aria-pressed="true"] .st{color:var(--green);font-weight:700}
   .pt[aria-pressed="true"]::after{content:"\2713";position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:800;color:#04120f;background:linear-gradient(135deg,var(--green),var(--blue))}
@@ -558,7 +559,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     <div id="premPick">
       <h4>Top 10 mobile games <button type="button" id="premGAll">Select all</button><button type="button" id="premGNone">Clear</button><span class="pcount" id="premCount" role="status" aria-live="polite"></span></h4>
       <div class="pgrid" id="premGames"></div>
-      <p class="pnote">Games can only be blocked on a phone, not in a browser. Your game picks are saved on this device.</p>
+      <p class="pnote">Games are locked by the Maatram Hard Lock phone app: open it, tap <b>Choose apps to lock</b> and use <b>Lock all games</b>. A browser can&rsquo;t block games, so your picks here are saved on this device only. <a href="download.html">Get the app</a></p>
     </div>
   </section>
 
@@ -741,7 +742,11 @@ const SEL=(function(){
     list.forEach(x=>{
       const b=document.createElement('button'); b.type='button'; b.className='pt'; b.dataset.n=x[0];
       b.innerHTML='<span class="mono"></span><span class="nm"></span><span class="st"></span>';
-      b.querySelector('.mono').textContent=x[1]; b.querySelector('.nm').textContent=x[0];
+      const mono=b.querySelector('.mono'); mono.textContent=x[1]; b.querySelector('.nm').textContent=x[0];
+      /* logo: drop assets/games/<slug>.png in the repo and it shows here; the initials stay if the file is missing */
+      const img=new Image(); img.alt=''; img.decoding='async';
+      img.onload=()=>{ mono.textContent=''; mono.appendChild(img); mono.style.background='none'; };
+      img.src='assets/games/'+x[0].toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.png';
       b.addEventListener('click',()=>{ if(body.classList.contains('locked')) return;
         sel.has(x[0])?sel.delete(x[0]):sel.add(x[0]); save(); sync(); });
       box.appendChild(b);
