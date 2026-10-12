@@ -393,15 +393,15 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
     <article class="app" aria-labelledby="appLock">
       <span class="tag live">Maintained</span>
       <h2 id="appLock">Maatram Hard Lock</h2>
-      <p>Hard Lock only. Locks just the apps you pick, and keeps running through "Clear all". New in 2.4.4 alpha: a lock extended from a linked device now counts as one whole lock. In 2.4.2: changing the phone clock no longer ends a lock, and a lock from a linked device blocks the app you already have open. New in 2.4: link the app with maatram.co.in and the Chrome extension so one Hard Lock locks them all. Also: pick apps to lock sorted by your real screen time, a new blooming sakura (any finished lock grows a blooming tree, a 90-minute lock grows a full tree), and the neon Maatram look.</p>
+      <p>Hard Lock only. Locks just the apps you pick, and keeps running through "Clear all". New in 2.5 beta: <b>Pause before opening</b> — when no lock runs, your picked apps open only after a short breath, and from the 2nd open of the day a quick sum or typed sentence. Plus <b>daily limits</b>: set minutes a day per app, and once used up it stays closed until midnight. In 2.4.4: a lock extended from a linked device now counts as one whole lock. In 2.4.2: changing the phone clock no longer ends a lock, and a lock from a linked device blocks the app you already have open. New in 2.4: link the app with maatram.co.in and the Chrome extension so one Hard Lock locks them all. Also: pick apps to lock sorted by your real screen time, a new blooming sakura (any finished lock grows a blooming tree, a 90-minute lock grows a full tree), and the neon Maatram look.</p>
       <ul class="chips">
-        <li>Version <b>2.4.4 alpha</b></li>
-        <li><b>2.82 MB</b></li>
+        <li>Version <b>2.5 beta</b></li>
+        <li><b>3.32 MB</b></li>
         <li>Android <b>8.0</b> and above</li>
         <li><b>com.maatram.hardlock</b></li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtnLock" href="https://github.com/MaatramReelsBlocking/maatram-hard-lock/releases/download/build-33/maatram-hardlock-v2.4.4-alpha.apk"
+        <a class="dl" id="dlBtnLock" href="https://github.com/MaatramReelsBlocking/maatram-hard-lock/releases/download/build-38/maatram-hardlock-v2.5-beta.apk"
            type="application/vnd.android.package-archive" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -528,7 +528,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       ("package appears to be invalid").</p>
     <div class="card">
       <ol class="steps">
-        <li>Let the download finish, then open <span class="path">maatram-hardlock-v2.4.4-alpha.apk</span>
+        <li>Let the download finish, then open <span class="path">maatram-hardlock-v2.5-beta.apk</span>
           from the <b>Files</b> app.</li>
         <li>If Play Protect says <b>App blocked to protect your device</b>, tap
           <b>More details</b>, then <b>Install anyway</b>.</li>
@@ -559,13 +559,13 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 macOS     shasum -a 256 maatram-v1.1.apk
 Linux     sha256sum maatram-v1.1.apk</pre>
     </div>
-    <h3 class="for" id="verify-lock">Hard Lock · maatram-hardlock-v2.4.4-alpha.apk (build 33)</h3>
+    <h3 class="for" id="verify-lock">Hard Lock · maatram-hardlock-v2.5-beta.apk (build 38)</h3>
     <div class="hashbox">
-      <p class="hash">1cc5d4e4d0a036a8ce6d4e1cfeb643ccc4c56d2c30aa6459da570d3ccd38795d</p>
+      <p class="hash">bf0cc9ffd98979c88e8944b6ab379573851a8ec7044e55f592090a00ce5e7940</p>
       <button class="copy" type="button">Copy hash</button>
-      <pre>Windows   certutil -hashfile maatram-hardlock-v2.4.4-alpha.apk SHA256
-macOS     shasum -a 256 maatram-hardlock-v2.4.4-alpha.apk
-Linux     sha256sum maatram-hardlock-v2.4.4-alpha.apk</pre>
+      <pre>Windows   certutil -hashfile maatram-hardlock-v2.5-beta.apk SHA256
+macOS     shasum -a 256 maatram-hardlock-v2.5-beta.apk
+Linux     sha256sum maatram-hardlock-v2.5-beta.apk</pre>
     </div>
   </section>
 
@@ -588,12 +588,12 @@ Linux     sha256sum maatram-hardlock-v2.4.4-alpha.apk</pre>
     <h3 class="for">Hard Lock</h3>
     <dl class="spec">
       <dt>Package</dt><dd>com.maatram.hardlock</dd>
-      <dt>Version</dt><dd>2.4.4 alpha (version code 20) · build 33</dd>
-      <dt>Size</dt><dd>2 957 323 bytes · 2.82 MB</dd>
+      <dt>Version</dt><dd>2.5 beta (version code 21) · build 38</dd>
+      <dt>Size</dt><dd>3 478 578 bytes · 3.32 MB</dd>
       <dt>Requires</dt><dd>Android 8.0 (API 26) or newer · built against API 34</dd>
-      <dt>Permissions</dt><dd>Start at boot · exact alarms · see installed apps (to choose apps to lock) · ask to run without battery limits · "Hard Lock is on" notification while a lock runs</dd>
+      <dt>Permissions</dt><dd>Start at boot · exact alarms · see installed apps (to choose apps to lock) · ask to run without battery limits · usage access (optional, for daily limits and screen-time sorting) · "Hard Lock is on" notification while a lock runs</dd>
       <dt>Service</dt><dd>BlockerService (Maatram Focus Shield) — the accessibility service
-        that blocks apps during a Hard Lock</dd>
+        that blocks apps during a Hard Lock, and runs the pause screen and daily limits outside one</dd>
       <dt>Device admin</dt><dd>Optional — stops the app being uninstalled while a lock runs</dd>
       <dt>Signing</dt><dd>Debug key, new for every build</dd>
       <dt>Source</dt><dd><a href="https://github.com/MaatramReelsBlocking/maatram-hard-lock"
