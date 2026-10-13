@@ -1001,7 +1001,10 @@ async function pollLink(){
 renderLink();
 setInterval(pollLink,30000); setTimeout(pollLink,1500);
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) pollLink(); });
+let starting=false; // a double tap must not start the lock twice
 lockBtn.addEventListener('click', async ()=>{
+
+  if(starting) return;
 
   if(body.classList.contains('locked')){
 
@@ -1024,6 +1027,7 @@ lockBtn.addEventListener('click', async ()=>{
     Date.now() + total * 1000;
 
 
+  starting=true;
   try {
 
     /* Start Chrome extension blocking (your sites first, so they lock too) */
@@ -1097,6 +1101,7 @@ lockBtn.addEventListener('click', async ()=>{
     )) window.open("https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen", "_blank", "noopener");
 
   }
+  finally { starting=false; }
 
 });
 

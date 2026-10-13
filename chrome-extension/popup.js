@@ -386,6 +386,7 @@ siteForm.addEventListener("submit", async event => {
   if (!value) return;
   askSiteAccess([cleanSite(value)]); // not awaited: the prompt can close the popup
   const { customSites = [] } = await chrome.storage.local.get("customSites");
+  if (customSites.includes(cleanSite(value))) { siteError.textContent = "That site is already on your list."; return; }
   siteInput.value = "";
   await saveSites(customSites.concat(value));
   const after = (await chrome.storage.local.get("customSites")).customSites || [];

@@ -864,6 +864,7 @@ el.puSkip.addEventListener('click',  () => closePU(false));
 addEventListener('keydown', e => {
   if (el.pu.classList.contains('on')) return;
   if (e.target.closest('button,input,select,textarea')) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return; // Ctrl+R is reload, not reset
   if (e.key === ' ') { e.preventDefault(); el.go.click(); }
   if (e.key.toLowerCase() === 'r') el.reset.click();
 });

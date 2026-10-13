@@ -361,7 +361,7 @@ async function boot(){
     e.preventDefault();
     const name=$('nameIn').value.replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,40).trim(), msg=$('nameMsg'), user=auth.currentUser;
     if(!user) return;
-    if(name.length<2){ msg.textContent='Use 2–20 characters.'; return; }
+    if(name.length<2){ msg.textContent='Use 2–40 characters.'; return; }
     $('nameSave').disabled=true; msg.textContent='Saving…';
     try{
       await updateProfile(user,{displayName:name});

@@ -13,6 +13,27 @@ const MAX_CUSTOM_SITES = 50;
 const LOCK_ALARM = "maatram-hard-lock";
 const NOCOOKIE_RULE_ID = RULE_ID_START + BLOCKED_DOMAINS.length;
 
+// Lock changes run one at a time, so an expiring lock can't undo a new one
+// and two starts at once can't shorten a longer lock.
+let lockQueue = Promise.resolve();
+function serial(fn) {
+  return (...args) => {
+    const p = lockQueue.then(() => fn(...args));
+    lockQueue = p.catch(() => {});
+    return p;
+  };
+}
+
+// A lock is still on while its alarm is set, even if the computer's clock was moved past its end.
+async function lockRunning(data) {
+  return Boolean(data.hardLockActive && (Number(data.hardLockEndTime) > Date.now() || await chrome.alarms.get(LOCK_ALARM)));
+}
+
+// "co.in" would block maatram.co.in too.
+function blocksMaatram(d) {
+  return /(^|\.)maatram\.co\.in$/.test(d) || "maatram.co.in".endsWith("." + d);
+}
+
 
 async function createBlockingRules(sel) {
 
@@ -62,7 +83,7 @@ function normalizeSite(value) {
     .replace(/^www\./, "");
 
   if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d)) return "";
-  if (/(^|\.)maatram\.co\.in$/.test(d)) return "";
+  if (blocksMaatram(d)) return "";
   if (BLOCKED_DOMAINS.includes(d)) return "";
   return d;
 
@@ -81,7 +102,7 @@ async function setCustomSites(list) {
 
   const data = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime"]);
 
-  if (data.hardLockActive && Number(data.hardLockEndTime) > Date.now()) {
+  if (await lockRunning(data)) {
     throw new Error("You can change your sites after the lock ends.");
   }
 
@@ -131,7 +152,7 @@ const MAX_SELECTED = 40;
 function normalizeSelected(list) {
   return [...new Set((Array.isArray(list) ? list : []).map(v =>
     String(v || "").trim().toLowerCase().replace(/^www\./, "")
-  ).filter(d => /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) && !/(^|\.)maatram\.co\.in$/.test(d)))].slice(0, MAX_SELECTED);
+  ).filter(d => /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) && !blocksMaatram(d)))].slice(0, MAX_SELECTED);
 }
 
 async function getSelected() {
@@ -141,7 +162,7 @@ async function getSelected() {
 
 async function setSelected(list) {
   const data = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime"]);
-  if (data.hardLockActive && Number(data.hardLockEndTime) > Date.now()) {
+  if (await lockRunning(data)) {
     throw new Error("You can change your blocked apps after the lock ends.");
   }
   if (list === null) { await chrome.storage.local.remove("selectedDomains"); return null; }
@@ -225,7 +246,7 @@ async function startHardLock(minutes) {
 
 
 /* Locks until an exact time (used by the toolbar, the website and linked devices). */
-async function lockUntil(endTime) {
+const lockUntil = serial(async function (endTime) {
 
   const cur = await chrome.storage.local.get(["hardLockActive", "hardLockEndTime", "hardLockStartTime"]);
   const running = cur.hardLockActive && Number(cur.hardLockEndTime) > Date.now();
@@ -272,7 +293,7 @@ async function lockUntil(endTime) {
     }
   );
 
-}
+});
 
 
 async function stopHardLock() {
@@ -490,7 +511,7 @@ chrome.alarms.onAlarm.addListener(
 );
 
 
-async function checkLockState() {
+const checkLockState = serial(async function () {
 
   const data =
     await chrome.storage.local.get([
@@ -555,7 +576,7 @@ async function checkLockState() {
 
   }
 
-}
+});
 
 
 /* maatram.co.in's clock; this computer's if the site can't be reached. */
