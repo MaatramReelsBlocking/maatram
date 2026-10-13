@@ -6,8 +6,8 @@ Maatram is an open-source tool that helps students cut their own screen time —
 nagging them, but by putting friction, points and other people between them and the app
 they were about to open.
 
-It started as a school business project at SSVM School of Excellence (class 10B, team of
-five) and now runs as a live website, an Android app and a Chrome extension.
+It started as a school business project at SSVM School of Excellence (team of
+four) and now runs as a live website, an Android app and a Chrome extension.
 
 - **Live:** https://maatram.co.in
 - **Blog:** [How to Stop Scrolling Reels: 5 Friction Tricks for Students](https://maatram.co.in/blog-stop-scrolling-reels.html) ([also on Medium](https://medium.com/@maatram97/how-to-stop-scrolling-reels-5-friction-tricks-for-students-433ddce8cfaa))

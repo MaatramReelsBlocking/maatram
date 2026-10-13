@@ -39,7 +39,7 @@
   { id: 'age', q: 'How old are you?', k: ['how old are you', 'your age', 'when were you born', 'age'],
     a: "I'm pretty new, born in 2026 on maatram.co.in. basically a baby AI with a katana." },
   { id: 'where', q: 'Where are you from?', k: ['where are you from', 'where do you live', 'which country', 'coimbatore'],
-    a: 'I live on maatram.co.in. my creators are five class 10B students at SSVM School of Excellence, Coimbatore 🇮🇳', l: ['Meet the team', '/about.html'] },
+    a: 'I live on maatram.co.in. my creators are four students at SSVM School of Excellence, Coimbatore 🇮🇳', l: ['Meet the team', '/about.html'] },
   { id: 'katana', q: 'Why do you have a katana?', k: ['katana', 'sword', 'ninja', 'ronin', 'samurai', 'your icon', 'your logo'],
     a: "the katana slices distractions 🗡️📱 a ronin is a samurai with no master, and that's me: no algorithm controls me, I just help you focus." },
   { id: 'tamil', q: 'Can you speak Tamil or Hindi?', k: ['tamil', 'hindi', 'other language', 'speak tamil', 'speak hindi', 'language', 'tanglish', 'hinglish'],

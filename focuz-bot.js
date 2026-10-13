@@ -22,7 +22,7 @@
     { id: 'data', q: 'Where is my data stored?', k: ['data', 'privacy', 'stored', 'store', 'safe', 'track', 'spy', 'collect', 'personal'],
       a: "the screen-time numbers you type on Stats stay in your own browser. if you sign in, your name, photo and points are saved to your account so they can show on the Leaderboard. Study Room messages go through a public relay and aren't stored, so never drop personal details there.", l: ['Privacy policy', '/privacy.html'] },
     { id: 'who', q: 'Who built Maatram?', k: ['who built', 'who made', 'team', 'creator', 'ssvm', 'school', 'students', 'developer'],
-      a: 'five class 10B students at SSVM School of Excellence, Coimbatore. inspired by Gen Z, made by Gen Z, made for Gen Z 🫡', l: ['About the team', '/about.html'] },
+      a: 'four students at SSVM School of Excellence, Coimbatore. inspired by Gen Z, made by Gen Z, made for Gen Z 🫡', l: ['About the team', '/about.html'] },
 
     // Points
     { id: 'points', q: 'How do points work?', k: ['points work', 'points', 'pts', 'score', 'earn', 'how to earn', 'reward', 'balance', 'lose points', 'penalty'],

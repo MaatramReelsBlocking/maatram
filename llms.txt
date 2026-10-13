@@ -1,6 +1,6 @@
 # Maatram
 
-> Maatram is a free focus and digital wellbeing app for students, built by class 10B at SSVM School of Excellence. It cuts screen time with an app gate, focus timers, live study rooms and a points system. Every tool opens without an account; signing in (Google only) saves points. Web app plus an Android build and a Chrome extension. Tagline: Bringing a change in you.
+> Maatram is a free focus and digital wellbeing app for students, built by a team of four students at SSVM School of Excellence. It cuts screen time with an app gate, focus timers, live study rooms and a points system. Every tool opens without an account; signing in (Google only) saves points. Web app plus an Android build and a Chrome extension. Tagline: Bringing a change in you.
 
 Everything on the site runs on one points balance: finishing focus sessions, study-room time and Wellness daily checks pays points, breaking an app lock costs them.
 
