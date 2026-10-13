@@ -179,6 +179,7 @@ node test-csp.js
 node test-gate.js
 node test-points.js
 node test-sports.js
+node test-link.js
 ```
 
 ---

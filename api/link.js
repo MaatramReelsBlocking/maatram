@@ -1,4 +1,4 @@
-/* Linked devices — one Hard Lock for the website, the phone app and the Chrome extension.
+/* Linked devices — one Hard Lock for the website, the phone app, the Chrome extension and the Windows app.
    A device holds a link code (8 letters/digits). Starting a lock anywhere stores its end time
    under that code; every linked device checks the code and locks until that time.
    Runs as a Vercel Node function at /api/link. Storage: Firestore links/{code} (see firestore.rules).
@@ -13,11 +13,11 @@ const PROJECT = 'maatram-859f4';
 const KEY = 'AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ';   // public web key (same as firebase-config.js)
 const CODE = /^[A-HJ-NP-Z2-9]{8}$/;
 const MAX_MIN = 90;
-const BY = new Set(['web', 'phone', 'chrome']);
+const BY = new Set(['web', 'phone', 'chrome', 'pc']);
 const DOC = (c) => `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/links/${c}?key=${KEY}`;
 const HDR = { 'Content-Type': 'application/json', Referer: 'https://maatram.co.in/' };
 
-/* best-effort per-instance limiter: 40 requests/minute per IP (a device polls once a minute) */
+/* best-effort per-instance limiter: 300 requests/minute per IP (a device polls once a minute) */
 const hits = new Map();
 function limited(ip) {
   const now = Date.now(), list = (hits.get(ip) || []).filter((t) => now - t < 6e4);
@@ -49,7 +49,9 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ...cur, now: Date.now() });
     }
     if (req.method === 'POST') {
-      const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
+      let b;
+      try { b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {}; } catch (_) { b = null; }   // Vercel's req.body getter throws on bad JSON
+      if (!b || typeof b !== 'object') return res.status(400).json({ error: 'bad request' });
       const code = String(b.code || '').toUpperCase(), minutes = Math.round(Number(b.minutes)), by = BY.has(b.by) ? b.by : 'web';
       if (!CODE.test(code) || !(minutes >= 1 && minutes <= MAX_MIN)) return res.status(400).json({ error: 'bad request' });
       const now = Date.now(), end = now + minutes * 60000, cur = await read(code);
