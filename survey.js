@@ -48,8 +48,9 @@
     var p = document.createElement('div');
     p.id = 'svPop';
     p.innerHTML = '<div class="sv-card" role="dialog" aria-modal="true" aria-labelledby="svT">' +
-      '<h2 id="svT">Enjoying Maatram?</h2><p>Take our 1-minute survey. Every rating shows up on the <a href="/ratings.html" style="color:#2fe38f">Ratings</a> page.</p>' +
-      '<a class="sv-btn sv-main" href="' + URL + '" target="_blank" rel="noopener" data-close>Take the survey</a>' +
+      '<h2 id="svT">Enjoying Maatram?</h2><p>Give us a star rating. It shows up live on the Ratings page.</p>' +
+      '<div class="sv-row" style="margin-top:0"><a class="sv-btn sv-main" href="/ratings.html#rate" data-close>Rate Maatram</a>' +
+      '<a class="sv-btn" href="' + URL + '" target="_blank" rel="noopener" data-close>Take the survey</a></div>' +
       '<small>Or send the link to a friend</small></div>';
     p.querySelector('small').after(box());
     var row = document.createElement('div'); row.className = 'sv-row';

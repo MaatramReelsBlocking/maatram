@@ -173,6 +173,20 @@ service cloud.firestore {
                         || request.resource.data.end >= resource.data.end);
     }
 
+    /* Reviews on ratings.html: one per signed-in account (doc id = uid), editable by its
+       author, readable by everyone so the page works signed out. Moderator can remove one. */
+    match /reviews/{uid} {
+      allow read: if true;
+      allow create, update: if isOwner(uid)
+                    && get(/databases/$(database)/documents/users/$(uid)).data.get('banned', false) != true
+                    && neu().keys().hasOnly(['stars','text','name','at'])
+                    && neu().stars is int && neu().stars >= 1 && neu().stars <= 5
+                    && neu().text is string && neu().text.size() <= 400
+                    && safeText(neu().name, 40)
+                    && neu().at == request.time;
+      allow delete: if isOwner(uid) || isListingModerator();
+    }
+
     /* Nothing else is reachable from a browser. */
     match /{document=**} {
       allow read, write: if false;

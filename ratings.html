@@ -153,6 +153,13 @@
   .rev{padding:16px 0;border-top:1px solid rgba(255,255,255,.08)}.rev:first-child{border-top:0}
   .rev p{margin:8px 0 4px;line-height:1.6;font-size:14.5px}.rev small{color:var(--dim);font-size:12px}
   .rev .stars{font-size:16px}
+  .rv-stars{display:flex;gap:6px;margin:4px 0 14px}
+  .rv-stars button{width:48px;height:48px;border:0;background:none;cursor:pointer;font-size:38px;line-height:1;color:rgba(255,255,255,.2);transition:color .15s,transform .15s}
+  .rv-stars button.on{color:#ffd166}html.minimal .rv-stars button.on{color:#ECEFEE}
+  .rv-stars button:hover{transform:scale(1.12)}
+  #rvText{width:100%;min-height:90px;padding:12px 14px;border-radius:14px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);color:var(--ink);font:14px/1.5 inherit;font-family:inherit;resize:vertical;margin-bottom:12px}
+  .rv-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .rev b{font-size:13px;margin-left:8px}
   .rt-note{color:var(--dim);font-size:12px;text-align:center;margin:-8px 0 22px}
 
 /* ══ MAATRAM UNIVERSAL NAV ══ */
@@ -298,9 +305,15 @@ body{padding-top:52px!important}
 
   <section class="rt-card" id="rate">
     <h2 class="rt-h">Rate Maatram</h2>
-    <p class="rt-sub">Take the 1-minute survey, or send the link to a friend.</p>
-    <a class="sv-btn sv-main" href="https://maatram.co.in/survey" target="_blank" rel="noopener">Take the survey</a>
-    <div data-survey-share style="margin-top:14px"></div>
+    <p class="rt-sub" id="rvHint">Tap the stars. Your rating shows up here instantly.</p>
+    <div class="rv-stars" role="radiogroup" aria-label="Your rating">
+      <button type="button" role="radio" aria-checked="false" aria-label="1 star" data-s="1">★</button><button type="button" role="radio" aria-checked="false" aria-label="2 stars" data-s="2">★</button><button type="button" role="radio" aria-checked="false" aria-label="3 stars" data-s="3">★</button><button type="button" role="radio" aria-checked="false" aria-label="4 stars" data-s="4">★</button><button type="button" role="radio" aria-checked="false" aria-label="5 stars" data-s="5">★</button>
+    </div>
+    <label class="sr-only" for="rvText">Your review (optional)</label>
+    <textarea id="rvText" maxlength="400" placeholder="What do you like, or what should we fix? (optional)"></textarea>
+    <div class="rv-row"><button type="button" class="sv-btn sv-main" id="rvSend">Post rating</button><span id="rvMsg" class="rt-n" aria-live="polite"></span></div>
+    <p class="rt-sub" style="margin:22px 0 10px">Got 1 more minute? <a href="https://maatram.co.in/survey" target="_blank" rel="noopener" style="color:#2fe38f">Take the full survey</a>, or send it to a friend.</p>
+    <div data-survey-share></div>
   </section>
 
   <section class="rt-card" id="rtRevWrap" hidden>
@@ -317,30 +330,82 @@ body{padding-top:52px!important}
 <script>
 
 
-/* ══ ratings: /api/ratings reads the survey's response sheet ══ */
-(async function load(){
-  setTimeout(load,120000);   // live: re-read every 2 minutes
+/* ══ ratings: live site reviews (Firestore reviews/{uid}) + survey answers (/api/ratings) ══ */
+(function(){
   const $=id=>document.getElementById(id), esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const bar=(label,n,total)=>'<div class="bar"><span title="'+esc(label)+'">'+esc(label)+'</span><i><b style="--w:'+(total?Math.round(n/total*100):0)+'%"></b></i><span>'+n+'</span></div>';
   const stars=v=>'<span class="stars" style="--p:'+(v/5*100)+'%" role="img" aria-label="'+v+' out of 5 stars">★★★★★</span>';
-  let d;
-  try{ const r=await fetch('/api/ratings'); if(!r.ok) throw 0; d=await r.json(); }
-  catch(_){ $('rtN').textContent='Ratings could not load right now. Try again later.'; return; }
-  $('rtAvg').textContent=d.rated?d.average.toFixed(1):'–';
-  $('rtStars').style.setProperty('--p',(d.average/5*100)+'%');
-  $('rtN').textContent=d.rated?('Based on '+d.rated+' rating'+(d.rated===1?'':'s')):'No ratings yet';
-  $('rtDist').innerHTML=[5,4,3,2,1].map(k=>bar(k+' star'+(k>1?'s':''),d.dist[k]||0,d.rated)).join('');
-  if(!d.live){ $('rtNote').textContent='Showing responses up to '+new Date(d.asOf).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+'.'; $('rtNote').hidden=false; }
-  if(d.reviews.length){
-    $('rtRev').innerHTML=d.reviews.map(r=>'<div class="rev">'+(r.stars?stars(r.stars):'')+'<p>'+esc(r.text)+'</p><small>'+esc((r.at||'').split(' ')[0])+'</small></div>').join('');
-    $('rtRevWrap').hidden=false;
+  const day=d=>d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  let survey=null, site=[], qsDone=false;
+
+  function paint(){
+    const dist={1:0,2:0,3:0,4:0,5:0}; let sum=0,n=0;
+    if(survey) for(const k in survey.dist){ dist[k]+=survey.dist[k]; sum+=k*survey.dist[k]; n+=survey.dist[k]; }
+    site.forEach(r=>{ dist[r.stars]++; sum+=r.stars; n++; });
+    const avg=n?Math.round(sum/n*10)/10:0;
+    $('rtAvg').textContent=n?avg.toFixed(1):'–';
+    $('rtStars').style.setProperty('--p',(avg/5*100)+'%');
+    $('rtN').textContent=n?('Based on '+n+' rating'+(n===1?'':'s')):(survey?'No ratings yet':'Loading ratings…');
+    $('rtDist').innerHTML=[5,4,3,2,1].map(k=>bar(k+' star'+(k>1?'s':''),dist[k],n)).join('');
+    const rows=site.filter(r=>r.text).map(r=>({stars:r.stars,text:r.text,who:r.name,at:r.at?day(r.at):''}))
+      .concat(survey?survey.reviews.map(r=>({stars:r.stars,text:r.text,who:'Survey',at:(r.at||'').split(' ')[0]})):[]);
+    $('rtRev').innerHTML=rows.map(r=>'<div class="rev">'+(r.stars?stars(r.stars):'')+'<b>'+esc(r.who)+'</b><p>'+esc(r.text)+'</p><small>'+esc(r.at)+'</small></div>').join('');
+    $('rtRevWrap').hidden=!rows.length;
+    if(survey&&!survey.live){ $('rtNote').textContent='Survey answers up to '+day(new Date(survey.asOf))+'. Star ratings posted here are live.'; $('rtNote').hidden=false; }
+    if(survey&&!qsDone){ qsDone=true;
+      const qs=survey.questions.filter(q=>!/overall.*rate/i.test(q.q));
+      $('rtQs').innerHTML=qs.map(q=>{const e=Object.entries(q.counts).sort((a,b)=>b[1]-a[1]),t=e.reduce((s,x)=>s+x[1],0);
+        return '<div class="rt-card"><h3>'+esc(q.q)+'</h3>'+e.map(x=>bar(x[0],x[1],t)).join('')+'</div>';}).join('');
+      $('rtQh').hidden=!qs.length;
+    }
   }
-  const qs=d.questions.filter(q=>!/overall.*rate/i.test(q.q));
-  if(qs.length){
-    $('rtQs').innerHTML=qs.map(q=>{const e=Object.entries(q.counts).sort((a,b)=>b[1]-a[1]),t=e.reduce((s,x)=>s+x[1],0);
-      return '<div class="rt-card"><h3>'+esc(q.q)+'</h3>'+e.map(x=>bar(x[0],x[1],t)).join('')+'</div>';}).join('');
-    $('rtQh').hidden=false;
-  }
+
+  (async function load(){
+    setTimeout(load,120000);
+    try{ const r=await fetch('/api/ratings'); if(r.ok){ survey=await r.json(); paint(); } }catch(_){}
+  })();
+
+  /* star picker */
+  let pick=0;
+  const btns=[...document.querySelectorAll('.rv-stars button')];
+  const show=v=>btns.forEach(b=>{const on=+b.dataset.s<=v;b.classList.toggle('on',on);b.setAttribute('aria-checked',String(+b.dataset.s===v));});
+  btns.forEach(b=>{b.onclick=()=>{pick=+b.dataset.s;show(pick);};b.onmouseenter=()=>show(+b.dataset.s);});
+  document.querySelector('.rv-stars').onmouseleave=()=>show(pick);
+
+  if(!(location.protocol==='https:'||location.protocol==='http:')) return;
+  (async()=>{
+    try{
+      const V='https://www.gstatic.com/firebasejs/10.12.2/';
+      const [{initializeApp,getApps,getApp},{getAuth,onAuthStateChanged},fs]=await Promise.all([
+        import(V+'firebase-app.js'),import(V+'firebase-auth.js'),import(V+'firebase-firestore.js')]);
+      const app=getApps().length?getApp():initializeApp(window.MAATRAM_FB), db=fs.getFirestore(app), auth=getAuth(app);
+      /* live: every new or edited review appears for everyone without a reload */
+      fs.onSnapshot(fs.query(fs.collection(db,'reviews'),fs.orderBy('at','desc'),fs.limit(200)),snap=>{
+        site=snap.docs.map(d=>{const v=d.data();return{id:d.id,stars:v.stars,text:v.text||'',name:v.name||'Student',at:v.at&&v.at.toDate?v.at.toDate():null};})
+          .filter(r=>r.stars>=1&&r.stars<=5);
+        paint();
+        const me=auth.currentUser&&site.find(r=>r.id===auth.currentUser.uid);
+        if(me&&!pick){ pick=me.stars; show(pick); $('rvText').value=me.text; $('rvSend').textContent='Update rating'; }
+      },e=>console.warn('reviews',e));
+      let user=null;
+      onAuthStateChanged(auth,u=>{ user=u;
+        $('rvHint').innerHTML=u?'Tap the stars. Your rating shows up here instantly.':'<a href="login.html" style="color:#2fe38f">Sign in</a> to post a rating (one per account, you can edit it later).';
+      });
+      $('rvSend').onclick=async()=>{
+        const msg=$('rvMsg');
+        if(!user){ location.href='login.html'; return; }
+        if(!pick){ msg.textContent='Pick 1 to 5 stars first.'; return; }
+        $('rvSend').disabled=true; msg.textContent='Posting…';
+        try{
+          const ud=await fs.getDoc(fs.doc(db,'users',user.uid));
+          const name=String((ud.exists()&&ud.data().name)||user.displayName||'Student').trim().slice(0,40)||'Student';
+          await fs.setDoc(fs.doc(db,'reviews',user.uid),{stars:pick,text:$('rvText').value.trim().slice(0,400),name,at:fs.serverTimestamp()});
+          msg.textContent='Thanks! Your rating is live.'; $('rvSend').textContent='Update rating';
+        }catch(e){ console.warn('review',e); msg.textContent=/permission/i.test(e.code||e.message)?'Could not post: reviews are not switched on yet.':'Could not post. Try again.'; }
+        $('rvSend').disabled=false;
+      };
+    }catch(e){ console.warn('reviews',e); }
+  })();
 })();
 
 

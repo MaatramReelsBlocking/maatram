@@ -33,6 +33,7 @@ function page(file, { seen = false, data } = {}) {
   const pop = w.document.getElementById('svPop');
   ok(!!pop, 'pop-up shows for a new visitor');
   ok(pop && pop.querySelector('a[href*="mailto:"]') && pop.querySelector('a[href*="wa.me"]'), 'pop-up has mail + WhatsApp share');
+  ok(pop && pop.querySelector('a.sv-main').getAttribute('href') === '/ratings.html#rate', 'pop-up leads to the star rating');
   ok(Date.now() - +w.localStorage.getItem('maatram_survey_seen') < 5000, 'shown time saved');
   pop.querySelector('[data-close]:not(.sv-main)').click();
   ok(!w.document.getElementById('svPop'), 'Maybe later closes it');
@@ -58,7 +59,7 @@ function page(file, { seen = false, data } = {}) {
   await api({}, res); console.warn = warn;
   w = page('ratings.html', { seen: true, data: res.o });
   const inline = [...w.document.querySelectorAll('script:not([src]):not([type])')].map((x) => x.textContent);
-  inline.filter((c) => !c.includes('firebasejs')).forEach((code) => { try { w.eval(code); } catch (_) {} });
+  inline.filter((c) => !c.includes('universal nav auth')).forEach((code) => { try { w.eval(code); } catch (_) {} });
   w.eval(SURVEY);
   await new Promise((r) => setTimeout(r, 50));
   const d = w.document;
@@ -70,6 +71,9 @@ function page(file, { seen = false, data } = {}) {
   ok(d.querySelectorAll('#rtQs .rt-card').length === 9, 'survey answer cards rendered');
   ok(d.querySelector('a.mn-link.active').getAttribute('href') === 'ratings.html', 'nav marks Ratings active');
   ok(!!d.querySelector('#rate .sv-box'), 'share box on ratings page');
+  const st = d.querySelectorAll('.rv-stars button');
+  st[3].click();
+  ok(st.length === 5 && [...st].filter((b) => b.classList.contains('on')).length === 4, 'star picker selects 4 stars');
 
   console.log(`\n  ${pass} passed, ${fail} failed   (survey + ratings)`);
   process.exit(fail ? 1 : 0);
