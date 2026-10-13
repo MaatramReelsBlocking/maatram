@@ -1,0 +1,49 @@
+# Emails the Leaderboard's top 3 their certificate on the 1st of every month, 9:00 am IST.
+# Manual run: Actions tab -> Monthly certificates -> Run workflow (pick a month, or a dry run
+# that only renders the PNGs as a downloadable artifact). Each month is emailed only once.
+# Needs repo secrets FIREBASE_SERVICE_ACCOUNT and GMAIL_APP_PASSWORD (see .github/certificates/send.mjs).
+name: Monthly certificates
+
+on:
+  schedule:
+    - cron: '30 3 1 * *'   # 1st of the month 03:30 UTC = 09:00 IST
+  workflow_dispatch:
+    inputs:
+      month:
+        description: 'Month to award, like 2026-10 (blank = last month)'
+        required: false
+      dry_run:
+        description: 'Dry run: render certificates only, send no email'
+        type: boolean
+        default: true
+
+concurrency:
+  group: certificates
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: .github/certificates
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - name: Send certificates
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MONTH: ${{ inputs.month }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
+        run: node send.mjs
+      - if: ${{ inputs.dry_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: certificates-preview
+          path: .github/certificates/out/
+          retention-days: 3

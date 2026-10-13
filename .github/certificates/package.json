@@ -1,0 +1,10 @@
+{
+  "name": "maatram-certificates",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.65",
+    "firebase-admin": "^13.0.0",
+    "nodemailer": "^6.9.16"
+  }
+}

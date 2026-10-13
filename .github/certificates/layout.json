@@ -1,0 +1,8 @@
+{
+  "_help": "Positions are fractions of the template: x 0 = left edge, 1 = right edge; y 0 = top, 1 = bottom. size = text height as a fraction of the template height. maxWidth = widest the text may get (long names shrink to fit). Remove the rank block if the certificate has no place for it.",
+  "fonts": [{ "file": "font-bold.ttf", "family": "Maatram Bold" }],
+  "text": {
+    "name":  { "x": 0.5, "y": 0.50, "size": 0.075, "maxWidth": 0.70, "font": "Maatram Bold", "color": "#111111" },
+    "month": { "x": 0.5, "y": 0.63, "size": 0.035, "maxWidth": 0.60, "font": "Maatram Bold", "color": "#333333" }
+  }
+}
