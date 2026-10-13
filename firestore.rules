@@ -167,7 +167,7 @@ service cloud.firestore {
                     && request.resource.data.minutes >= 1 && request.resource.data.minutes <= 90
                     && request.resource.data.end > request.time.toMillis()
                     && request.resource.data.end <= request.time.toMillis() + 91 * 60 * 1000
-                    && request.resource.data.by in ['web','phone','chrome']
+                    && request.resource.data.by in ['web','phone','chrome','pc']
                     && (resource == null
                         || resource.data.end <= request.time.toMillis()
                         || request.resource.data.end >= resource.data.end);

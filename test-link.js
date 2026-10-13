@@ -29,6 +29,7 @@ const call=(method,{query={},body,throwBody}={})=>new Promise(done=>{
   ok('POST shorter lock is 409',      (await call('POST',{body:{code:'ABCD2345',minutes:10}})).s===409);
   ok('POST longer lock extends',      (await call('POST',{body:{code:'ABCD2345',minutes:60}})).s===200);
   ok('POST unknown "by" becomes web', (await call('POST',{body:{code:'WXYZ2345',minutes:5,by:'x'}})).j.by==='web');
+  ok('POST from the Windows app keeps "pc"', (await call('POST',{body:{code:'PCPC2345',minutes:5,by:'pc'}})).j.by==='pc');
   ok('OPTIONS is 204',                (await call('OPTIONS')).s===204);
   console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail?1:0);
 })();
