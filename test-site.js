@@ -52,8 +52,7 @@ ok('every page links to the download page', missingNav.length === 0, missingNav.
 const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 ok('home footer links to it too', /Download the Android app/.test(idx));
 ok('nav link added exactly once per page', navPages.every(p =>
-  (fs.readFileSync(path.join(ROOT, p), 'utf8').match(/href="download\.html"/g) || []).length ===
-  (p === 'index.html' ? 2 : 1)));
+  (fs.readFileSync(path.join(ROOT, p), 'utf8').match(/class="mn-link[^"]*" href="download\.html"/g) || []).length === 1));
 
 /* ---- no stale references to the old file name ---- */
 /* vercel.json legitimately names the old path as a redirect SOURCE - excluded */
