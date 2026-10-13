@@ -9,7 +9,7 @@ function page(file, { seen = false, data } = {}) {
   const html = fs.readFileSync(path.join(__dirname, file), 'utf8').replace(/<script\b[^>]*\bsrc=[^>]*><\/script>/g, '');
   const dom = new JSDOM(html, { url: 'https://maatram.co.in/' + file, runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window;
-  if (seen) w.localStorage.setItem('maatram_survey_seen', '1');
+  if (seen) w.localStorage.setItem('maatram_survey_seen', String(seen === 'old' ? Date.now() - 8 * 864e5 : Date.now()));
   w.matchMedia = () => ({ matches: false, addEventListener() {} });
   w.HTMLCanvasElement.prototype.getContext = () => new Proxy({}, { get: () => () => {} });
   w.fetch = async (u) => ({ ok: true, json: async () => data });
@@ -33,7 +33,7 @@ function page(file, { seen = false, data } = {}) {
   const pop = w.document.getElementById('svPop');
   ok(!!pop, 'pop-up shows for a new visitor');
   ok(pop && pop.querySelector('a[href*="mailto:"]') && pop.querySelector('a[href*="wa.me"]'), 'pop-up has mail + WhatsApp share');
-  ok(w.localStorage.getItem('maatram_survey_seen') === '1', 'marked seen once shown');
+  ok(Date.now() - +w.localStorage.getItem('maatram_survey_seen') < 5000, 'shown time saved');
   pop.querySelector('[data-close]:not(.sv-main)').click();
   ok(!w.document.getElementById('svPop'), 'Maybe later closes it');
 
@@ -42,7 +42,14 @@ function page(file, { seen = false, data } = {}) {
   w.setTimeout = ((st) => (f, ms) => st(f, 0))(w.setTimeout);
   w.eval(SURVEY);
   await new Promise((r) => setTimeout(r, 30));
-  ok(!w.document.getElementById('svPop'), 'no pop-up for a returning visitor');
+  ok(!w.document.getElementById('svPop'), 'no pop-up for a visitor who saw it this week');
+
+  // a week later: shows again
+  w = page('socials.html', { seen: 'old' });
+  w.setTimeout = ((st) => (f, ms) => st(f, 0))(w.setTimeout);
+  w.eval(SURVEY);
+  await new Promise((r) => setTimeout(r, 30));
+  ok(!!w.document.getElementById('svPop'), 'pop-up returns after 7 days');
 
   // ratings page
   const res = { setHeader() {}, status() { return this; }, json(o) { this.o = o; } };

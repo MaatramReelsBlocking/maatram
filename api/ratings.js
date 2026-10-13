@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
     console.warn('ratings', e.message);
     out = summarize(SNAPSHOT, false);
   }
-  res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=3600');
+  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
   return res.status(200).json(out);
 };
 

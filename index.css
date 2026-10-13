@@ -329,3 +329,5 @@ html.m-index .m-card .mc-t{display:block;font-family:var(--font-display,"Fredoka
 .mc-link:focus-visible{outline:none}.m-card:focus-within{outline:2px solid #9CC0B2;outline-offset:3px}
 #mfoot .fh{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#7f8b8d;margin:0 0 12px;font-weight:700}
 button.fcard{font:inherit;width:100%;text-align:center}
+
+.m-team{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;max-width:820px}.m-team li{padding:16px 18px;border-radius:18px;border:1px solid var(--stroke,rgba(255,255,255,.13));background:var(--card,rgba(255,255,255,.05))}.m-team b{display:block;color:var(--ink,#ECEFEE);font-size:16px;font-weight:700}.m-team span{display:block;margin-top:4px;color:var(--dim,#8A928E);font-size:13px}

@@ -318,7 +318,8 @@ body{padding-top:52px!important}
 
 
 /* ══ ratings: /api/ratings reads the survey's response sheet ══ */
-(async()=>{
+(async function load(){
+  setTimeout(load,120000);   // live: re-read every 2 minutes
   const $=id=>document.getElementById(id), esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const bar=(label,n,total)=>'<div class="bar"><span title="'+esc(label)+'">'+esc(label)+'</span><i><b style="--w:'+(total?Math.round(n/total*100):0)+'%"></b></i><span>'+n+'</span></div>';
   const stars=v=>'<span class="stars" style="--p:'+(v/5*100)+'%" role="img" aria-label="'+v+' out of 5 stars">★★★★★</span>';

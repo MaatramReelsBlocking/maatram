@@ -1,4 +1,4 @@
-/* Maatram survey: one-time "rate us" pop-up for new visitors, plus a copy/share box
+/* Maatram survey: weekly "rate us" pop-up, plus a copy/share box
    that fills any element with [data-survey-share]. Short link /survey redirects to the
    Google Form (vercel.json). Loaded with defer on every page. */
 (function () {
@@ -44,7 +44,7 @@
   }
 
   function popup() {
-    try { localStorage.setItem(KEY, '1'); } catch (_) {}
+    try { localStorage.setItem(KEY, String(Date.now())); } catch (_) {}
     var p = document.createElement('div');
     p.id = 'svPop';
     p.innerHTML = '<div class="sv-card" role="dialog" aria-modal="true" aria-labelledby="svT">' +
@@ -65,8 +65,8 @@
 
   document.querySelectorAll('[data-survey-share]').forEach(function (el) { el.appendChild(box()); });
 
-  var seen = true;
-  try { seen = !!localStorage.getItem(KEY); } catch (_) {}
-  // New visitor: show once, after they've had a few seconds on the page. Never on admin/login.
+  var seen = true;   // shown at most once a week
+  try { seen = Date.now() - (+localStorage.getItem(KEY) || 0) < 7 * 864e5; } catch (_) {}
+  // Show after a few seconds on the page, at most once a week. Never on admin/login.
   if (!seen && !/\/(admin|login|auth-bridge)\.html$/.test(location.pathname)) setTimeout(popup, 8000);
 })();
