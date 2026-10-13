@@ -130,7 +130,7 @@
 
   function norm(s) {
     return (' ' + String(s).toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9 ]+/g, ' ') + ' ')
-      .replace(/ (\w+)/g, function (m, w) { return ' ' + (SYN[w] || w); }).replace(/\s+/g, ' ');
+      .replace(/ (\w+)/g, function (m, w) { return ' ' + (Object.prototype.hasOwnProperty.call(SYN, w) ? SYN[w] : w); }).replace(/\s+/g, ' ');
   }
   function lev(a, b) {
     if (Math.abs(a.length - b.length) > 2) return 9;
@@ -183,7 +183,7 @@
 
   /* ---- UI (built on first open) ---- */
   var CSS =
-    '#fz-btn,#fz-panel{cursor:auto}body:has(#fz-btn:hover,#fz-panel:hover) #cursor{opacity:0}' +
+    '#fz-panel[hidden]{display:none!important}#fz-btn,#fz-panel{cursor:auto}body:has(#fz-btn:hover,#fz-panel:hover) #cursor{opacity:0}' +
     '#fz-btn{position:fixed;right:18px;bottom:74px;z-index:10000;width:52px;height:52px;border-radius:50%;border:1px solid rgba(52,211,153,.55);' +
     'background:linear-gradient(135deg,#34D399,#4E9BFF);color:#04120F;display:grid;place-items:center;cursor:pointer;' +
     'box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 4px rgba(52,211,153,.12);transition:transform .2s ease;padding:0}' +
@@ -409,7 +409,7 @@
     var ctx = r.slice(0, 3).map(function (x) { return '- ' + x.e.q + ' ' + [].concat(x.e.a)[0] + (x.e.l ? ' (' + x.e.l[1] + ')' : ''); }).join('\n');
     var m = el('div', 'fz-m fz-b md'); m.innerHTML = '<span class="fz-typing" aria-label="Focuz is typing"><i></i><i></i><i></i></span>';
     log.appendChild(m); scrollEnd();
-    var ctrl = window.AbortController ? new AbortController() : null, text = '', raf = 0, my = gen;
+    var ctrl = window.AbortController ? new AbortController() : null, text = '', raf = 0, cut = false, my = gen;
     function stopped() { return !!(ctrl && ctrl.signal.aborted); }
     setBusy(ctrl || {});
     function paint() { raf = 0; var near = log.scrollHeight - log.scrollTop - log.clientHeight < 80; m.innerHTML = md(text); if (near) scrollEnd(); }
@@ -433,11 +433,12 @@
       if (stopped() || (err && err.name === 'AbortError')) return;
       if (err && err.soft) { m.remove(); var s = say(err.soft, 'b'); s.classList.add('fz-err'); hist.pop(); save(); throw 'handled'; }
       if (!text) { setStatus(false); m.remove(); offline(q, r); throw 'handled'; }
+      cut = true; // the connection dropped mid-answer
     }).then(function () {
       if (raf) cancelAnimationFrame(raf);
       if (my !== gen) return; // chat was reset mid-answer
       if (!text) { m.remove(); if (!stopped()) { setStatus(false); offline(q, r); } return; }
-      if (stopped()) text += ' …';
+      if (stopped() || cut) text += ' …';
       setStatus(true); m.innerHTML = md(text); actions(m, text); scrollEnd();
       remember('assistant', text);
     }, function () {}).then(function () { setBusy(null); if (isOpen && matchMedia('(pointer:fine)').matches) input.focus(); });
@@ -496,7 +497,7 @@
   function open() {
     if (!built) build();
     lastFocus = document.activeElement;
-    panel.hidden = false; isOpen = true;
+    panel.hidden = false; void panel.offsetWidth; isOpen = true; // reflow so the fade-in still runs
     requestAnimationFrame(function () { if (isOpen) panel.classList.add('open'); });
     btn.setAttribute('aria-expanded', 'true');
     scrollEnd();

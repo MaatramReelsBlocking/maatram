@@ -83,12 +83,13 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
   if (!ALLOWED.test(origin)) return res.status(403).json({ error: 'origin' });
 
-  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'anon';
-  if (limited(ip)) return res.status(429).json({ error: 'Slow down a little — try again in a minute.' });
-
   let input;
   try { input = clean(req.body); } catch (_) { input = null; }
   if (!input) return res.status(400).json({ error: 'bad request' });
+
+  // after validation, so junk requests can't use up the daily cap
+  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'anon';
+  if (limited(ip)) return res.status(429).json({ error: 'Slow down a little — try again in a minute.' });
 
   const messages = [{ role: 'system', content: system(input.page, input.ctx) }, ...input.messages];
   let upstream = null;
@@ -99,16 +100,20 @@ module.exports = async function handler(req, res) {
     for (const model of [...new Set(p.models.filter(Boolean))]) for (let attempt = 0; attempt < 2; attempt++) {
       if (Date.now() - t0 > 20000) break outer; // stay under the function time limit
       if (attempt) await new Promise((r) => setTimeout(r, 1500 * attempt)); // busy model: retry with backoff
+      const ac = new AbortController(), timer = setTimeout(() => ac.abort(), 15000); // a hung provider: move on
       try {
         upstream = await fetch(p.url, {
           method: 'POST',
           headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
           body: JSON.stringify({ model, messages, stream: true, max_tokens: 4000, temperature: 0.5 }),
+          signal: ac.signal,
         });
+        clearTimeout(timer);
         if (upstream.ok) break outer;
         console.warn('focuz', p.name, model, upstream.status, (await upstream.text()).slice(0, 200));
         if (upstream.status !== 503) { upstream = null; break; } // only 'busy' is worth a retry; quota/not-found move on
       } catch (e) { console.warn('focuz', p.name, model, e.message); }
+      clearTimeout(timer);
       upstream = null;
     }
   }
@@ -117,6 +122,15 @@ module.exports = async function handler(req, res) {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no' });
   const reader = upstream.body.getReader(), dec = new TextDecoder();
   let buf = '';
+  const send = (line) => {
+    if (!line.startsWith('data:')) return;
+    const data = line.slice(5).trim();
+    if (data === '[DONE]') return;
+    try {
+      const t = JSON.parse(data).choices?.[0]?.delta?.content;
+      if (t) res.write(t);
+    } catch (_) { /* partial keep-alive line */ }
+  };
   res.on('close', () => reader.cancel().catch(() => {}));
   try {
     for (;;) {
@@ -124,16 +138,9 @@ module.exports = async function handler(req, res) {
       if (done) break;
       buf += dec.decode(value, { stream: true });
       const lines = buf.split('\n'); buf = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data:')) continue;
-        const data = line.slice(5).trim();
-        if (data === '[DONE]') continue;
-        try {
-          const t = JSON.parse(data).choices?.[0]?.delta?.content;
-          if (t) res.write(t);
-        } catch (_) { /* partial keep-alive line */ }
-      }
+      lines.forEach(send);
     }
+    send(buf); // last line when the stream ends without a newline
   } catch (e) { console.warn('focuz stream', e.message); }
   res.end();
 };
