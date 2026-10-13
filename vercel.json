@@ -162,6 +162,11 @@
       "permanent": true
     },
     {
+      "source": "/survey",
+      "destination": "https://docs.google.com/forms/d/e/1FAIpQLSdDnTIge-aXXZ5kz9thYLm5L4h9f9j_Zwv7fLGBanD_wotbVA/viewform",
+      "permanent": false
+    },
+    {
       "source": "/get",
       "destination": "/maatram-v1.1.apk",
       "permanent": false

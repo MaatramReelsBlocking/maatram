@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+/* ══ MAATRAM Performance Mode — shared across all pages ══
+   Sets window.MAATRAM_PERF (true = performance/low-lag mode) BEFORE any
+   page canvas code runs, so each page's LITE flag can honor it.
+   Default: ON for weak/old devices, user can override and it persists. */
+(function(){
+  var KEY='maatram_perf';
+  var weak = matchMedia('(pointer:coarse)').matches
+          || innerWidth<820
+          || (navigator.hardwareConcurrency||8)<=4
+          || (navigator.deviceMemory||8)<=4;
+  var saved=null; try{saved=localStorage.getItem(KEY);}catch(_){}
+  var on = saved===null ? weak : saved==='1';
+  window.MAATRAM_PERF = on;
+  try{ if(saved===null) localStorage.setItem(KEY, on?'1':'0'); }catch(_){}
+  document.documentElement.classList.toggle('perf', on);
+})();
+</script>
+
+<meta charset="UTF-8">
+<script src="/firebase-config.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ratings & Reviews — Maatram Free Focus & Screen-Time App</title>
+
+<!-- ══════════════ SEO / social metadata (Maatram) ══════════════ -->
+<meta name="description" content="Ratings and reviews from Maatram's student survey: average star rating, how students use the app, and their feedback.">
+<meta name="keywords" content="Maatram ratings, Maatram reviews, Maatram survey">
+<meta name="author" content="Maatram">
+<meta name="publisher" content="Maatram">
+<meta name="robots" content="index, follow, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-image-preview:large, max-video-preview:-1">
+<link rel="canonical" href="https://maatram.co.in/ratings.html">
+<link rel="alternate" hreflang="en" href="https://maatram.co.in/ratings.html">
+<link rel="alternate" hreflang="x-default" href="https://maatram.co.in/ratings.html">
+<meta name="theme-color" content="#06090B">
+<meta name="color-scheme" content="dark">
+<meta name="application-name" content="Maatram">
+<meta name="apple-mobile-web-app-title" content="Maatram">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- icons + PWA manifest -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<!-- Open Graph (WhatsApp / Facebook / LinkedIn) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Maatram">
+<meta property="og:locale" content="en_IN">
+<meta property="og:url" content="https://maatram.co.in/ratings.html">
+<meta property="og:title" content="Ratings & Reviews — Maatram">
+<meta property="og:description" content="Ratings and reviews from Maatram's student survey: average star rating, how students use the app, and their feedback.">
+<meta property="og:image" content="https://maatram.co.in/og-image.png">
+<meta property="og:image:secure_url" content="https://maatram.co.in/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Maatram — bringing a change in you. Screen-time control, focus timers and study rooms for students.">
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@maatram_97">
+<meta name="twitter:creator" content="@maatram_97">
+<meta name="twitter:title" content="Ratings & Reviews — Maatram">
+<meta name="twitter:description" content="Ratings and reviews from Maatram's student survey: average star rating, how students use the app, and their feedback.">
+<meta name="twitter:image" content="https://maatram.co.in/og-image.png">
+<meta name="twitter:image:alt" content="Maatram — screen-time control, focus timers and study rooms for students.">
+
+<!-- speed: warm up third-party origins early -->
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+<!-- structured data -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://maatram.co.in/ratings.html","url":"https://maatram.co.in/ratings.html","name":"Ratings & Reviews — Maatram","description":"Ratings and reviews from Maatram's student survey: average star rating, how students use the app, and their feedback.","isPartOf":{"@id":"https://maatram.co.in/#website"},"publisher":{"@id":"https://maatram.co.in/#org"}}</script>
+<!-- ═════════════ end SEO block ═════════════ -->
+<style>
+@font-face{font-family:'Inter Fallback';src:local('Arial');size-adjust:107.12%;ascent-override:90.20%;descent-override:22.48%;line-gap-override:0%}
+
+  :root{--ink:#eafff6;--dim:#7da99b;--green:#2fe38f;--blue:#37b6ff;--gold:#ffd166;--pink:#ff6ec7;
+    --card:rgba(12,28,24,.72);--stroke:rgba(47,227,143,.16);
+    --font-display:'Sora',sans-serif;--font-body:'Inter','Inter Fallback',system-ui,sans-serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#000;color:var(--ink);font-family:var(--font-body);min-height:100vh;-webkit-font-smoothing:antialiased}
+  #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .wrap{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:46px 20px 90px}
+
+  .hero{text-align:center;margin-bottom:48px}
+  .hero h1,.hero h2{font-family:var(--font-display);font-weight:900;font-size:clamp(30px,6vw,52px);letter-spacing:1px;
+    text-shadow:0 0 22px rgba(47,227,143,.7),0 0 60px rgba(55,182,255,.35)}
+  .hero p{color:var(--dim);font-size:13px;letter-spacing:1.6px;text-transform:uppercase;margin-top:8px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .soc{display:flex;align-items:center;gap:16px;text-decoration:none;color:var(--ink);
+    background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 22px;
+    backdrop-filter:blur(12px);position:relative;overflow:hidden;
+    opacity:0;transform:translateY(28px);
+    transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
+  .soc.in{opacity:1;transform:none;transition:transform .65s cubic-bezier(.2,1.3,.3,1),opacity .65s,border-color .3s,box-shadow .3s}
+  .soc:hover{transform:translateY(-6px) scale(1.02)!important;box-shadow:0 20px 46px -16px var(--glow)}
+  .soc .ic{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex-shrink:0;
+    transition:transform .35s}
+  .soc:hover .ic{transform:rotate(-7deg) scale(1.1)}
+  .soc .ic svg{width:28px;height:28px}
+  .soc b{font-family:var(--font-display);font-size:16px;display:block;margin-bottom:3px}
+  .soc span{font-size:12px;color:var(--dim);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+  .soc .arrow{margin-left:auto;font-size:18px;color:var(--dim);transition:transform .3s,color .3s}
+  .soc:hover .arrow{transform:translateX(5px);color:var(--ink)}
+
+  .soc.insta{--glow:rgba(220,39,67,.45)}   .soc.insta:hover{border-color:rgba(220,39,67,.55)}
+  .soc.x{--glow:rgba(255,255,255,.25)}     .soc.x:hover{border-color:rgba(255,255,255,.4)}
+  .soc.li{--glow:rgba(10,102,194,.45)}     .soc.li:hover{border-color:rgba(10,102,194,.55)}
+  .soc.gh{--glow:rgba(47,227,143,.4)}      .soc.gh:hover{border-color:rgba(47,227,143,.5)}
+  .soc.rd{--glow:rgba(255,69,0,.45)}       .soc.rd:hover{border-color:rgba(255,69,0,.55)}
+
+  .gh-note{margin-top:34px;text-align:center;color:var(--dim);font-size:12px;line-height:1.7;
+    border:1.5px dashed rgba(47,227,143,.25);border-radius:16px;padding:18px 20px;max-width:560px;margin-left:auto;margin-right:auto}
+  .gh-note b{color:var(--green)}
+
+  .pagecred{margin-top:60px;text-align:center;color:var(--dim);font-size:11px;letter-spacing:1.4px}
+  .pagecred b{color:var(--green)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+
+  /* ratings page */
+  .stars{--p:100%;font-size:22px;letter-spacing:3px;line-height:1;display:inline-block;
+    background:linear-gradient(90deg,#ffd166 var(--p),rgba(255,255,255,.18) var(--p));-webkit-background-clip:text;background-clip:text;color:transparent}
+  html.minimal .stars{background:linear-gradient(90deg,#ECEFEE var(--p),rgba(255,255,255,.18) var(--p));-webkit-background-clip:text;background-clip:text}
+  .rt-card{border:1px solid var(--stroke);background:var(--card);border-radius:22px;padding:26px 24px;backdrop-filter:blur(8px);margin-bottom:22px}
+  .rt-sum{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:center}
+  @media(max-width:600px){.rt-sum{grid-template-columns:minmax(0,1fr);text-align:center}}
+  .rt-avg{font-family:var(--font-display);font-size:64px;font-weight:900;line-height:1}
+  .rt-avg + .stars{font-size:26px;margin:8px 0 6px}
+  .rt-n{color:var(--dim);font-size:13px}
+  .bar{display:grid;grid-template-columns:96px minmax(0,1fr) 34px;gap:10px;align-items:center;font-size:13px;margin:7px 0;text-align:left}
+  .bar i{display:block;height:9px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}
+  .bar i b{display:block;height:100%;width:var(--w);border-radius:9px;background:linear-gradient(90deg,#2fe38f,#37b6ff)}
+  html.minimal .bar i b{background:#9CC0B2}
+  .bar span:last-child{color:var(--dim);text-align:right}
+  .bar span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rt-h{font-family:var(--font-display);font-size:18px;font-weight:800;margin:0 0 6px}
+  .rt-sub{color:var(--dim);font-size:13.5px;margin:0 0 16px;line-height:1.55}
+  .qs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px;margin-bottom:22px}
+  .qs .rt-card{margin:0}.qs h3{font-size:14px;font-weight:700;margin:0 0 10px;line-height:1.45}
+  .qs .bar{grid-template-columns:minmax(0,150px) minmax(0,1fr) 28px}
+  .rev{padding:16px 0;border-top:1px solid rgba(255,255,255,.08)}.rev:first-child{border-top:0}
+  .rev p{margin:8px 0 4px;line-height:1.6;font-size:14.5px}.rev small{color:var(--dim);font-size:12px}
+  .rev .stars{font-size:16px}
+  .rt-note{color:var(--dim);font-size:12px;text-align:center;margin:-8px 0 22px}
+
+/* ══ MAATRAM UNIVERSAL NAV ══ */
+#mnav{position:fixed;top:0;left:0;right:0;height:52px;z-index:600;display:flex;align-items:center;gap:5px;
+  padding:0 14px;background:rgba(2,10,8,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter','Inter Fallback',system-ui,sans-serif;cursor:auto}
+#mnav *{cursor:pointer}
+#mnav .mn-logo{display:flex;align-items:center;gap:8px;margin-right:10px;text-decoration:none;color:#eafff6}
+
+#mnav .mn-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#2fe38f,#37b6ff);
+  display:grid;place-items:center;font-weight:800;color:#04120f;font-size:14px}
+#mnav .mn-logo b{font-size:13px;font-weight:700;letter-spacing:.4px}
+#mnav .mn-spacer{flex:1}
+#mnav a.mn-link{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:#7da99b;text-decoration:none;padding:7px 11px;border-radius:100px;transition:all .25s;white-space:nowrap}
+#mnav a.mn-link:hover{color:#eafff6;background:rgba(55,182,255,.1)}
+#mnav a.mn-link.active{color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff)}
+#mnavAuth{display:flex;align-items:center;gap:8px;margin-left:6px}
+#mnavIn{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#04120f;
+  text-decoration:none;padding:8px 16px;border-radius:100px;background:linear-gradient(90deg,#2fe38f,#37b6ff);white-space:nowrap}
+#mnavChip{display:none;align-items:center;gap:8px;padding:4px 6px;border-radius:100px;
+  border:1px solid rgba(47,227,143,.3);background:rgba(47,227,143,.06);position:relative}
+#mnavChip img{width:28px;height:28px;border-radius:50%;border:1px solid #2fe38f}
+#mnavChip .nm{font-size:12px;font-weight:700;color:#eafff6;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#mnavChip .pt{font-size:10px;font-weight:800;color:#ffd166;letter-spacing:.5px;padding:3px 8px;border-radius:100px;
+  border:1px solid rgba(255,209,102,.35);background:rgba(255,209,102,.08);white-space:nowrap}
+#mnavMenu{display:none;position:absolute;top:44px;right:0;min-width:180px;z-index:700;
+  background:rgba(6,18,14,.97);border:1px solid rgba(47,227,143,.25);border-radius:14px;padding:8px;
+  box-shadow:0 18px 50px -12px rgba(0,0,0,.8)}
+#mnavMenu.open{display:block}
+#mnavMenu button,#mnavMenu a{display:block;width:100%;text-align:left;padding:10px 13px;border-radius:9px;
+  background:transparent;border:none;color:#eafff6;font-family:inherit;font-size:12px;font-weight:600;text-decoration:none;transition:background .2s}
+#mnavMenu button:hover,#mnavMenu a:hover{background:rgba(55,182,255,.12)}
+#mnavMenu .out{color:#ff5d73}
+@media(max-width:860px){#mnav,html.minimal #mnav{overflow-x:auto;scrollbar-width:none;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(2,10,8,.96)!important}#mnavMenu{position:fixed;top:52px;right:8px}#mnav::-webkit-scrollbar{display:none}
+  #mnav .mn-logo b{display:none}#mnavChip .nm{display:none}}
+body{padding-top:52px!important}
+
+  /* contact / feedback */
+  .contact{margin-top:46px;border:1px solid var(--stroke);background:var(--card);border-radius:22px;
+    padding:30px 28px;backdrop-filter:blur(8px)}
+  .contact h3,.contact .c-title{font-family:var(--font-display,inherit);font-size:20px;font-weight:800;letter-spacing:1px;
+    margin:0 0 6px;background:linear-gradient(90deg,#2fe38f,#37b6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .contact .c-sub{color:rgba(214,238,229,.65);font-size:13.5px;margin-bottom:20px}
+  .c-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:720px){.c-grid{grid-template-columns:1fr}}
+  .c-ways a{display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:14px;
+    border:1px solid var(--stroke);color:#eafff6;text-decoration:none;font-size:14px;margin-bottom:12px;transition:all .3s}
+  .c-ways a:hover{border-color:rgba(47,227,143,.5);transform:translateX(4px);background:rgba(47,227,143,.06)}
+  .c-ways .cw-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;
+    background:linear-gradient(135deg,#2fe38f,#37b6ff);font-size:17px}
+  .c-ways b{display:block;font-size:14px}
+  .c-ways span{display:block;font-size:12px;color:rgba(214,238,229,.6)}
+  .c-form textarea,.c-form input{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:13px;
+    border:1px solid var(--stroke);background:rgba(255,255,255,.04);color:#eafff6;font-family:inherit;font-size:14px;
+    outline:none;transition:border .3s}
+  .c-form input{margin-bottom:12px}
+  .c-form textarea{min-height:110px;resize:vertical;margin-bottom:12px}
+  .c-form textarea:focus,.c-form input:focus{border-color:rgba(47,227,143,.55)}
+  .c-form button{padding:12px 28px;border:none;border-radius:100px;cursor:pointer;font-weight:800;font-size:13px;
+    letter-spacing:1px;text-transform:uppercase;color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff);transition:transform .25s}
+  .c-form button:hover{transform:scale(1.04)}
+  /* ══ performance-mode toggle button (all pages) ══ */
+  #perfBtn{position:fixed;bottom:18px;left:18px;z-index:900;display:flex;align-items:center;gap:8px;
+    padding:8px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.18);cursor:pointer;
+    background:rgba(6,18,15,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#cfe9dd;
+    font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+    transition:border-color .25s,color .25s}
+  #perfBtn:hover{border-color:rgba(47,227,143,.55);color:#eafff6}
+  #perfBtn .pf-ic{font-size:13px;line-height:1}
+  #perfBtn .pf-sw{width:28px;height:15px;border-radius:100px;border:1px solid rgba(255,255,255,.3);position:relative;transition:all .25s;flex-shrink:0}
+  #perfBtn .pf-sw::after{content:"";position:absolute;top:1.5px;left:2px;width:10px;height:10px;border-radius:50%;background:#cfe9dd;transition:all .25s}
+  html:not(.perf) #perfBtn .pf-sw{background:linear-gradient(90deg,#2fe38f,#37b6ff);border-color:transparent}
+  html:not(.perf) #perfBtn .pf-sw::after{left:14px;background:#04120f}
+  html:not(.perf) #perfBtn{border-color:rgba(47,227,143,.4)}
+  @media(pointer:coarse){#perfBtn{bottom:12px;left:12px}}
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all';this.onload=null">
+<script>/* Skin class + the few tokens that must exist at first paint, so
+   theme.js itself no longer has to block rendering. */
+(function(){var m=null;try{m=localStorage.getItem('maatram_theme');}catch(_){}if(m!=='minimal')return;document.documentElement.classList.add('minimal');var s=document.createElement("style");s.textContent="html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:\"Plus Jakarta Sans\",\"Sora\",sans-serif;--font-body:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}";document.head.appendChild(s);})();</script>
+<script defer src="theme.js?v=4"></script><script defer src="/focuz-bot.js"></script><script defer src="/survey.js"></script>
+
+<style id="mfootCSS">
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+#mfoot{position:relative;z-index:6;max-width:1080px;margin:0 auto;padding:56px 22px 130px;
+  font-family:Inter,'Inter Fallback',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#8b9698;
+  border-top:1px solid rgba(255,255,255,.08);line-height:1.65;font-size:14.5px}
+#mfoot h2{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#cfd8d7;margin:0 0 14px;font-weight:700}
+#mfoot h3{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#7f8b8d;margin:0 0 12px;font-weight:700}
+#mfoot p{margin:0 0 16px;max-width:70ch}
+#mfoot a{color:#a9bdb8;text-decoration:none;border-bottom:1px solid rgba(169,189,184,.24)}
+#mfoot a:hover{color:#34D399;border-bottom-color:#34D399}
+#mfoot .fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:30px 26px;margin:30px 0 8px}
+#mfoot ul{list-style:none;margin:0;padding:0}
+#mfoot li{margin:0 0 9px}
+#mfoot .fbot{margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);
+  display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between;font-size:13px;color:#6c7779}
+@media(max-width:560px){#mfoot{padding:44px 18px 120px}}
+</style>
+<style id="a11yCSS">
+.skip-link{position:absolute;left:-9999px;top:0;z-index:100000;padding:12px 18px;border-radius:0 0 12px 0;
+  background:#34D399;color:#04120F;font:600 14px/1 Inter,system-ui,sans-serif;text-decoration:none}
+.skip-link:focus{left:0}
+:focus-visible{outline:2px solid #34D399;outline-offset:2px}
+#mfoot{content-visibility:auto;contain-intrinsic-size:auto 620px}
+</style>
+<script defer src="/speed-insights.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<nav id="mnav" aria-label="Main navigation">
+  <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
+  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link active" href="ratings.html">Ratings</a><a class="mn-link" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
+    <a id="mnavIn" href="login.html">Sign in</a>
+    <div id="mnavChip">
+      <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" loading="lazy" decoding="async" width="28" height="28">
+      <span class="nm" id="mnavNm"></span>
+      <span class="pt" id="mnavPts">0 PTS</span>
+      <div id="mnavMenu">
+        <a href="leaderboard.html">🏆 My rank</a>
+        <button class="out" id="mnavOut">Sign out</button>
+      </div>
+    </div>
+  </div>
+</nav>
+<canvas id="bg"></canvas>
+<div class="wrap" id="main" role="main" tabindex="-1">
+  <div class="hero">
+    <h1>RATINGS</h1>
+    <p>What students say about Maatram</p>
+  </div>
+
+  <section class="rt-card rt-sum" aria-live="polite">
+    <div><div class="rt-avg" id="rtAvg">–</div><span class="stars" id="rtStars" style="--p:0%" aria-hidden="true">★★★★★</span><div class="rt-n" id="rtN">Loading ratings…</div></div>
+    <div id="rtDist"></div>
+  </section>
+  <p class="rt-note" id="rtNote" hidden></p>
+
+  <section class="rt-card" id="rate">
+    <h2 class="rt-h">Rate Maatram</h2>
+    <p class="rt-sub">Take the 1-minute survey, or send the link to a friend.</p>
+    <a class="sv-btn sv-main" href="https://maatram.co.in/survey" target="_blank" rel="noopener">Take the survey</a>
+    <div data-survey-share style="margin-top:14px"></div>
+  </section>
+
+  <section class="rt-card" id="rtRevWrap" hidden>
+    <h2 class="rt-h">Feedback</h2>
+    <div id="rtRev"></div>
+  </section>
+
+  <h2 class="rt-h" id="rtQh" hidden style="margin:8px 0 14px">Survey answers</h2>
+  <div class="qs" id="rtQs"></div>
+
+<p class="pagecred">MAATRAM · <b>Action ⟹ Value</b> · Team Maatram, SSVM School of Excellence</p>
+</div>
+
+<script>
+
+
+/* ══ ratings: /api/ratings reads the survey's response sheet ══ */
+(async()=>{
+  const $=id=>document.getElementById(id), esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const bar=(label,n,total)=>'<div class="bar"><span title="'+esc(label)+'">'+esc(label)+'</span><i><b style="--w:'+(total?Math.round(n/total*100):0)+'%"></b></i><span>'+n+'</span></div>';
+  const stars=v=>'<span class="stars" style="--p:'+(v/5*100)+'%" role="img" aria-label="'+v+' out of 5 stars">★★★★★</span>';
+  let d;
+  try{ const r=await fetch('/api/ratings'); if(!r.ok) throw 0; d=await r.json(); }
+  catch(_){ $('rtN').textContent='Ratings could not load right now. Try again later.'; return; }
+  $('rtAvg').textContent=d.rated?d.average.toFixed(1):'–';
+  $('rtStars').style.setProperty('--p',(d.average/5*100)+'%');
+  $('rtN').textContent=d.rated?('Based on '+d.rated+' rating'+(d.rated===1?'':'s')):'No ratings yet';
+  $('rtDist').innerHTML=[5,4,3,2,1].map(k=>bar(k+' star'+(k>1?'s':''),d.dist[k]||0,d.rated)).join('');
+  if(!d.live){ $('rtNote').textContent='Showing responses up to '+new Date(d.asOf).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+'.'; $('rtNote').hidden=false; }
+  if(d.reviews.length){
+    $('rtRev').innerHTML=d.reviews.map(r=>'<div class="rev">'+(r.stars?stars(r.stars):'')+'<p>'+esc(r.text)+'</p><small>'+esc((r.at||'').split(' ')[0])+'</small></div>').join('');
+    $('rtRevWrap').hidden=false;
+  }
+  const qs=d.questions.filter(q=>!/overall.*rate/i.test(q.q));
+  if(qs.length){
+    $('rtQs').innerHTML=qs.map(q=>{const e=Object.entries(q.counts).sort((a,b)=>b[1]-a[1]),t=e.reduce((s,x)=>s+x[1],0);
+      return '<div class="rt-card"><h3>'+esc(q.q)+'</h3>'+e.map(x=>bar(x[0],x[1],t)).join('')+'</div>';}).join('');
+    $('rtQh').hidden=false;
+  }
+})();
+
+
+/* ══ background: constellation network — nodes linking like a community ══ */
+const cv=document.getElementById('bg'),ctx=cv.getContext('2d');
+const LITE=(window.MAATRAM_PERF!==undefined)?window.MAATRAM_PERF:(matchMedia('(pointer:coarse)').matches||innerWidth<820||(navigator.hardwareConcurrency||8)<=4);
+const DPR=LITE?1:Math.min(devicePixelRatio||1,1.5);let W,H;
+function fit(){W=Math.max(1,innerWidth);H=Math.max(1,innerHeight);
+  cv.width=W*DPR;cv.height=H*DPR;cv.style.width=W+'px';cv.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0);}
+fit();addEventListener('resize',fit);
+const mouse={x:-999,y:-999};
+addEventListener('pointermove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+const COLS=['rgb(47,227,143)','rgb(55,182,255)','rgb(255,209,102)','rgb(255,110,199)'];
+const N=Math.min(56,Math.floor(innerWidth/22));
+const nodes=[];
+for(let i=0;i<N;i++)nodes.push({x:Math.random(),y:Math.random(),
+  vx:(Math.random()-.5)*.0006,vy:(Math.random()-.5)*.0006,c:COLS[i%4],s:1+Math.random()*1.6,tw:Math.random()*7});
+const reduced=(window.MAATRAM_PERF===true) || matchMedia('(prefers-reduced-motion: reduce)').matches;
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(const n of nodes){
+    n.x+=n.vx;n.y+=n.vy;n.tw+=.03;
+    if(n.x<0||n.x>1)n.vx*=-1;if(n.y<0||n.y>1)n.vy*=-1;
+    n._px=n.x*W;n._py=n.y*H;
+    const dx=n._px-mouse.x,dy=n._py-mouse.y,d2=dx*dx+dy*dy;
+    if(d2<9000){const d=Math.sqrt(d2)||1;n._px+=dx/d*16;n._py+=dy/d*16;}
+  }
+  ctx.lineWidth=.5;ctx.strokeStyle='rgba(55,182,255,.13)';ctx.beginPath();
+  for(let i=0;i<nodes.length;i++)for(let k=1;k<=3;k++){
+    const a=nodes[i],b=nodes[(i+k)%nodes.length];
+    const dx=a._px-b._px,dy=a._py-b._py;
+    if(dx*dx+dy*dy<130*130){ctx.moveTo(a._px,a._py);ctx.lineTo(b._px,b._py);}
+  }
+  ctx.stroke();
+  for(const n of nodes){
+    ctx.globalAlpha=.3+.35*Math.abs(Math.sin(n.tw));
+    ctx.fillStyle=n.c;ctx.beginPath();ctx.arc(n._px,n._py,n.s,0,6.283);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  if(!reduced)requestAnimationFrame(loop);
+}
+if(!reduced)requestAnimationFrame(loop);else loop();
+</script>
+<script>
+/* ══ universal nav auth (Firebase session shared across all pages) ══ */
+(async()=>{
+  const chip=document.getElementById('mnavChip'),inBtn=document.getElementById('mnavIn'),
+        menu=document.getElementById('mnavMenu');
+  if(!chip)return;
+  chip.addEventListener('click',e=>{ if(!e.target.closest('#mnavMenu')) menu.classList.toggle('open'); });
+  document.addEventListener('click',e=>{ if(!e.target.closest('#mnavChip')) menu.classList.remove('open'); });
+  if(!(location.protocol==='http:'||location.protocol==='https:'))return;  // file:// → nav stays simple
+  try{
+    const [{initializeApp,getApps,getApp},{getAuth,onAuthStateChanged,signOut}]=await Promise.all([
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
+    ]);
+    const app=getApps().length?getApp():initializeApp(window.MAATRAM_FB);
+    const auth=getAuth(app);
+    /* Firestore is only ever touched once somebody is signed in, so it loads on
+       demand instead of up front. Signed-out visitors — and page-speed tests —
+       never download it. */
+    let db=null,doc=null,onSnapshot=null,runTransaction=null,fsReady=null;
+    const loadFs=()=>fsReady||(fsReady=import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+      .then(m=>{ doc=m.doc; onSnapshot=m.onSnapshot; runTransaction=m.runTransaction; db=m.getFirestore(app); }));
+    let unsub=null;
+    /* ══ Maatram points engine (all pages) ══ */
+    let __mtUser=null, __mtAuthKnown=false;
+    window.maatramAward=async function(pts,reason){
+      pts=Math.round(pts); if(!pts) return;
+      /* local bank (works offline / signed-out) */
+      try{
+        const cur=+localStorage.getItem('maatram_points')||0;
+        localStorage.setItem('maatram_points',Math.max(0,cur+pts));
+      }catch(_){}
+      try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
+      try{ parent.postMessage({maatramRelay:{type:'points',pts}},'*'); }catch(_){}
+      mtToast(pts,reason);
+      /* cloud write: queued per account, paced to match firestore.rules
+         (gains: at most 1 point per 6 s since the last gain, 100 per write) */
+      if(!__mtAuthKnown){ try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){} }
+      else if(__mtUser){
+        const K='maatram_pend_'+__mtUser.uid;
+        try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){}
+        mtFlush();
+      }
+    };
+    async function mtFlush(){
+      if(!__mtUser) return;
+      const uid=__mtUser.uid, K='maatram_pend_'+uid, pend=()=>+localStorage.getItem(K)||0;
+      const run=async()=>{
+        const p=pend(); if(!p) return 0;
+        if(typeof loadFs==='function') await loadFs();
+        const {serverTimestamp}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const res=await runTransaction(db,async t=>{
+          const r=doc(db,'users',uid), s=await t.get(r), d=s.exists()?s.data():{}, cur=d.points||0;
+          if(p<0){ const nx=Math.max(0,cur-100,cur+p); t.set(r,{points:nx},{merge:true}); return {used:nx===0?p:nx-cur,wait:0}; }
+          const since=(Date.now()-(d.awardAt?d.awardAt.toMillis():0))/1000-3, want=Math.min(100,p,3000-cur);
+          if(want<=0) return {used:p,wait:0};   /* monthly ceiling reached: drop the rest */
+          if(Math.floor(since/6)<want) return {used:0,wait:Math.ceil(want*6-since)};
+          t.set(r,{points:cur+want,awardAt:serverTimestamp()},{merge:true}); return {used:want,wait:0};
+        });
+        localStorage.setItem(K,String(pend()-res.used));
+        return res.wait||(pend()?1:0);
+      };
+      let wait=0;
+      const locked=()=>navigator.locks?navigator.locks.request('maatram_pts',run):run();
+      try{ wait=await (mtFlush.q=(mtFlush.q||Promise.resolve()).catch(()=>{}).then(locked)); }   /* one flush at a time, per tab and across tabs */
+      catch(e){ console.warn('points write',e); wait=60; }
+      clearTimeout(mtFlush.t); if(wait) mtFlush.t=setTimeout(mtFlush,wait*1000);
+    }
+    function mtToast(pts,reason){
+      const t=document.createElement('div');
+      t.textContent=(pts>0?'+':'')+pts+' PTS'+(reason?' · '+reason:'');
+      t.style.cssText='position:fixed;top:64px;right:16px;z-index:900;font-family:Sora,Inter,sans-serif;'
+        +'font-weight:800;font-size:13px;letter-spacing:1px;padding:11px 20px;border-radius:100px;'
+        +'backdrop-filter:blur(10px);transition:all .5s cubic-bezier(.2,1.3,.3,1);opacity:0;transform:translateY(-14px);'
+        +(pts>0?'color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff);box-shadow:0 8px 30px -8px rgba(47,227,143,.7);'
+               :'color:#fff;background:linear-gradient(90deg,#ff5d73,#ff9a5d);box-shadow:0 8px 30px -8px rgba(255,93,115,.7);');
+      document.body.appendChild(t);
+      requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='none';});
+      setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(-14px)';},2600);
+      setTimeout(()=>t.remove(),3200);
+    }
+
+    onAuthStateChanged(auth,async u=>{
+      __mtUser=u;
+      if(!__mtAuthKnown){ __mtAuthKnown=true; let e=0;   /* points earned before sign-in was known go to this account */
+        try{ e=+localStorage.getItem('maatram_pend_early')||0; localStorage.removeItem('maatram_pend_early'); }catch(_){}
+        if(u&&e){ const K='maatram_pend_'+u.uid; try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+e)); }catch(_){} } }
+      if(u) mtFlush();
+      if(unsub){unsub();unsub=null;}
+      if(u){
+        inBtn.style.display='none';chip.style.display='flex';
+        document.getElementById('mnavPic').src=u.photoURL||'';
+        document.getElementById('mnavNm').textContent=(u.displayName||'You').split(' ')[0];
+        await loadFs();
+        if(__mtUser!==u) return;               /* signed out again while loading */
+        unsub=onSnapshot(doc(db,'users',u.uid),s=>{
+          document.getElementById('mnavPts').textContent=((s.exists()&&s.data().points)||0)+' PTS';
+        },()=>{});
+      }else{
+        inBtn.style.display='inline-block';chip.style.display='none';
+      }
+    });
+    document.getElementById('mnavOut').onclick=()=>{menu.classList.remove('open');signOut(auth);};
+  }catch(e){console.warn('nav auth',e);}
+})();
+</script>
+<button id="perfBtn" type="button" aria-pressed="false" aria-label="Toggle performance mode" title="Toggle performance mode (less animation, zero lag)">
+  <span class="pf-ic">⚡</span><span class="pf-sw"></span><span id="perfLbl">Performance</span>
+</button>
+<script>
+/* ══ performance toggle behavior ══ */
+(function(){
+  var KEY='maatram_perf', btn=document.getElementById('perfBtn'), lbl=document.getElementById('perfLbl');
+  function paint(on){
+    document.documentElement.classList.toggle('perf',on);
+    btn.setAttribute('aria-pressed',String(!on));
+    lbl.textContent = on ? 'Performance: Off' : 'Performance: On';
+  }
+  paint(!!window.MAATRAM_PERF);
+  btn.addEventListener('click',function(){
+    var on=!(localStorage.getItem(KEY)==='1');
+    try{localStorage.setItem(KEY,on?'1':'0');}catch(_){}
+    /* reload so canvases rebuild at the new detail level — clean + reliable */
+    location.reload();
+  });
+})();
+</script>
+
+
+<section style="max-width:680px;margin:48px auto 0;padding:0 20px 8px;color:var(--dim,#8FA3A0);font-size:13.5px;line-height:1.75">Maatram is a free, open-source focus and productivity app built by students, for students — join the community on Instagram, X, LinkedIn, Reddit and GitHub to follow new features, contribute code, or just say hi. Whether you’re after a free screen time app, a Pomodoro study timer, a social media blocker, or a study room to keep you accountable, the fastest way to reach Team Maatram is right here.</section>
+
+<footer id="mfoot">
+  <h2>Maatram — bringing a change in you</h2>
+  <p>Maatram is a free, open-source screen-time and focus platform built by students at
+  SSVM School of Excellence. Instead of nagging you, it puts real friction between you and
+  the apps that eat your day: a gate you have to wait at, a hard lock you cannot argue
+  with, timers that reward the hours you stay off your phone, and study rooms where your
+  friends can see the moment you slip. Inspired by Gen Z, made by Gen Z, made for Gen Z.</p>
+
+  <div class="fcols">
+    <div>
+      <h3>Focus tools</h3>
+      <ul>
+        <li><a href="timers.html">Pomodoro &amp; Deep Work timers</a></li>
+        <li><a href="app-gate.html">App Gate &amp; Hard Lock</a></li>
+        <li><a href="study-room.html">Live study rooms</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Track progress</h3>
+      <ul>
+        <li><a href="stats.html">Screen-time stats</a></li>
+        <li><a href="leaderboard.html">Leaderboard</a></li>
+        <li><a href="sports.html">Sports Corner</a></li>
+        <li><a href="login.html">Sign in with Google</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="socials.html">Socials &amp; contact</a></li>
+        <li><a href="blog.html">Updates</a></li>
+        <li><a href="https://github.com/MaatramReelsBlocking/maatram" target="_blank" rel="me noopener">Source code on GitHub</a></li>
+        <li><a class="eml" data-u="maatram97" data-d="gmail.com" href="#contact">maatram97 (at) gmail.com</a></li>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="terms.html">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Why screen time matters</h3>
+      <ul>
+        <li><a href="https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health" target="_blank" rel="noopener noreferrer">WHO — adolescent mental health</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="_blank" rel="noopener noreferrer">The Pomodoro Technique</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Digital_detox" target="_blank" rel="noopener noreferrer">Digital detox research</a></li>
+        <li><a href="https://wellbeing.google/" target="_blank" rel="noopener noreferrer">Google Digital Wellbeing</a></li>
+        <li><a href="https://www.commonsensemedia.org/" target="_blank" rel="noopener noreferrer">Common Sense Media</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="fbot">
+    <span>&copy; 2026 Maatram · Action &rArr; Value · Free &amp; open source</span>
+    <span>Built by students, in Coimbatore, India.</span>
+  </div>
+</footer>
+</body>
+</html>
