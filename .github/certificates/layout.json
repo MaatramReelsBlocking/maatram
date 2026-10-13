@@ -1,8 +1,11 @@
 {
-  "_help": "Positions are fractions of the template: x 0 = left edge, 1 = right edge; y 0 = top, 1 = bottom. size = text height as a fraction of the template height. maxWidth = widest the text may get (long names shrink to fit). Remove the rank block if the certificate has no place for it.",
-  "fonts": [{ "file": "font-bold.ttf", "family": "Maatram Bold" }],
+  "_help": "Positions are fractions of template.png: x 0 = left edge, 1 = right edge; y 0 = top, 1 = bottom. size = text height as a fraction of the template height. maxWidth = widest the text may get (long names shrink to fit).",
+  "fonts": [
+    { "file": "LibreBaskerville-Bold.ttf", "family": "Libre Baskerville" },
+    { "file": "LeagueSpartan-Bold.ttf", "family": "League Spartan" }
+  ],
   "text": {
-    "name":  { "x": 0.5, "y": 0.50, "size": 0.075, "maxWidth": 0.70, "font": "Maatram Bold", "color": "#111111" },
-    "month": { "x": 0.5, "y": 0.63, "size": 0.035, "maxWidth": 0.60, "font": "Maatram Bold", "color": "#333333" }
+    "name":  { "x": 0.5,    "y": 0.393, "size": 0.062, "maxWidth": 0.56, "font": "Libre Baskerville", "weight": "700", "color": "#6B0A0A" },
+    "month": { "x": 0.6705, "y": 0.812, "size": 0.034, "maxWidth": 0.145, "font": "League Spartan", "weight": "700", "color": "#6B0A0A" }
   }
 }
