@@ -85,5 +85,17 @@ const grab=(file,re)=>{ const m=fs.readFileSync(file,'utf8').match(re); if(!m) t
   ok('HSTS still preloaded',                 /preload/.test(get('Strict-Transport-Security')));
   ok('X-Robots-Tag unchanged (SEO)',         get('X-Robots-Tag')==='index, follow, max-image-preview:large, max-video-preview:-1');
 }
-console.log('\n'+pass+' passed, '+fail+' failed   (security fixes)');
-process.exit(fail?1:0);
+/* focuz: a script with a forged Origin and rotating IPs hits the per-instance daily cap */
+(async()=>{
+  for(const k of ['GEMINI_API_KEY','NVIDIA_API_KEY','AI_GATEWAY_API_KEY','VERCEL_OIDC_TOKEN']) delete process.env[k];
+  const handler=require('./api/focuz.js');
+  const call=(i)=>new Promise(done=>{
+    const res={setHeader(){},status(s){this.s=s;return this;},json(){done(this.s);},end(){done(this.s);}};
+    handler({method:'POST',headers:{origin:'https://maatram.co.in','x-forwarded-for':'10.'+(i>>16)+'.'+((i>>8)&255)+'.'+(i&255)},body:{messages:[{role:'user',content:'hi'}]}},res);
+  });
+  const codes=[]; for(let i=0;i<2001;i++) codes.push(await call(i));
+  ok('focuz: 2000 calls a day go through',   codes.slice(0,2000).every(c=>c===503));
+  ok('focuz: call 2001 hits the daily cap',  codes[2000]===429);
+  console.log('\n'+pass+' passed, '+fail+' failed   (security fixes)');
+  process.exit(fail?1:0);
+})();

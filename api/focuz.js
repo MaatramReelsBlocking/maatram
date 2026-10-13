@@ -46,14 +46,17 @@ How to answer:
 ${CORE}${ctx ? '\n\nRelevant help-centre entries:\n' + ctx : ''}`;
 }
 
-/* best-effort per-instance limiter: 12 requests/minute and 150/day per IP */
-const hits = new Map();
+/* best-effort per-instance limiter: 12 requests/minute and 150/day per IP, 2000/day in total.
+   The Origin check only stops browsers; a script can send any Origin and rotate IPs, so the total cap
+   bounds what one instance can spend. Over it, the bot falls back to its offline FAQ. */
+const hits = new Map(), all = { d: 0, day: Date.now() };
 function limited(ip) {
   const now = Date.now(), h = hits.get(ip) || { m: [], d: 0, day: now };
   if (now - h.day > 864e5) { h.d = 0; h.day = now; }
+  if (now - all.day > 864e5) { all.d = 0; all.day = now; }
   h.m = h.m.filter((t) => now - t < 6e4);
-  if (h.m.length >= 12 || h.d >= 150) return true;
-  h.m.push(now); h.d++; hits.set(ip, h);
+  if (h.m.length >= 12 || h.d >= 150 || all.d >= 2000) return true;
+  h.m.push(now); h.d++; all.d++; hits.set(ip, h);
   if (hits.size > 5000) hits.clear();
   return false;
 }
