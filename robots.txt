@@ -6,7 +6,7 @@
 User-agent: *
 Allow: /
 
-# Big AI/answer engines — explicitly welcome (helps AI-search visibility)
+# Search engines
 User-agent: Googlebot
 Allow: /
 
@@ -17,6 +17,22 @@ User-agent: DuckDuckBot
 Allow: /
 
 User-agent: Applebot
+Allow: /
+
+# AI/answer engines — explicitly welcome (helps AI-search visibility)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
 Allow: /
 
 # Bad-manners scrapers that hammer small sites
