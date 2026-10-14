@@ -112,7 +112,7 @@ a.ghost:hover{color:var(--ink)}
 
 /* ---- two app cards ---- */
 .apps{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin:8px 0 0}
-@media (min-width:700px){.apps{grid-template-columns:repeat(2,minmax(0,1fr))}.app.wide{grid-column:1/-1}}
+@media (min-width:700px){.apps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .ext-steps{margin:4px 0 0;padding-left:20px;color:var(--dim,#8FA3A0);font-size:14px;line-height:1.7}
 .ext-steps b,.ext-steps code{color:var(--ink,#EAFFF6)}
 .app{display:flex;flex-direction:column;gap:14px;border:1px solid var(--line);
@@ -128,6 +128,26 @@ a.ghost:hover{color:var(--ink)}
 .tag.live{color:var(--green);border-color:rgba(47,227,143,.4)}
 html.minimal .tag.live{border-color:rgba(156,192,178,.45)}
 .both{color:var(--dim);font-size:14px;margin:16px 0 0}
+/* ---- platform grid: hairline cells, mono labels, square buttons ---- */
+.plat-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:26px 0 0;
+  padding:14px 18px;border:1px solid var(--line);border-bottom:0;
+  font:600 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.plat-head b{color:var(--ink);font-weight:600}
+.apps{gap:1px;margin:0;background:var(--line);border:1px solid var(--line)}
+.app{border:0;border-radius:0;background:var(--bg);padding:0 0 24px;gap:16px}
+.app>*:not(.cell-head){margin-left:22px!important;margin-right:22px!important}
+.cell-head{display:flex;justify-content:space-between;padding:13px 22px;border-bottom:1px solid var(--line);
+  font:600 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.app.mine .sys{color:var(--blue)}
+.ttl{display:flex;align-items:center;gap:14px;margin-top:8px}
+.ico{flex:none;width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--line);color:var(--ink)}
+.app h2{font-size:clamp(21px,3.4vw,27px);line-height:1.15;letter-spacing:-.02em}
+.app .chips{flex-direction:column;gap:9px}
+.app .chips li{border:0;background:none;padding:0 0 0 22px;position:relative;font-size:14.5px}
+.app .chips li::before{content:"";position:absolute;left:2px;top:.45em;width:9px;height:9px;border:1.5px solid var(--dim);border-radius:2px}
+.app a.dl{border-radius:3px;font:700 13.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase}
+.apps.picked .app:not(.mine) a.dl{background:none;color:var(--ink);border:1px solid var(--line-hi,rgba(255,255,255,.28))}
+.app a.ghost{border-radius:3px}
 h3.for{font-size:16.5px;margin:26px 0 10px;letter-spacing:-.01em}
 h3.for:first-of-type{margin-top:0}
 ol.steps{margin:0;padding-left:20px;color:var(--dim);font-size:14.5px}
@@ -364,12 +384,14 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 <main id="main">
 <div class="wrap">
 
-  <p class="eyebrow">Android · free &amp; open source</p>
-  <h1>Get Maatram on <em>your phone</em></h1>
-  <div class="apps">
-    <article class="app" aria-labelledby="appFull">
+  <p class="eyebrow">Android · Windows · Chrome · free &amp; open source</p>
+  <h1>Get Maatram on <em>your devices</em></h1>
+  <div class="plat-head"><span>01 / <b>Platforms</b></span><span>Android 5.1+ · x64 Windows · Chrome desktop</span></div>
+  <div class="apps" id="apps">
+    <article class="app" data-os="android-full" aria-labelledby="appFull">
+      <div class="cell-head"><span class="sys">Platform</span><span class="n">01</span></div>
       <span class="tag">Stable, not updated</span>
-      <h2 id="appFull">Maatram, full app</h2>
+      <div class="ttl"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></span><h2 id="appFull">Maatram, full app</h2></div>
       <p>Every feature from the website, plus native app blocking.</p>
       <ul class="chips">
         <li>Version <b>1.1</b></li>
@@ -390,9 +412,10 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       </div>
     </article>
 
-    <article class="app" aria-labelledby="appLock">
+    <article class="app" data-os="android" aria-labelledby="appLock">
+      <div class="cell-head"><span class="sys">Platform</span><span class="n">02</span></div>
       <span class="tag live">Maintained</span>
-      <h2 id="appLock">Maatram Hard Lock</h2>
+      <div class="ttl"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span><h2 id="appLock">Maatram Hard Lock</h2></div>
       <p>Hard Lock only. Locks just the apps you pick, and keeps running through "Clear all". New in 2.4.4 alpha: a lock extended from a linked device now counts as one whole lock. In 2.4.2: changing the phone clock no longer ends a lock, and a lock from a linked device blocks the app you already have open. New in 2.4: link the app with maatram.co.in and the Chrome extension so one Hard Lock locks them all. Also: pick apps to lock sorted by your real screen time, a new blooming sakura (any finished lock grows a blooming tree, a 90-minute lock grows a full tree), and the neon Maatram look.</p>
       <ul class="chips">
         <li>Version <b>2.4.4 alpha</b></li>
@@ -413,9 +436,38 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       </div>
     </article>
 
-    <article class="app wide" aria-labelledby="appExt">
+    <article class="app" data-os="windows" aria-labelledby="appWin">
+      <div class="cell-head"><span class="sys">Platform</span><span class="n">03</span></div>
+      <span class="tag live">New · 0.1.0</span>
+      <div class="ttl"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M3 5.2 10.3 4v7.3H3zM11.3 3.9 21 2.5v8.8h-9.7zM3 12.3h7.3v7.3L3 18.6zM11.3 12.3H21v9.2l-9.7-1.4z"/></svg></span><h2 id="appWin">Maatram Hard Lock for Windows</h2></div>
+      <p>Hard Lock only. Pick a duration, start the lock, and for that time apps like WhatsApp, Instagram, Discord and Steam are closed the moment they open, and Instagram, YouTube, TikTok, Snapchat, X, Reddit and more are blocked system-wide through the Windows hosts file. Enter the link code from App Gate and one Hard Lock locks this PC, your phone, the website and Chrome together.</p>
+      <ul class="chips">
+        <li>Version <b>0.1.0</b></li>
+        <li><b>1.52 MB</b> installer</li>
+        <li>Windows <b>10 and 11</b>, 64-bit</li>
+        <li>Needs <b>administrator</b> rights</li>
+      </ul>
+      <div class="cta">
+        <a class="dl" id="dlBtnWin" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/download/v0.1.0/Maatram.Hard.Lock_0.1.0_x64-setup.exe" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/>
+          </svg>
+          Download for Windows<span class="sr-only"> — Maatram Hard Lock for Windows (.exe)</span>
+        </a>
+        <a class="ghost" href="https://github.com/MaatramReelsBlocking/maatram-windows" target="_blank" rel="noopener">Source on GitHub</a>
+      </div>
+      <ol class="ext-steps">
+        <li>Windows shows <b>Unknown publisher</b> because the file is not code-signed. Click <b>More info</b>, then <b>Run anyway</b>.</li>
+        <li>Allow administrator rights. Maatram needs them to edit the hosts file and close apps.</li>
+        <li>If something goes wrong, right-click <a href="https://github.com/MaatramReelsBlocking/maatram-windows/blob/main/Maatram-Restore.bat" target="_blank" rel="noopener">Maatram-Restore.bat</a> and choose <b>Run as administrator</b>. Uninstalling also ends any running lock.</li>
+      </ol>
+    </article>
+
+    <article class="app" data-os="desktop" aria-labelledby="appExt">
+      <div class="cell-head"><span class="sys">Platform</span><span class="n">04</span></div>
       <span class="tag live">New · 1.6.3</span>
-      <h2 id="appExt">Maatram Hard Lock for Chrome</h2>
+      <div class="ttl"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5h8.2M9 13.8 4.9 6.7M15 13.8l-4.1 7.1"/></svg></span><h2 id="appExt">Maatram Hard Lock for Chrome</h2></div>
       <p>Blocks YouTube, Instagram, X, Facebook, TikTok, Snapchat and your own sites on the computer during a Hard Lock. New in 1.6: block only the apps you pick with Premium Blocking on maatram.co.in. New in 1.3: link it with the website and the phone app, so one Hard Lock locks all of them. The Chrome Web Store update is in review; until then, install this copy by hand.</p>
       <ul class="chips">
         <li>Version <b>1.6.3</b></li>
@@ -669,6 +721,17 @@ Linux     sha256sum maatram-hardlock-v2.4.4-alpha.apk</pre>
   var PERF = !!window.MAATRAM_PERF;
   var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var STATIC = PERF || RM;
+
+  /* ---- "Your system": highlight the card that fits this device ---- */
+  var ua = navigator.userAgent;
+  var os = /Android/i.test(ua) ? 'android' : /Windows/i.test(ua) ? 'windows'
+         : /iPhone|iPad|iPod/i.test(ua) ? '' : 'desktop';
+  var mine = os && document.querySelector('#apps [data-os="' + os + '"]');
+  if (mine) {
+    mine.classList.add('mine');
+    mine.querySelector('.sys').textContent = 'Your system';
+    document.getElementById('apps').classList.add('picked');
+  }
 
   /* ---- install rail state ---- */
   var KEY = 'maatram_install_steps';
