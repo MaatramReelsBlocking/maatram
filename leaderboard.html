@@ -435,7 +435,7 @@ async function bootCloud(){
   try{
     const [{initializeApp},
            {getAuth,onAuthStateChanged},
-           {getFirestore,collection,query,orderBy,limit,onSnapshot}] = await Promise.all([
+           {getFirestore,collection,query,where,orderBy,limit,onSnapshot}] = await Promise.all([
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(m=>({initializeApp:c=>m.getApps().length?m.getApp():m.initializeApp(c)})),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
@@ -444,11 +444,14 @@ async function bootCloud(){
     CLOUD=true;
     const pill=(t,c,b)=>{ $('modePill').textContent=t; $('modePill').style.color=c; $('modePill').style.borderColor=b||''; };
 
-    /* Two reads, one per board, each a single-field order (no composite index).
+    /* Two reads, one per board.
        This month = users.points, but only while users.cycle is the current month:
                     someone who has not been back since the 1st still holds last
                     month's points until gate.js rolls their doc, and those do not
-                    count for this month.
+                    count for this month. The read filters on cycle so those stale
+                    docs cannot fill its 100 slots (composite index cycle+points,
+                    see firestore.indexes.json); until that index exists it falls
+                    back to the plain points order.
        All time   = users.lifetime + users.points. lifetime holds archived months
                     only, so the points in progress (this month's, or a not-yet-rolled
                     month's) are added once; the roll moves points into lifetime and
@@ -470,18 +473,25 @@ async function bootCloud(){
       cloudLife .sort((a,b)=>b.points-a.points); cloudLife =cloudLife .slice(0,50);
       render();
     }
-    function listen(field,into){
-      return onSnapshot(query(collection(db,'users'),orderBy(field,'desc'),limit(100)),snap=>{
+    function listen(field,into,filter){
+      const q=query(collection(db,'users'),...(filter?[filter]:[]),orderBy(field,'desc'),limit(100));
+      const unsub=onSnapshot(q,snap=>{
         into.clear(); snap.forEach(d=>into.set(d.id,d.data()));
         AUTH='in';
         pill('Live · Global','var(--green)','rgba(47,227,143,.45)');
         rebuild();
       },err=>{
+        if(filter&&err.code==='failed-precondition'){   // index not built yet
+          const i=unsubs.indexOf(unsub);
+          if(i>=0) unsubs[i]=listen(field,into);
+          return;
+        }
         console.warn('board read',err);
         if(!auth.currentUser){ AUTH='out'; pill('Sign in to view','var(--gold)','rgba(255,209,102,.45)'); }
         else{ AUTH='in'; pill('Board offline','#ff5d73'); }
         render();
       });
+      return unsub;
     }
 
     /* reads need a signed-in user: start the listeners once one exists, stop on sign-out */
@@ -492,7 +502,7 @@ async function bootCloud(){
       if(u){
         AUTH='pending';   // until the first snapshot, so "empty" does not flash
         pill('Loading\u2026','var(--dim)');
-        unsubs=[listen('points',byPoints),listen('lifetime',byLife)];
+        unsubs=[listen('points',byPoints,where('cycle','==',cycleId())),listen('lifetime',byLife)];
       }else{
         AUTH='out';
         pill('Sign in to view','var(--gold)','rgba(255,209,102,.45)');

@@ -142,9 +142,15 @@ ok('cycleNote exists', !!L.getElementById('cycleNote'));
 ok('tablist role', !!L.querySelector('.tabs[role="tablist"]'));
 ok('month tab selected by default', L.getElementById('tabMonth').getAttribute('aria-selected') === 'true');
 ok('tabs are 44px+ targets', /\.tabs button\{min-height:44px/.test(lb));
-ok('boards read with single-field orders (no composite index)',
-   /orderBy\(field,'desc'\),limit\(100\)/.test(lb) && /listen\('points',byPoints\)/.test(lb) && /listen\('lifetime',byLife\)/.test(lb)
-   && !/where\(/.test(lb));
+ok('month board filters on this cycle, all time reads lifetime',
+   /orderBy\(field,'desc'\),limit\(100\)/.test(lb)
+   && /listen\('points',byPoints,where\('cycle','==',cycleId\(\)\)\)/.test(lb)
+   && /listen\('lifetime',byLife\)/.test(lb));
+ok('month read falls back to plain order until the index exists',
+   /err\.code==='failed-precondition'[\s\S]{0,120}listen\(field,into\)/.test(lb));
+const idx = JSON.parse(fs.readFileSync(path.join(__dirname, 'firestore.indexes.json'), 'utf8'));
+ok('composite index cycle+points declared', idx.indexes.some(i => i.collectionGroup === 'users'
+   && JSON.stringify(i.fields) === JSON.stringify([{fieldPath:'cycle',order:'ASCENDING'},{fieldPath:'points',order:'DESCENDING'}])));
 ok('all time = lifetime + this month', /lifetime\|\|0\)\+\(v\.points\|\|0\)/.test(lb));
 ok('month board counts points only for the current cycle', /points:v\.cycle===cur\?\(v\.points\|\|0\):0/.test(lb));
 /* behavioural: lift rebuild() out of the page and feed it docs */
