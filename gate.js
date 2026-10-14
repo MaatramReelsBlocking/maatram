@@ -130,6 +130,9 @@
         try{ var snap=await F.getDoc(F.doc(db,'users',user.uid)); d=snap.exists()?snap.data():{}; }
         catch(e){ reveal(); return; }       /* read failed: let them work, do not trap them */
         if(enforce(U,auth,d)) return;      /* banned or kicked by an admin */
+        /* Terms + Privacy not accepted on this account yet: ask before the page is usable */
+        await new Promise(function(r){ var c=document.createElement('script'); c.src='/consent.js'; c.onload=c.onerror=r; document.head.appendChild(c); });
+        if(window.maatramConsent && !await window.maatramConsent(user.uid,db,F)){ try{ await U.signOut(auth); }catch(e){} send(); return; }
         /* stay live: a ban or kick lands while the page is open */
         try{ F.onSnapshot(F.doc(db,'users',user.uid),function(s){
                if(s.exists()) enforce(U,auth,s.data());

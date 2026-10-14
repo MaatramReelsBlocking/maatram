@@ -47,7 +47,12 @@ service cloud.firestore {
        NOTE the absence of: email, phone, any contact field, any moderation
        field. A key that is not on this list is rejected outright. */
     function writableKeys() {
-      return ['name','photo','points','lifetime','lastLogin','cycle','awardAt'];
+      return ['name','photo','points','lifetime','lastLogin','cycle','awardAt','termsV','termsAt'];
+    }
+    /* Terms + Privacy acceptance (consent.js): a short version tag and the server time it was ticked */
+    function termsOk(keys) {
+      return (!('termsV' in keys) || (neu().termsV is string && neu().termsV.size() <= 10))
+          && (!('termsAt' in keys) || neu().termsAt == request.time);
     }
     function safeText(v, max) {
       return v is string && v.size() > 0 && v.size() <= max;
@@ -79,7 +84,8 @@ service cloud.firestore {
                     && (!('lastLogin' in neu()) || neu().lastLogin is timestamp)
                     && (!('cycle' in neu()) || cycleOk(neu().cycle))
                     && (!('lifetime' in neu()) || neu().lifetime == 0)
-                    && (!('awardAt' in neu()) || neu().awardAt == request.time);
+                    && (!('awardAt' in neu()) || neu().awardAt == request.time)
+                    && termsOk(neu().keys());
 
       allow update: if isOwner(uid)
                     && old().get('banned', false) != true   // a banned account is frozen
@@ -89,6 +95,7 @@ service cloud.firestore {
                     && (!('name'  in changed()) || safeText(neu().name, 40))
                     && (!('photo' in changed()) || photoOk(neu().photo))
                     && (!('lastLogin' in changed()) || neu().lastLogin is timestamp)
+                    && termsOk(changed())
                     && (
                          // normal play: one award or one penalty per write.
                          // cycle and lifetime move only in the two roll branches.

@@ -49,7 +49,7 @@ const grab=(file,re)=>{ const m=fs.readFileSync(file,'utf8').match(re); if(!m) t
   ok('no admin write path on user docs',     !/allow update: if isAdmin\(\)/.test(r));
   ok('admin_log collection gone',            !/admin_log/.test(r));
   ok('email is not a writable key',          !/'email'/.test(r));
-  ok('writable keys are an allowlist',       /writableKeys\(\)\s*\{\s*return \['name','photo','points','lifetime','lastLogin','cycle','awardAt'\]/.test(r));
+  ok('writable keys are an allowlist',       /writableKeys\(\)\s*\{\s*return \['name','photo','points','lifetime','lastLogin','cycle','awardAt','termsV','termsAt'\]/.test(r));
   ok('every update path is key-capped',      (r.match(/changed\(\)\.hasOnly/g)||[]).length===3);
   ok('create is key-capped',                 /neu\(\)\.keys\(\)\.hasOnly\(writableKeys\(\)\)/.test(r));
   ok('account delete is console-only',       /allow delete: if false;/.test(r));
