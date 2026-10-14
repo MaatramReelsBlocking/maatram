@@ -168,27 +168,32 @@
     },
     {
       "source": "/get",
-      "destination": "/maatram-v1.1.apk",
+      "destination": "/maatram-v1.2.apk",
       "permanent": false
     },
     {
       "source": "/maatram.apk",
-      "destination": "/maatram-v1.1.apk",
+      "destination": "/maatram-v1.2.apk",
+      "permanent": false
+    },
+    {
+      "source": "/maatram-v1.1.apk",
+      "destination": "/maatram-v1.2.apk",
       "permanent": false
     },
     {
       "source": "/maatram-v1.0.apk",
-      "destination": "/maatram-v1.1.apk",
+      "destination": "/maatram-v1.2.apk",
       "permanent": false
     },
     {
       "source": "/downloads/maatram-v1.0.apk",
-      "destination": "/maatram-v1.1.apk",
+      "destination": "/maatram-v1.2.apk",
       "permanent": false
     },
     {
       "source": "/downloads/maatram.apk",
-      "destination": "/maatram-v1.1.apk",
+      "destination": "/maatram-v1.2.apk",
       "permanent": false
     }
   ]
