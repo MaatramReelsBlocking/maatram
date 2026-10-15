@@ -274,7 +274,8 @@ const lockUntil = serial(async function (endTime) {
 
   await enableBlocking();
 
-  // Rules only catch new page loads: reload tabs already open on a protected site.
+  // Rules only catch new page loads: reload tabs already open on a protected site
+  // ("tabs" lets the query match sites the extension has no host access to).
   const sel = await getSelected();
   const toReload = (Array.isArray(sel) ? sel : BLOCKED_DOMAINS).concat(await getCustomSites());
   const open = await chrome.tabs.query({ url: toReload.flatMap(siteOrigins) }).catch(() => []);
