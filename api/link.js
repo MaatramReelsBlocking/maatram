@@ -43,7 +43,7 @@ module.exports = async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const code = String(req.query.code || '').toUpperCase();
+      const code = String(new URL(req.url, 'http://x').searchParams.get('code') || '').toUpperCase();
       if (!CODE.test(code)) return res.status(400).json({ error: 'bad code' });
       const cur = await read(code);
       return res.status(200).json({ ...cur, now: Date.now() });

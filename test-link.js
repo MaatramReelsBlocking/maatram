@@ -12,7 +12,7 @@ global.fetch=async(url,o={})=>{
 const handler=require('./api/link.js');
 let ip=0;
 const call=(method,{query={},body,throwBody}={})=>new Promise(done=>{
-  const req={method,query,headers:{'x-forwarded-for':'10.0.0.'+(ip++)}};
+  const req={method,url:'/api/link?'+new URLSearchParams(query),headers:{'x-forwarded-for':'10.0.0.'+(ip++)}};
   Object.defineProperty(req,'body',{get(){ if(throwBody) throw new SyntaxError('Invalid JSON'); return body; }});
   const res={setHeader(){},status(s){this.s=s;return this;},json(j){done({s:this.s,j});},end(){done({s:this.s});}};
   handler(req,res);
