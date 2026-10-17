@@ -56,7 +56,7 @@ function page(file, { seen = false, data } = {}) {
   const res = { setHeader() {}, status() { return this; }, json(o) { this.o = o; } };
   global.fetch = async () => ({ ok: false, status: 403, headers: { get: () => 'text/html' } });
   const warn = console.warn; console.warn = () => {};
-  await api({}, res); console.warn = warn;
+  await api({ headers: {} }, res); console.warn = warn;
   w = page('ratings.html', { seen: true, data: res.o });
   w.eval(fs.readFileSync(path.join(__dirname, 'survey-questions.js'), 'utf8'));   // real page loads this before its inline script
   const inline = [...w.document.querySelectorAll('script:not([src]):not([type])')].map((x) => x.textContent);

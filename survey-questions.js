@@ -9,7 +9,7 @@
     { id: 'ease', q: 'How easy was it to set up and navigate through the app?',
       options: ['Very easy', 'Easy', 'Neutral', 'Difficult', 'Very difficult'] },
     { id: 'feature', q: 'Which feature of the app do you find most useful?',
-      options: ['App blocking / Screen limits', 'Rewards / Focus streak tracking', 'Study rooms', 'Timers (Pomodoro / Deep Work)', 'Stats', 'Other'] },
+      options: ['App blocking / Screen limits', 'Rewards / Focus streak tracking', 'Study rooms', 'Timers (Pomodoro / Deep Work)', 'Stats', 'Wellness (meals, water, sleep)', 'Other'] },
     { id: 'alerts', q: "How effective are the app's alerts or reminders in helping you stop using your device?",
       options: ['Extremely effective', 'Effective', 'Somewhat effective', 'Not effective'] },
     { id: 'cut', q: 'On average, how much has your daily non-academic screen time decreased since using the app?',
