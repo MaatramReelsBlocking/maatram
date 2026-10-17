@@ -338,7 +338,19 @@
   +'radial-gradient(circle at 22% 75%,#7E9C8E 0 18%,transparent 20%),#0B0C0B}'
   +'.th-opt b{display:block;font-size:12.5px;font-weight:700}'
   +'.th-opt span{display:block;font-size:10px;color:#8A928E;margin-top:2px}'
-  +'@media(pointer:coarse){#themePanel{bottom:60px;right:12px}}';
+  +'@media(pointer:coarse){#themePanel{bottom:60px;right:12px}}'
+  /* ── one shared top-bar layout: the name/points chip is never clipped, on any page or width ── */
+  +'#mnav{gap:2px;padding:0 10px;overflow-x:auto;scrollbar-width:none}'
+  +'#mnav::-webkit-scrollbar{display:none}'
+  +'#mnav a.mn-link{padding:7px 8px;letter-spacing:.6px}'
+  +'#mnav .mn-logo{flex:none;margin-right:6px}'
+  +'#mnav .mn-spacer{flex:1 0 0}'
+  +'#mnavAuth{flex:none;margin-left:4px;padding-left:8px;position:sticky;right:0;background:linear-gradient(90deg,transparent,rgba(2,10,8,.96) 10px)}'
+  +'html.minimal #mnavAuth{background:linear-gradient(90deg,transparent,rgba(11,12,11,.96) 10px)}'
+  +'#mnavChip{flex:none}'
+  +'#mnavChip .pt{min-width:62px;text-align:center}'
+  +'#mnavMenu{position:fixed;top:52px;right:8px}'
+  +'@media(max-width:1180px){#mnav .mn-logo b{display:none}#mnavChip .nm{display:none}}';
 
   var css = (MIN ? cssMin : '') + cssBoth;
 
