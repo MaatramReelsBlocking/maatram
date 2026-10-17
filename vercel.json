@@ -166,12 +166,22 @@
   "redirects": [
     {
       "source": "/:path((?!api/).*)",
-      "has": [{ "type": "host", "value": "maatram-website.vercel.app" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "maatram-website.vercel.app"
+        }
+      ],
       "destination": "https://maatram.co.in/:path",
       "permanent": true
     },
     {
       "source": "/survey",
+      "destination": "/survey.html",
+      "permanent": false
+    },
+    {
+      "source": "/survey-form",
       "destination": "https://docs.google.com/forms/d/e/1FAIpQLSdDnTIge-aXXZ5kz9thYLm5L4h9f9j_Zwv7fLGBanD_wotbVA/viewform",
       "permanent": false
     },

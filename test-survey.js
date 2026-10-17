@@ -58,6 +58,7 @@ function page(file, { seen = false, data } = {}) {
   const warn = console.warn; console.warn = () => {};
   await api({}, res); console.warn = warn;
   w = page('ratings.html', { seen: true, data: res.o });
+  w.eval(fs.readFileSync(path.join(__dirname, 'survey-questions.js'), 'utf8'));   // real page loads this before its inline script
   const inline = [...w.document.querySelectorAll('script:not([src]):not([type])')].map((x) => x.textContent);
   inline.filter((c) => !c.includes('universal nav auth')).forEach((code) => { try { w.eval(code); } catch (_) {} });
   w.eval(SURVEY);
@@ -74,6 +75,43 @@ function page(file, { seen = false, data } = {}) {
   const st = d.querySelectorAll('.rv-stars button');
   st[3].click();
   ok(st.length === 5 && [...st].filter((b) => b.classList.contains('on')).length === 4, 'star picker selects 4 stars');
+
+  // shared aggregation: live Firestore surveys + legacy Google Form snapshot
+  const SQ = fs.readFileSync(path.join(__dirname, 'survey-questions.js'), 'utf8');
+  const sw = {}; new Function('window', SQ)(sw); const MS = sw.MAATRAM_SURVEY;
+  const fmt = () => '1 Jan 2026';
+  const live = MS.liveStats([
+    { stars: 5, answers: { freq: 'Once a day', overall: 'Excellent', text: 'Love the hard lock' }, at: new Date() },
+    { stars: 3, answers: { freq: 'Once a day', overall: 'Fair', text: 'nil' }, at: new Date() },
+    { stars: 4, answers: { freq: 'Rarely', overall: 'Good', text: 'Would like more games in the blocklist' }, at: new Date() },
+  ], fmt);
+  ok(live.dist[5] === 1 && live.dist[4] === 1 && live.dist[3] === 1 && live.responses === 3, 'live: star distribution from surveys');
+  ok(live.reviews.length === 2 && live.reviews[0].at === '1 Jan 2026', 'live: empty-ish text hidden, date label applied');
+  ok(live.questions.find((q) => q.q.startsWith('How frequently')).counts['Once a day'] === 2, 'live: per-question counts');
+  ok(!live.questions.some((q) => /overall.*rate/i.test(q.q)), 'live: overall rating question left out of the cards');
+  const merged = MS.merge(api.summarize([['Timestamp', 'Overall, how would you rate your experience with this app?', 'Any suggestions or feedback?'], ['1/1', 'Excellent', 'Nice app for us'], ['1/2', 'Poor', 'Too many popups']], true), live);
+  ok(merged.dist[5] === 2 && merged.dist[1] === 1 && merged.dist[4] === 1 && merged.dist[3] === 1, 'merge: legacy and live totals add up');
+  ok(merged.reviews.length === 4 && merged.reviews[0].text === 'Love the hard lock', 'merge: live reviews listed first');
+  ok(MS.merge(null, null).reviews.length === 0 && MS.merge(null, live).dist[5] === 1, 'merge: works with either source missing');
+
+  // survey form page
+  let sv = page('survey.html');
+  sv.eval(SQ);
+  const svInline = [...sv.document.querySelectorAll('script:not([src]):not([type])')].map((x) => x.textContent).filter((c) => c.includes('survey:'));
+  svInline.forEach((code) => { try { sv.eval(code); } catch (_) {} });
+  ok(sv.document.querySelectorAll('#svForm fieldset').length === 10, 'survey: 10 choice questions rendered');
+  ok(sv.document.querySelectorAll('#svForm textarea').length === 1, 'survey: free-text feedback box rendered');
+  ok(sv.document.querySelectorAll('#svForm input[type=radio]').length >= 30, 'survey: every choice is a radio');
+  ok(sv.document.getElementById('svSend').disabled, 'survey: submit disabled until signed in');
+
+  // ratings page carries the live hook, rules carry the surveys collection
+  const rat = fs.readFileSync(path.join(__dirname, 'ratings.html'), 'utf8');
+  ok(/collection\(db,'surveys'\)/.test(rat), 'ratings: listens to surveys live');
+  const rules = fs.readFileSync(path.join(__dirname, 'firestore.rules'), 'utf8');
+  ok(/match \/surveys\/\{uid\}/.test(rules) && /neu\(\)\.at == request\.time/.test(rules), 'rules: surveys collection, owner-only write');
+  const vj = JSON.parse(fs.readFileSync(path.join(__dirname, 'vercel.json'), 'utf8'));
+  ok(vj.redirects.some((r) => r.source === '/survey' && r.destination === '/survey.html'), '/survey now points at the on-site form');
+  ok(vj.redirects.some((r) => r.source === '/survey-form' && /docs\.google\.com/.test(r.destination)), 'old Google Form kept at /survey-form');
 
   console.log(`\n  ${pass} passed, ${fail} failed   (survey + ratings)`);
   process.exit(fail ? 1 : 0);

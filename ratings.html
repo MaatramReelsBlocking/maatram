@@ -22,6 +22,7 @@
 
 <meta charset="UTF-8">
 <script src="/firebase-config.js"></script>
+<script src="/survey-questions.js"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ratings & Reviews — Maatram Free Focus & Screen-Time App</title>
@@ -336,28 +337,29 @@ body{padding-top:52px!important}
   const bar=(label,n,total)=>'<div class="bar"><span title="'+esc(label)+'">'+esc(label)+'</span><i><b style="--w:'+(total?Math.round(n/total*100):0)+'%"></b></i><span>'+n+'</span></div>';
   const stars=v=>'<span class="stars" style="--p:'+(v/5*100)+'%" role="img" aria-label="'+v+' out of 5 stars">★★★★★</span>';
   const day=d=>d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
-  let survey=null, site=[], qsDone=false;
+  let survey=null, live=null, site=[];   /* survey = legacy Google Form snapshot (/api/ratings), live = Firestore surveys */
+  const MS=window.MAATRAM_SURVEY;
 
   function paint(){
-    const dist={1:0,2:0,3:0,4:0,5:0}; let sum=0,n=0;
-    if(survey) for(const k in survey.dist){ dist[k]+=survey.dist[k]; sum+=k*survey.dist[k]; n+=survey.dist[k]; }
+    const sv=MS.merge(survey,live);
+    const dist=sv.dist; let sum=0,n=0;
+    for(const k in dist){ sum+=k*dist[k]; n+=dist[k]; }
     site.forEach(r=>{ dist[r.stars]++; sum+=r.stars; n++; });
     const avg=n?Math.round(sum/n*10)/10:0;
+    const ready=survey!==null||live!==null;
     $('rtAvg').textContent=n?avg.toFixed(1):'–';
     $('rtStars').style.setProperty('--p',(avg/5*100)+'%');
-    $('rtN').textContent=n?('Based on '+n+' rating'+(n===1?'':'s')):(survey?'No ratings yet':'Loading ratings…');
+    $('rtN').textContent=n?('Based on '+n+' rating'+(n===1?'':'s')):(ready?'No ratings yet':'Loading ratings…');
     $('rtDist').innerHTML=[5,4,3,2,1].map(k=>bar(k+' star'+(k>1?'s':''),dist[k],n)).join('');
     const rows=site.filter(r=>r.text).map(r=>({stars:r.stars,text:r.text,who:r.name,at:r.at?day(r.at):''}))
-      .concat(survey?survey.reviews.map(r=>({stars:r.stars,text:r.text,who:'Survey',at:(r.at||'').split(' ')[0]})):[]);
+      .concat(sv.reviews.map(r=>({stars:r.stars,text:r.text,who:'Survey',at:r.at})));
     $('rtRev').innerHTML=rows.map(r=>'<div class="rev">'+(r.stars?stars(r.stars):'')+'<b>'+esc(r.who)+'</b><p>'+esc(r.text)+'</p><small>'+esc(r.at)+'</small></div>').join('');
     $('rtRevWrap').hidden=!rows.length;
-    if(survey&&!survey.live){ $('rtNote').textContent='Survey answers up to '+day(new Date(survey.asOf))+'. Star ratings posted here are live.'; $('rtNote').hidden=false; }
-    if(survey&&!qsDone){ qsDone=true;
-      const qs=survey.questions.filter(q=>!/overall.*rate/i.test(q.q));
-      $('rtQs').innerHTML=qs.map(q=>{const e=Object.entries(q.counts).sort((a,b)=>b[1]-a[1]),t=e.reduce((s,x)=>s+x[1],0);
-        return '<div class="rt-card"><h3>'+esc(q.q)+'</h3>'+e.map(x=>bar(x[0],x[1],t)).join('')+'</div>';}).join('');
-      $('rtQh').hidden=!qs.length;
-    }
+    if(survey&&!survey.live){ $('rtNote').textContent='Google Form answers from before the on-site survey are shown up to '+day(new Date(survey.asOf))+'. New answers and star ratings are live.'; $('rtNote').hidden=false; }
+    const qs=sv.questions.filter(q=>!/overall.*rate/i.test(q.q));
+    $('rtQs').innerHTML=qs.map(q=>{const e=Object.entries(q.counts).sort((a,b)=>b[1]-a[1]),t=e.reduce((s,x)=>s+x[1],0);
+      return '<div class="rt-card"><h3>'+esc(q.q)+'</h3>'+e.map(x=>bar(x[0],x[1],t)).join('')+'</div>';}).join('');
+    $('rtQh').hidden=!qs.length;
   }
 
   (async function load(){
@@ -387,6 +389,11 @@ body{padding-top:52px!important}
         const me=auth.currentUser&&site.find(r=>r.id===auth.currentUser.uid);
         if(me&&!pick){ pick=me.stars; show(pick); $('rvText').value=me.text; $('rvSend').textContent='Update rating'; }
       },e=>console.warn('reviews',e));
+      /* live: every survey answer appears here as soon as it is submitted */
+      fs.onSnapshot(fs.query(fs.collection(db,'surveys'),fs.orderBy('at','desc'),fs.limit(500)),snap=>{
+        live=MS.liveStats(snap.docs.map(d=>{const v=d.data();return{stars:v.stars,answers:v.answers||{},at:v.at&&v.at.toDate?v.at.toDate():null};}),day);
+        paint();
+      },e=>console.warn('surveys',e));
       let user=null;
       onAuthStateChanged(auth,u=>{ user=u;
         $('rvHint').innerHTML=u?'Tap the stars. Your rating shows up here instantly.':'<a href="login.html" style="color:#2fe38f">Sign in</a> to post a rating (one per account, you can edit it later).';

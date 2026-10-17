@@ -194,6 +194,31 @@ service cloud.firestore {
       allow delete: if isOwner(uid) || isListingModerator();
     }
 
+    /* Survey answers (survey.html): one per signed-in account (doc id = uid), editable by its
+       author, readable by everyone so ratings.html can total them live. No name is stored. */
+    match /surveys/{uid} {
+      allow read: if true;
+      allow create, update: if isOwner(uid)
+                    && get(/databases/$(database)/documents/users/$(uid)).data.get('banned', false) != true
+                    && neu().keys().hasOnly(['answers','stars','at'])
+                    && neu().stars is int && neu().stars >= 1 && neu().stars <= 5
+                    && neu().answers is map
+                    && neu().answers.keys().hasOnly(['freq','ease','feature','alerts','cut','apps','benefit','design','recommend','overall','text'])
+                    && neu().answers.freq is string && neu().answers.freq.size() <= 120
+                    && neu().answers.ease is string && neu().answers.ease.size() <= 120
+                    && neu().answers.feature is string && neu().answers.feature.size() <= 120
+                    && neu().answers.alerts is string && neu().answers.alerts.size() <= 120
+                    && neu().answers.cut is string && neu().answers.cut.size() <= 120
+                    && neu().answers.apps is string && neu().answers.apps.size() <= 120
+                    && neu().answers.benefit is string && neu().answers.benefit.size() <= 120
+                    && neu().answers.design is string && neu().answers.design.size() <= 120
+                    && neu().answers.recommend is string && neu().answers.recommend.size() <= 120
+                    && neu().answers.overall in ['Excellent','Good','Fair','Poor']
+                    && neu().answers.text is string && neu().answers.text.size() <= 400
+                    && neu().at == request.time;
+      allow delete: if isOwner(uid) || isListingModerator();
+    }
+
     /* Nothing else is reachable from a browser. */
     match /{document=**} {
       allow read, write: if false;
