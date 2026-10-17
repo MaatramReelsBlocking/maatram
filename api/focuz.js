@@ -6,6 +6,7 @@
      AI_GATEWAY_API_KEY / Vercel OIDC — Vercel AI Gateway (needs a card on file)
    If every provider fails the bot falls back to its offline FAQ. */
 
+const { banned } = require('./_guard');
 const env = process.env;
 const PROVIDERS = [
   { name: 'gemini', key: env.GEMINI_API_KEY, url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
@@ -82,6 +83,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Headers', 'content-type'); return res.status(204).end(); }
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
   if (!ALLOWED.test(origin)) return res.status(403).json({ error: 'origin' });
+  if (banned(req, res)) return;
 
   let input;
   try { input = clean(req.body); } catch (_) { input = null; }

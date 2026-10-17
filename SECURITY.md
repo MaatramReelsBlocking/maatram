@@ -22,6 +22,15 @@ study rooms. Use your own account.
 - **The Android accessibility service.** It can read window state and send global actions.
   Anything that lets another app drive it, or that leaks what the user opened, matters.
 
+## Blocking an abusive IP
+
+The three serverless endpoints (`/api/focuz`, `/api/link`, `/api/ratings`) refuse any address listed in the
+`BLOCKED_IPS` environment variable (Vercel -> Settings -> Environment Variables; comma separated, exact IPs or
+IPv4 ranges like `198.51.100.0/24`, nothing smaller than /8). It is empty by default. Don't ban a school or
+mobile-carrier range, since many students share one address. Website bans on accounts are done with
+`banned: true` on the user document in the Firebase console. VPN users are not unmasked or blocked as a class:
+that cannot be done reliably from a website and would lock out honest students.
+
 ## Known and accepted
 
 - The Firebase **web** config is public. That is how Firebase works; the protection is in

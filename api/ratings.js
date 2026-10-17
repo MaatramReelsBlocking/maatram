@@ -5,6 +5,7 @@
    Google returns a sign-in page and this falls back to the last snapshot below.
    Override the sheet with env SURVEY_SHEET_ID. */
 
+const { banned } = require('./_guard');
 const SHEET = process.env.SURVEY_SHEET_ID || '1HTtHR5XPAE81xhHvDQ52oO-zzFxs-KbLEWFQ6wPRdxk';
 const CSV = `https://docs.google.com/spreadsheets/d/${SHEET}/gviz/tq?tqx=out:csv`;
 const STARS = { Excellent: 5, Good: 4, Fair: 3, Poor: 1 };   // "Overall experience" answer -> stars
@@ -55,6 +56,7 @@ function summarize(rows, live) {
 }
 
 module.exports = async (req, res) => {
+  if (banned(req, res)) return;
   let out;
   try {
     const r = await fetch(CSV, { redirect: 'manual' });

@@ -9,6 +9,7 @@
    The end time is set with the server's clock, so every device agrees. A running lock can only
    be extended, never shortened or cancelled. */
 
+const { banned } = require('./_guard');
 const PROJECT = 'maatram-859f4';
 const KEY = 'AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ';   // public web key (same as firebase-config.js)
 const CODE = /^[A-HJ-NP-Z2-9]{8}$/;
@@ -38,6 +39,7 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');          // phone app and extension call this too
   res.setHeader('Cache-Control', 'no-store');
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Headers', 'content-type'); res.setHeader('Access-Control-Allow-Methods', 'GET, POST'); return res.status(204).end(); }
+  if (banned(req, res)) return;
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'anon';
   if (limited(ip)) return res.status(429).json({ error: 'Too many requests. Try again in a minute.' });
 
