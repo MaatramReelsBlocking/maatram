@@ -407,9 +407,9 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 <main id="main">
 <div class="wrap">
 
-  <p class="eyebrow">Android · iPhone · Windows · Chrome · free &amp; open source</p>
+  <p class="eyebrow">Android · iPhone · Windows · Linux · Mac · Chrome · free &amp; open source</p>
   <h1>Get Maatram on <em>your devices</em></h1>
-  <div class="plat-head"><span>01 / <b>Platforms</b></span><span>Android 5.1+ · iPhone Safari · x64 Windows · Chrome desktop</span></div>
+  <div class="plat-head"><span>01 / <b>Platforms</b></span><span>Android 5.1+ · iPhone Safari · x64 Windows · Linux · Mac · Chrome desktop</span></div>
   <div class="apps" id="apps">
     <article class="app" data-os="android-full" aria-labelledby="appFull">
       <div class="cell-head"><span class="sys">Platform</span><span class="n">01</span></div>
@@ -542,6 +542,56 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
         <li>Tap the <b>Share</b> button (square with an arrow), then <b>Add to Home Screen</b>.</li>
         <li>Turn on <b>Open as Web App</b> if you see it, then tap <b>Add</b>.</li>
         <li>Open Maatram from the new icon and sign in there once. The home-screen app keeps its own login, separate from Safari.</li>
+      </ol>
+    </article>
+    <article class="app" data-os="linux" aria-labelledby="appLinux">
+      <div class="cell-head"><span class="sys">Platform</span><span class="n">06</span></div>
+      <span class="tag live">New · 0.2.0</span>
+      <div class="ttl"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7 9 3 3-3 3M13 15h4"/></svg></span><h2 id="appLinux">Maatram Hard Lock for Linux</h2></div>
+      <p>Hard Lock only, the same as on Windows. Pick a duration, start the lock, and for that time the apps you list are closed the moment they open and Instagram, YouTube, TikTok, Snapchat, X, Reddit and more are blocked through <code>/etc/hosts</code>. Enter the link code from App Gate and one Hard Lock locks this computer, your phone, the website and Chrome together.</p>
+      <ul class="chips">
+        <li>Version <b>0.2.0</b></li>
+        <li>AppImage, <b>.deb</b>, <b>.rpm</b></li>
+        <li>Ubuntu, Debian, <b>Fedora</b> and others, 64-bit</li>
+        <li>Asks for your <b>admin password</b> once</li>
+      </ul>
+      <div class="cta">
+        <a class="dl" id="dlBtnLinux" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-x86_64.AppImage" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+          Download AppImage<span class="sr-only"> — Maatram Hard Lock for Linux (.AppImage, any distribution)</span>
+        </a>
+        <a class="ghost" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-amd64.deb" rel="noopener">.deb (Ubuntu, Debian)</a>
+        <a class="ghost" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-x86_64.rpm" rel="noopener">.rpm (Fedora)</a>
+      </div>
+      <ol class="ext-steps">
+        <li>AppImage: make it runnable with <code>chmod +x maatram-hardlock-linux-x86_64.AppImage</code>, then open it.</li>
+        <li>Ubuntu or Debian: <code>sudo apt install ./maatram-hardlock-linux-amd64.deb</code>. Fedora: <code>sudo dnf install ./maatram-hardlock-linux-x86_64.rpm</code>.</li>
+        <li>The first time you press Start, Maatram asks for your admin password to set up the lock service. That is how it can edit <code>/etc/hosts</code> and close apps.</li>
+        <li>If something goes wrong, run <code>sudo sh Maatram-Restore.sh</code> from <a href="https://github.com/MaatramReelsBlocking/maatram-windows/blob/main/Maatram-Restore.sh" target="_blank" rel="noopener">GitHub</a>. It ends any lock and cleans the hosts file.</li>
+      </ol>
+    </article>
+    <article class="app" data-os="mac" aria-labelledby="appMac">
+      <div class="cell-head"><span class="sys">Platform</span><span class="n">07</span></div>
+      <span class="tag live">New · 0.2.0</span>
+      <div class="ttl"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2.5 19.5h19"/></svg></span><h2 id="appMac">Maatram Hard Lock for Mac</h2></div>
+      <p>Hard Lock only, the same as on Windows. Pick a duration, start the lock, and for that time the apps you list are closed the moment they open and Instagram, YouTube, TikTok, Snapchat, X, Reddit and more are blocked through the hosts file. Enter the link code from App Gate and one Hard Lock locks this Mac, your phone, the website and Chrome together.</p>
+      <ul class="chips">
+        <li>Version <b>0.2.0</b></li>
+        <li><b>.dmg</b> for Apple silicon and Intel</li>
+        <li>Asks for your <b>admin password</b> once</li>
+      </ul>
+      <div class="cta">
+        <a class="dl" id="dlBtnMac" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-macos-universal.dmg" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+          Download for Mac<span class="sr-only"> — Maatram Hard Lock for Mac (.dmg)</span>
+        </a>
+        <a class="ghost" href="https://github.com/MaatramReelsBlocking/maatram-windows" target="_blank" rel="noopener">Source on GitHub</a>
+      </div>
+      <ol class="ext-steps">
+        <li>Open the .dmg and drag Maatram Hard Lock into Applications.</li>
+        <li>The app is not notarized by Apple yet, so macOS may refuse it at first. Right-click the app, choose <b>Open</b>, then <b>Open</b> again.</li>
+        <li>The first time you press Start, Maatram asks for your admin password to set up the lock service.</li>
+        <li>If something goes wrong, run <code>sudo sh Maatram-Restore.sh</code> from <a href="https://github.com/MaatramReelsBlocking/maatram-windows/blob/main/Maatram-Restore.sh" target="_blank" rel="noopener">GitHub</a>. It ends any lock and cleans the hosts file.</li>
       </ol>
     </article>
   </div>
@@ -777,7 +827,8 @@ Linux     sha256sum maatram-hardlock-v2.6.5-beta.apk</pre>
   /* ---- "Your system": highlight the card that fits this device ---- */
   var ua = navigator.userAgent;
   var os = /Android/i.test(ua) ? 'android' : /Windows/i.test(ua) ? 'windows'
-         : /iPhone|iPad|iPod/i.test(ua) ? 'ios' : 'desktop';
+         : /iPhone|iPad|iPod/i.test(ua) ? 'ios' : /Macintosh|Mac OS X/i.test(ua) ? 'mac'
+         : /Linux|X11/i.test(ua) ? 'linux' : 'desktop';
   var mine = os && document.querySelector('#apps [data-os="' + os + '"]');
   if (mine) {
     mine.classList.add('mine');
