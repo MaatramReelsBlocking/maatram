@@ -153,6 +153,21 @@
   .room-actions{display:flex;gap:10px;flex-wrap:wrap}
   #shareBtn{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:9px 22px;border-radius:100px;border:1px solid var(--green);color:var(--green);background:transparent;cursor:pointer;transition:all .3s}
   #shareBtn:hover{background:rgba(47,227,143,.1)}
+  #lobbyShare{margin-top:2px;background:transparent;border:1px solid var(--green);color:var(--green);font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:12px 22px;border-radius:100px;cursor:pointer;min-height:44px}
+  #lobbyShare:hover{background:rgba(47,227,143,.1)}
+  /* invite popup: always centred, even under a global margin reset */
+  #inviteDlg{position:fixed;inset:0;margin:auto;height:fit-content;max-height:calc(100dvh - 32px);overflow:auto;width:calc(100% - 32px);max-width:420px;padding:0;border:1px solid rgba(47,227,143,.35);border-radius:22px;background:#0d1417;color:#e6f0ed;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+  #inviteDlg::backdrop{background:rgba(4,7,8,.82);backdrop-filter:blur(6px)}
+  #inviteDlg .in{padding:26px 22px 20px;text-align:center}
+  #inviteDlg h2{margin:0 0 8px;font-family:var(--font-display);font-size:22px;color:#fff}
+  #inviteDlg p{margin:0 0 14px;color:#a9bcb8;font-size:14.5px;line-height:1.55}
+  #inviteDlg .code{display:inline-block;margin:0 0 16px;padding:10px 20px;border-radius:14px;border:1px dashed rgba(47,227,143,.5);font:800 26px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:5px;color:var(--green)}
+  #inviteDlg .acts{display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-bottom:10px}
+  #inviteDlg .acts button,#inviteDlg .acts a{min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:100px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#e6f0ed;font:700 13px var(--font-display);text-decoration:none;cursor:pointer}
+  #inviteDlg .acts .main{grid-column:1/-1;border:0;background:linear-gradient(90deg,#2fe38f,#37b6ff);color:#04120f}
+  #inviteDlg .acts button:hover,#inviteDlg .acts a:hover{border-color:var(--green)}
+  #inviteDlg .close{width:100%;min-height:44px;border-radius:100px;border:0;background:transparent;color:#8fa3a0;font:600 13px var(--font-display);cursor:pointer}
+  #inviteDlg button:focus-visible,#inviteDlg a:focus-visible{outline:2px solid #38b6ff;outline-offset:3px}
 
   /* seats */
   .seats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
@@ -349,6 +364,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
         <button class="gen" id="genBtn" title="Generate random code">🎲</button>
       </div>
       <button id="joinBtn" disabled>Join Room</button>
+      <button id="lobbyShare" type="button">Share this code</button>
     </div>
   </div>
 
@@ -387,6 +403,19 @@ window.maatramAward=window.maatramAward||function(pts,reason){
   <footer>MAATRAM · <b>Action ⟹ Value</b> · Built by Team Maatram, SSVM School of Excellence</footer>
 </div>
 
+<dialog id="inviteDlg" aria-labelledby="invH"><div class="in">
+  <h2 id="invH">Share this room</h2>
+  <p id="invP">Send the code or the link. Up to 4 friends can join you.</p>
+  <div class="code" id="invCode"></div>
+  <div class="acts">
+    <button type="button" class="main" id="invShare" hidden>Share…</button>
+    <button type="button" id="invCopyLink">Copy link</button>
+    <button type="button" id="invCopyCode">Copy code</button>
+    <a id="invWa" target="_blank" rel="noopener">WhatsApp</a>
+    <a id="invMail">Email</a>
+  </div>
+  <button type="button" class="close" id="invClose">Close</button>
+</div></dialog>
 <div id="kicked" role="dialog" aria-modal="true" aria-labelledby="kickedTitle">
   <div class="box">
     <h2 id="kickedTitle">Struck out. 🚫</h2>
@@ -572,6 +601,8 @@ function joinRoom(code, resume=false){
   addLog(resume?`Welcome back, ${myName} — session continued.`:`You joined as ${myName}.`,'good');
   renderSeats();
   connect(code);
+  clearTimeout(aloneT);
+  aloneT=setTimeout(()=>{ if(inRoom && !Object.keys(peers).length) openInvite(code,true); },8000);   /* nobody showed up: nudge the user to invite */
   clockTick=setInterval(()=>{ renderTimes();
     store.set('maatram_room_alive',String(Date.now()));
     sessPatch({last:Date.now(),strikes:myStrikes});
@@ -583,7 +614,7 @@ function leaveRoom(kicked=false){
   if(!inRoom) return;
   inRoom=false;
   sessDel(); store.del('maatram_room_alive');
-  clearTimeout(focusBonusTimer);
+  clearTimeout(focusBonusTimer); clearTimeout(aloneT); closeInvite();
   if(kicked) window.maatramAward(-30,'Struck out');
   sendMsg({type:'bye',name:myName});
   clearInterval(clockTick); clockTick=null;
@@ -596,15 +627,35 @@ function leaveRoom(kicked=false){
 }
 
 $('leaveBtn').onclick=()=>leaveRoom();
-/* invite link: phones get the share sheet, everyone else gets it copied */
-$('shareBtn').onclick=async()=>{
-  const url=location.origin+location.pathname+'?room='+encodeURIComponent(roomCode), btn=$('shareBtn');
-  try{
-    if(navigator.share && matchMedia('(pointer:coarse)').matches){ await navigator.share({title:'Maatram study room',url}); return; }
-    await navigator.clipboard.writeText(url); btn.textContent='Link copied ✓';
-    setTimeout(()=>{ btn.textContent='Share link'; },2000);
-  }catch(e){ if(e && e.name!=='AbortError') prompt('Copy this link:',url); }
-};
+/* invite popup: share sheet where the browser has one, plus copy / WhatsApp / email everywhere */
+const inviteUrl=c=>location.origin+location.pathname+'?room='+encodeURIComponent(c);
+const inviteMsg=c=>'Study with me on Maatram. Room code: '+c+'. Join here: '+inviteUrl(c);
+let inviteAlone=false, aloneT=null;
+function flash(btn,txt){ const o=btn.dataset.o||btn.textContent; btn.dataset.o=o; btn.textContent=txt; setTimeout(()=>{ btn.textContent=o; },1800); }
+async function copyText(t,btn){
+  try{ await navigator.clipboard.writeText(t); flash(btn,'Copied ✓'); }
+  catch(_){ prompt('Copy this:',t); }
+}
+function openInvite(code,alone){
+  inviteAlone=!!alone;
+  const dlg=$('inviteDlg');
+  $('invH').textContent=alone?'You’re the only one here':'Share this room';
+  $('invP').textContent=alone?'Share the room so others can join you. Studying together keeps everyone focused.':'Send the code or the link. Up to 4 friends can join you.';
+  $('invCode').textContent=code;
+  $('invShare').hidden=!navigator.share;
+  $('invShare').onclick=()=>navigator.share({title:'Maatram study room',text:inviteMsg(code),url:inviteUrl(code)}).catch(()=>{});
+  $('invCopyLink').onclick=e=>copyText(inviteUrl(code),e.currentTarget);
+  $('invCopyCode').onclick=e=>copyText(code,e.currentTarget);
+  $('invWa').href='https://wa.me/?text='+encodeURIComponent(inviteMsg(code));
+  $('invMail').href='mailto:?subject='+encodeURIComponent('Study with me on Maatram')+'&body='+encodeURIComponent(inviteMsg(code));
+  if(!dlg.open){ if(dlg.showModal) dlg.showModal(); else dlg.setAttribute('open',''); }
+  (navigator.share?$('invShare'):$('invCopyLink')).focus();
+}
+function closeInvite(){ const d=$('inviteDlg'); if(d.open){ d.close?d.close():d.removeAttribute('open'); } inviteAlone=false; }
+$('invClose').onclick=closeInvite;
+$('inviteDlg').addEventListener('click',e=>{ if(e.target===$('inviteDlg')) closeInvite(); });
+$('shareBtn').onclick=()=>openInvite(roomCode,false);
+$('lobbyShare').onclick=()=>{ const c=cleanCode($('codeInput').value); if(c.length<4){ $('codeInput').focus(); return; } openInvite(c,false); };
 $('kickedOk').onclick=()=>{ $('kicked').classList.remove('show'); leaveRoom(true); };
 
 /* ═══════════════════════════════════════════════
@@ -612,6 +663,7 @@ $('kickedOk').onclick=()=>{ $('kicked').classList.remove('show'); leaveRoom(true
 ═══════════════════════════════════════════════ */
 const SEAT_IDS=['seat0','seat1','seat2','seat3','seat4'];
 function renderSeats(){
+  if(inviteAlone && Object.keys(peers).length) closeInvite();   /* someone joined: the nudge is no longer true */
   const all=[{id:myId,name:myName,avatar:myAvatar,strikes:myStrikes,me:true,joinedAt:myStart},
              ...Object.entries(peers).map(([id,p])=>({id,...p,me:false}))].slice(0,5);
   SEAT_IDS.forEach((sid,i)=>{
