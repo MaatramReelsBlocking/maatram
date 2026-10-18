@@ -483,6 +483,8 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       <ol class="ext-steps">
         <li>Windows shows <b>Unknown publisher</b> because the file is not code-signed. Click <b>More info</b>, then <b>Run anyway</b>.</li>
         <li>Allow administrator rights. Maatram needs them to edit the hosts file and close apps.</li>
+        <li><b>Why the warning?</b> Windows warns about any new app that is not code-signed yet, however safe. Maatram is open source, so <a href="https://github.com/MaatramReelsBlocking/maatram-windows" target="_blank" rel="noopener">you can read every line</a> it runs.</li>
+        <li><b>Check the file is genuine.</b> In PowerShell run <code>Get-FileHash .\Maatram.Hard.Lock_0.1.0_x64-setup.exe</code>. The SHA-256 must be <code style="word-break:break-all">f455fa702834f8765818986ae06a5fd3fa7a13ec694bb6aff9e86372df3e4e39</code>.</li>
         <li>If something goes wrong, right-click <a href="https://github.com/MaatramReelsBlocking/maatram-windows/blob/main/Maatram-Restore.bat" target="_blank" rel="noopener">Maatram-Restore.bat</a> and choose <b>Run as administrator</b>. Uninstalling also ends any running lock.</li>
       </ol>
     </article>
