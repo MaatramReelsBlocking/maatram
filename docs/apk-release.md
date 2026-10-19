@@ -17,7 +17,7 @@ because the live size probe was measuring the 404 page instead of the APK.
 - The size probe is gone; the page states 2.86 MB as a fact
 - `download.html` now uses the exact same top nav as every other page (same markup,
   same CSS, same sign-in chip), so it matches in Neon and in Minimal Glass
-- "Get the app" is the active nav item on that page
+- "Download" is the active nav item on that page
 - `vercel.json`: `.apk` served as `application/vnd.android.package-archive`, plus
   redirects so `/get`, `/maatram.apk` and the old `/downloads/...` paths still work
 

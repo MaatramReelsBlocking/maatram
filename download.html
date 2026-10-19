@@ -274,6 +274,75 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
   dl.spec{grid-template-columns:minmax(0,1fr);}
   dl.spec dt{padding-bottom:0;border-bottom:0}
 }
+
+/* ---- download picker: triangle selector ---- */
+.pk{margin:30px 0 0}
+.pk-stage{position:relative;width:min(460px,100%);aspect-ratio:400/360;margin:0 auto 30px}
+.pk-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.pk-svg .e{fill:none;stroke-linecap:round}
+.pk-svg .base{stroke:var(--line);stroke-width:1.5}
+.pk-svg .glow{stroke:url(#pkg);stroke-width:7;opacity:.1;transition:opacity .3s var(--ease)}
+.pk-svg .flow{stroke:url(#pkg);stroke-width:2;stroke-dasharray:5 15;opacity:.7;animation:pkflow 2.6s linear infinite;transition:opacity .3s var(--ease)}
+@keyframes pkflow{to{stroke-dashoffset:-40}}
+.pk-stage:has([data-n="phone"]:is(:hover,:focus-visible)) :is(.e-pd,.e-pb) :is(.glow,.flow),
+.pk-stage:has([data-n="desktop"]:is(:hover,:focus-visible)) :is(.e-pd,.e-db) :is(.glow,.flow),
+.pk-stage:has([data-n="browser"]:is(:hover,:focus-visible)) :is(.e-pb,.e-db) :is(.glow,.flow),
+.pk-stage[data-sel="phone"] :is(.e-pd,.e-pb) :is(.glow,.flow),
+.pk-stage[data-sel="desktop"] :is(.e-pd,.e-db) :is(.glow,.flow),
+.pk-stage[data-sel="browser"] :is(.e-pb,.e-db) :is(.glow,.flow){opacity:1}
+.pk-stage:has([data-n="phone"]:is(:hover,:focus-visible)) :is(.e-pd,.e-pb) .glow,
+.pk-stage:has([data-n="desktop"]:is(:hover,:focus-visible)) :is(.e-pd,.e-db) .glow,
+.pk-stage:has([data-n="browser"]:is(:hover,:focus-visible)) :is(.e-pb,.e-db) .glow,
+.pk-stage[data-sel="phone"] :is(.e-pd,.e-pb) .glow,
+.pk-stage[data-sel="desktop"] :is(.e-pd,.e-db) .glow,
+.pk-stage[data-sel="browser"] :is(.e-pb,.e-db) .glow{opacity:.4}
+.pk-brand{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);pointer-events:none;white-space:nowrap;
+  font:800 clamp(18px,6vw,30px)/1 var(--font);letter-spacing:.08em;
+  background:linear-gradient(120deg,var(--green),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.pk-n{--nd:clamp(66px,18vw,88px);position:absolute;width:var(--nd);height:var(--nd);
+  margin:calc(var(--nd) / -2) 0 0 calc(var(--nd) / -2);display:grid;place-items:center;border-radius:50%;
+  text-decoration:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);
+  transition:transform .22s var(--ease),border-color .22s var(--ease),box-shadow .22s var(--ease)}
+.pk-n svg{width:36%;height:36%}
+.pk-n .lab{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;
+  font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;background:var(--bg);padding:3px 5px}
+.pk-n:hover,.pk-n:focus-visible,.pk-n[aria-current="true"]{border-color:var(--green);transform:scale(1.07);
+  box-shadow:0 0 28px -4px var(--green)}
+.pk-n:active{transform:scale(.98)}
+.pk-panel{border:1px solid var(--line);background:var(--panel);scroll-margin-top:64px}
+.pk-panel[hidden]{display:none}
+.pk-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding:10px 18px;border-bottom:1px solid var(--line);
+  font:600 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.pk-bar a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;color:var(--ink);text-decoration:none}
+.pk-bar a:hover{color:var(--green)}
+.pk-bar .pk-crumb{margin-left:auto}
+.pk-panel h2{margin:0;padding:18px 20px 4px;outline:0}
+.pk-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px;margin:0;padding:14px 20px 20px;list-style:none}
+.pk-c{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;min-height:104px;height:100%;
+  padding:14px 10px;border:1px solid var(--line);border-radius:0;background:var(--bg);color:var(--ink);text-decoration:none;text-align:center;
+  font-weight:700;font-size:14.5px;transition:border-color .2s var(--ease),transform .2s var(--ease)}
+a.pk-c:hover,a.pk-c:focus-visible{border-color:var(--green);transform:translateY(-2px)}
+a.pk-c[aria-current="true"]{border-color:var(--green)}
+.pk-c .ic{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;border:1px solid var(--line);color:var(--ink);overflow:hidden}
+.pk-c .ic svg{width:26px;height:26px}
+.pk-c .ic.img{background:#fff}
+.pk-c .ic img{width:38px;height:38px;object-fit:contain;display:block}
+.pk-c em{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.pk-c.soon{opacity:.55;cursor:default}
+.pk-note{margin:0;padding:0 20px 20px;color:var(--dim);font-size:14px}
+.pk-note:empty{display:none}
+.pk-soon{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border:1px dashed var(--line);
+  color:var(--dim);font-size:14px}
+html.pk-on .plat-head,html.pk-on .both{display:none}
+html.pk-on .apps{display:none;margin-top:16px}
+html.pk-on .apps.open{display:grid;grid-template-columns:minmax(0,1fr)}
+html.pk-on .apps .app{display:none}
+html.pk-on .apps .app.show{display:flex}
+@media (min-width:700px){html.pk-on .apps.open.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){.pk-svg .flow{animation:none}.pk-n,.pk-c{transition:none}
+  .pk-n:hover,.pk-n:focus-visible,a.pk-c:hover,a.pk-c:focus-visible{transform:none}}
+html.perf .pk-svg .flow{animation:none}
+html.perf .pk-n,html.perf .pk-c{transition:none}
 </style>
 <script defer src="/speed-insights.js"></script>
 <script src="/firebase-config.js"></script>
@@ -283,7 +352,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
- <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link active" href="download.html">Get the app</a><a class="mn-link" href="login.html">Account</a>
+ <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link active" href="download.html">Download</a><a class="mn-link" href="login.html">Account</a>
   <div id="mnavAuth">
     <a id="mnavIn" href="login.html">Sign in</a>
     <div id="mnavChip">
@@ -409,6 +478,27 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
 
   <p class="eyebrow">Android · iPhone · Windows · Linux · Mac · Chrome · free &amp; open source</p>
   <h1>Get Maatram on <em>your devices</em></h1>
+<script>document.documentElement.classList.add('pk-on')</script>
+  <div class="pk" id="picker" role="group" aria-label="Platforms">
+    <div class="pk-stage" id="pkStage">
+      <svg class="pk-svg" viewBox="0 0 400 360" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="pkg" gradientUnits="userSpaceOnUse" x1="60" y1="54" x2="340" y2="294"><stop offset="0" style="stop-color:var(--green)"/><stop offset="1" style="stop-color:var(--blue)"/></linearGradient></defs>
+        <g class="e-pd"><path class="e base" d="M200 54 60 294"/><path class="e glow" d="M200 54 60 294"/><path class="e flow" d="M200 54 60 294"/></g>
+        <g class="e-pb"><path class="e base" d="M200 54 340 294"/><path class="e glow" d="M200 54 340 294"/><path class="e flow" d="M200 54 340 294"/></g>
+        <g class="e-db"><path class="e base" d="M60 294 340 294"/><path class="e glow" d="M60 294 340 294"/><path class="e flow" d="M60 294 340 294"/></g>
+      </svg>
+      <div class="pk-brand" aria-hidden="true">MAATRAM</div>
+      <a class="pk-n" data-n="desktop" href="#desktop" style="left:15%;top:81.67%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span class="lab">Desktop</span></a>
+      <a class="pk-n" data-n="phone" href="#phone" style="left:50%;top:15%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg><span class="lab">Phone</span></a>
+      <a class="pk-n" data-n="browser" href="#browser" style="left:85%;top:81.67%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><span class="lab">Browser</span></a>
+    </div>
+    <div class="pk-panel" id="pkPanel" hidden>
+      <div class="pk-bar"><a id="pkBack" href="#">&larr; Back</a><a id="pkReset" href="#" hidden>Start over</a><span class="pk-crumb" id="pkCrumb"></span></div>
+      <h2 id="pkTitle" tabindex="-1"></h2>
+      <ul class="pk-choices" id="pkChoices"></ul>
+      <p class="pk-note" id="pkNote"></p>
+    </div>
+  </div>
   <div class="plat-head"><span>01 / <b>Platforms</b></span><span>Android 5.1+ · iPhone Safari · x64 Windows · Linux · Mac · Chrome desktop</span></div>
   <div class="apps" id="apps">
     <article class="app" data-os="android-full" aria-labelledby="appFull">
@@ -423,7 +513,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
         <li><b>com.maatram.app</b></li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtn" href="maatram-v1.2.apk" download
+        <a class="dl" id="dlBtn" data-dl="android-full" href="maatram-v1.2.apk" download
            type="application/vnd.android.package-archive">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -447,7 +537,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
         <li><b>com.maatram.hardlock</b></li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtnLock" href="https://github.com/MaatramReelsBlocking/maatram-hard-lock/releases/download/build-48/maatram-hardlock-v2.6.5-beta.apk"
+        <a class="dl" id="dlBtnLock" data-dl="android" href="https://github.com/MaatramReelsBlocking/maatram-hard-lock/releases/download/build-48/maatram-hardlock-v2.6.5-beta.apk"
            type="application/vnd.android.package-archive" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -471,7 +561,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
         <li>Needs <b>administrator</b> rights</li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtnWin" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/download/v0.1.0/Maatram.Hard.Lock_0.1.0_x64-setup.exe" rel="noopener">
+        <a class="dl" id="dlBtnWin" data-dl="windows" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/download/v0.1.0/Maatram.Hard.Lock_0.1.0_x64-setup.exe" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/>
@@ -502,15 +592,15 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
       <p class="bz-head">Install Maatram Hard Lock on your browser</p>
       <p class="bz-sub">Chrome, Brave, Edge and Opera use the same Web Store listing.</p>
       <ul class="bz">
-        <li><a href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener"><span class="ic"><img src="assets/browsers/chrome.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Chrome<span class="sr-only"> — install Maatram Hard Lock from the Chrome Web Store</span></a></li>
-        <li><a href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener"><span class="ic"><img src="assets/browsers/brave.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Brave<span class="sr-only"> — install Maatram Hard Lock from the Chrome Web Store</span></a></li>
-        <li><a href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener"><span class="ic"><img src="assets/browsers/edge.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Edge<span class="sr-only"> — install Maatram Hard Lock from the Chrome Web Store</span></a></li>
-        <li><a href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener"><span class="ic"><img src="assets/browsers/opera.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Opera<span class="sr-only"> — install Maatram Hard Lock from the Chrome Web Store</span></a></li>
+        <li><a data-dl="ext-store" href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener"><span class="ic"><img src="assets/browsers/chrome.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Chrome<span class="sr-only"> — install Maatram Hard Lock from the Chrome Web Store</span></a></li>
+        <li><a data-dl="ext-store" href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener"><span class="ic"><img src="assets/browsers/brave.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Brave<span class="sr-only"> — install Maatram Hard Lock from the Chrome Web Store</span></a></li>
+        <li><a data-dl="ext-store" href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener"><span class="ic"><img src="assets/browsers/edge.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Edge<span class="sr-only"> — install Maatram Hard Lock from the Chrome Web Store</span></a></li>
+        <li><a data-dl="ext-store" href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener"><span class="ic"><img src="assets/browsers/opera.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Opera<span class="sr-only"> — install Maatram Hard Lock from the Chrome Web Store</span></a></li>
         <li><span class="soon"><span class="ic"><img src="assets/browsers/firefox.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Firefox<em>Coming soon</em></span></li>
         <li><span class="soon"><span class="ic"><img src="assets/browsers/safari.png" alt="" width="40" height="40" loading="lazy" decoding="async"></span>Safari<em>Coming soon</em></span></li>
       </ul>
       <div class="cta">
-        <a class="ghost" id="dlBtnExt" href="maatram-hard-lock-extension-1.6.4.zip" download type="application/zip">Newest version by hand (.zip)<span class="sr-only"> — Maatram Hard Lock</span></a>
+        <a class="ghost" id="dlBtnExt" data-dl="ext-zip" href="maatram-hard-lock-extension-1.6.4.zip" download type="application/zip">Newest version by hand (.zip)<span class="sr-only"> — Maatram Hard Lock</span></a>
       </div>
       <ol class="ext-steps">
         <li>Download the zip and <b>unzip</b> it to a folder you will keep.</li>
@@ -531,7 +621,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
         <li>Updates itself</li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtnIos" href="/?utm_source=ios">
+        <a class="dl" id="dlBtnIos" data-dl="ios" href="/?utm_source=ios">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 12v8h14v-8"/>
@@ -558,12 +648,12 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
         <li>Asks for your <b>admin password</b> once</li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtnLinux" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-x86_64.AppImage" rel="noopener">
+        <a class="dl" id="dlBtnLinux" data-dl="linux-appimage" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-x86_64.AppImage" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
           Download AppImage<span class="sr-only"> — Maatram Hard Lock for Linux (.AppImage, any distribution)</span>
         </a>
-        <a class="ghost" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-amd64.deb" rel="noopener">.deb (Ubuntu, Debian)</a>
-        <a class="ghost" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-x86_64.rpm" rel="noopener">.rpm (Fedora)</a>
+        <a class="ghost" data-dl="linux-deb" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-amd64.deb" rel="noopener">.deb (Ubuntu, Debian)</a>
+        <a class="ghost" data-dl="linux-rpm" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-x86_64.rpm" rel="noopener">.rpm (Fedora)</a>
       </div>
       <ol class="ext-steps">
         <li>AppImage: make it runnable with <code>chmod +x maatram-hardlock-linux-x86_64.AppImage</code>, then open it.</li>
@@ -583,7 +673,7 @@ html.minimal .gate.done .tick{color:#9CC0B2;border-color:rgba(156,192,178,.45)}
         <li>Asks for your <b>admin password</b> once</li>
       </ul>
       <div class="cta">
-        <a class="dl" id="dlBtnMac" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-macos-universal.dmg" rel="noopener">
+        <a class="dl" id="dlBtnMac" data-dl="mac" href="https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-macos-universal.dmg" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
           Download for Mac<span class="sr-only"> — Maatram Hard Lock for Mac (.dmg)</span>
         </a>
@@ -910,6 +1000,95 @@ Linux     sha256sum maatram-hardlock-v2.6.5-beta.apk</pre>
     }, { rootMargin: '0px 0px -12% 0px', threshold: .08 });
     rv.forEach(function(el){ io.observe(el); });
   }
+})();
+</script>
+<script type="application/json" id="dlcfg">
+{
+  "android-full":   {"url":"maatram-v1.2.apk"},
+  "android":        {"url":"https://github.com/MaatramReelsBlocking/maatram-hard-lock/releases/download/build-48/maatram-hardlock-v2.6.5-beta.apk"},
+  "windows":        {"url":"https://github.com/MaatramReelsBlocking/maatram-windows/releases/download/v0.1.0/Maatram.Hard.Lock_0.1.0_x64-setup.exe"},
+  "mac":            {"url":"https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-macos-universal.dmg"},
+  "linux-appimage": {"url":"https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-x86_64.AppImage"},
+  "linux-deb":      {"url":"https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-amd64.deb"},
+  "linux-rpm":      {"url":"https://github.com/MaatramReelsBlocking/maatram-windows/releases/latest/download/maatram-hardlock-linux-x86_64.rpm"},
+  "ext-store":      {"url":"https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen"},
+  "ext-zip":        {"url":"maatram-hard-lock-extension-1.6.4.zip"},
+  "ios":            {"url":"/?utm_source=ios"}
+}
+</script>
+<script>
+/* Download picker. URLs live in #dlcfg above (one place; set "status":"soon" to show Coming soon).
+   Routes are real hashes: #desktop, #desktop/windows, #phone/android, #browser/chrome ... so Back works. */
+(function(){
+'use strict';
+try{
+var root=document.documentElement, panel=document.getElementById('pkPanel'); if(!panel)return;
+var CFG={}; try{CFG=JSON.parse(document.getElementById('dlcfg').textContent)||{};}catch(e){}
+[].slice.call(document.querySelectorAll('[data-dl]')).forEach(function(a){
+  var c=CFG[a.getAttribute('data-dl')]; if(!c)return;
+  if(c.status==='soon'){var s=document.createElement('span');s.className='pk-soon';s.setAttribute('aria-disabled','true');s.textContent='Coming soon';a.replaceWith(s);return;}
+  if(c.url)a.setAttribute('href',c.url);
+});
+var I=function(b,f){return '<svg viewBox="0 0 24 24" fill="'+(f?'currentColor':'none')+'" stroke="'+(f?'none':'currentColor')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+b+'</svg>';};
+var ICON={
+  windows:I('<path d="M3 5.2 10.3 4v7.3H3zM11.3 3.9 21 2.5v8.8h-9.7zM3 12.3h7.3v7.3L3 18.6zM11.3 12.3H21v9.2l-9.7-1.4z"/>',1),
+  mac:I('<rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2.5 19.5h19"/>'),
+  linux:I('<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7 9 3 3-3 3M13 15h4"/>'),
+  android:I('<path d="M6 10a6 6 0 0 1 12 0v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18z"/><path d="M8.5 4.5 7 2.5M15.5 4.5 17 2.5M9.5 9.5h.01M14.5 9.5h.01"/>'),
+  ios:I('<rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10 5h4"/>')
+};
+/* id, label, caption, cards to show (null = not available yet) */
+var TREE={
+  desktop:{t:'Desktop',k:[['windows','Windows','',['windows']],['mac','macOS','',['mac']],['linux','Linux','',['linux']]]},
+  phone:{t:'Phone',k:[['android','Android','',['android','android-full']],['ios','iOS','Web app',['ios']]]},
+  browser:{t:'Browser',n:'Bing is a search engine, not a browser. Microsoft Edge is the browser.',
+    k:[['chrome','Chrome','',['desktop']],['edge','Edge','',['desktop']],['brave','Brave','',['desktop']],['opera','Opera','',['desktop']],
+       ['firefox','Firefox','Coming soon',null],['safari','Safari','Coming soon',null]]}
+};
+var apps=document.getElementById('apps'), title=document.getElementById('pkTitle'), list=document.getElementById('pkChoices'),
+    back=document.getElementById('pkBack'), reset=document.getElementById('pkReset'), crumb=document.getElementById('pkCrumb'),
+    note=document.getElementById('pkNote'), stage=document.getElementById('pkStage'),
+    nodes=[].slice.call(stage.querySelectorAll('.pk-n')),
+    RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches, first=true;
+function parse(){var m=/^#(desktop|phone|browser)(?:\/([a-z]+))?$/.exec(location.hash);return m?{f:m[1],c:m[2]||null}:null;}
+function tile(f,k,cur){
+  var img=k[0] in {chrome:1,edge:1,brave:1,opera:1,firefox:1,safari:1};
+  var ic=img?'<span class="ic img"><img src="assets/browsers/'+k[0]+'.png" alt="" width="38" height="38" decoding="async"></span>':'<span class="ic">'+ICON[k[0]]+'</span>';
+  var cap=k[2]?'<em>'+k[2]+'</em>':'';
+  if(!k[3])return '<li><span class="pk-c soon" aria-disabled="true">'+ic+k[1]+cap+'</span></li>';
+  return '<li><a class="pk-c" href="#'+f+'/'+k[0]+'"'+(cur?' aria-current="true"':'')+'>'+ic+k[1]+cap+'</a></li>';
+}
+function render(){
+  var r=parse(), nd=r&&TREE[r.f], kid=null;
+  if(!r&&location.hash.length>1)return;          /* other anchors (#install, #verify) leave the view alone */
+  if(nd&&r.c){kid=nd.k.filter(function(k){return k[0]===r.c;})[0]||null; if(!kid||!kid[3]){r={f:r.f,c:null};kid=null;}}
+  nodes.forEach(function(n){if(r&&n.getAttribute('data-n')===r.f)n.setAttribute('aria-current','true');else n.removeAttribute('aria-current');});
+  if(r)stage.setAttribute('data-sel',r.f);else stage.removeAttribute('data-sel');
+  [].slice.call(apps.querySelectorAll('.app')).forEach(function(a){a.classList.remove('show');});
+  apps.classList.remove('open','two');
+  if(!nd){panel.hidden=true;first=false;return;}
+  panel.hidden=false;
+  title.textContent=kid?kid[1]:nd.t;
+  crumb.textContent=kid?nd.t+' / '+kid[1]:nd.t;
+  back.setAttribute('href',kid?'#'+r.f:'#'); reset.hidden=!kid; reset.setAttribute('href','#');
+  list.innerHTML=nd.k.map(function(k){return tile(r.f,k,kid&&k[0]===kid[0]);}).join('');
+  note.textContent=nd.n||'';
+  if(kid){
+    kid[3].forEach(function(id){var c=apps.querySelector('.app[data-os="'+id+'"]');if(c)c.classList.add('show');});
+    apps.classList.add('open'); if(kid[3].length>1)apps.classList.add('two');
+  }
+  if(!first){title.focus({preventScroll:true});panel.scrollIntoView({block:'start',behavior:RM?'auto':'smooth'});}
+  first=false;
+}
+window.addEventListener('hashchange',render);
+document.addEventListener('keydown',function(e){
+  var inside=e.target.closest&&e.target.closest('#picker,#apps'); if(!inside)return;
+  if(e.key==='Escape'){var r=parse(); if(r){location.hash=r.c?'#'+r.f:'';e.preventDefault();}return;}
+  var i=nodes.indexOf(e.target), d={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];
+  if(i>-1&&d){nodes[(i+d+nodes.length)%nodes.length].focus();e.preventDefault();}
+});
+render();
+}catch(e){document.documentElement.classList.remove('pk-on');console.warn('picker',e);}
 })();
 </script>
 </body>
