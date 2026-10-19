@@ -1,52 +1,7 @@
 {
-  "updated": "2026-10-12",
+  "updated": "2026-10-19",
   "note": "Found automatically from public race listings (RacesIndia). Each entry links to the organiser or its official registration page. Refreshed weekly; past events are removed.",
   "events": [
-    {
-      "title": "Chennai Night Run 2026",
-      "sport": "Running",
-      "city": "Chennai",
-      "date": "2026-10-17",
-      "venue": "Chennai",
-      "org": "Sportspro",
-      "url": "https://chennainightrun.com/"
-    },
-    {
-      "title": "BBCh MTB XC Race and Trail Run 2026",
-      "sport": "Cycling",
-      "city": "Bengaluru",
-      "date": "2026-10-18",
-      "venue": "Bengaluru",
-      "org": "Bangalore Bicycle Championships",
-      "url": "https://www.bbch.in/"
-    },
-    {
-      "title": "HCL Cyclothon Chennai 2026",
-      "sport": "Cycling",
-      "city": "Chennai",
-      "date": "2026-10-18",
-      "venue": "Aero Don Heli Station, near Toll Junction, ECR Kovalam",
-      "org": "CFI",
-      "url": "https://www.cfiindia.in/"
-    },
-    {
-      "title": "Run for Our Heroes with Pride 2026",
-      "sport": "Running",
-      "city": "Chennai",
-      "date": "2026-10-18",
-      "venue": "Olcott Memorial Higher Secondary School, Besant Nagar, Chennai",
-      "org": "SBPMS BRO SPORTS ACADEMY",
-      "url": "https://www.indiarunning.com/events/soldierathon_2026__run_for_the_soldiers_with_pride_69500"
-    },
-    {
-      "title": "Terry Fox Run Chennai 2026",
-      "sport": "Running",
-      "city": "Chennai",
-      "date": "2026-10-18",
-      "venue": "Chennai",
-      "org": "Rotary Club of Madras East",
-      "url": "https://rcme.org/"
-    },
     {
       "title": "Georgian Run 2026",
       "sport": "Running",
@@ -109,6 +64,15 @@
       "venue": "Salem",
       "org": "Dharan Hospital , Salem",
       "url": "https://therun.dharan.in/"
+    },
+    {
+      "title": "URU Games 2026",
+      "sport": "Running",
+      "city": "Bengaluru",
+      "date": "2026-10-25",
+      "venue": "Agara Lake",
+      "org": "Hybrid Miles Club",
+      "url": "https://www.hybridmiles.club/"
     },
     {
       "title": "Chargebee Chennai Runs 2026",
@@ -503,8 +467,8 @@
       "city": "Kochi",
       "date": "2027-02-28",
       "venue": "Durbar Hall Ground",
-      "org": "TE SPORTS",
-      "url": "https://www.tesports.in/"
+      "org": "Network18",
+      "url": "https://www.nw18.com/"
     },
     {
       "title": "Chalo Bharat Walkathon Bengaluru Edition 2027",
