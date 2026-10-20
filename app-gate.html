@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,42 +24,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>App Gate & Hard Lock — Block Social Media | Maatram</title>
 
-<!-- SEO & Social Metadata -->
-<meta name="description" content="Block Instagram, TikTok, YouTube and Snapchat for 5 to 180 minutes with Maatram Hard Lock, grow your focus Sakura tree, and earn points.">
-<meta name="keywords" content="block social media, app blocker, hard lock, instagram blocker, tiktok blocker, focus mode, friction layer">
+<!-- SEO / Metadata -->
+<meta name="description" content="Block social media and mobile games for 5 to 180 minutes with Maatram Hard Lock, grow your focus garden, and earn points.">
+<meta name="keywords" content="block social media, app blocker, hard lock, focus mode, friction layer">
 <meta name="author" content="Maatram">
 <meta name="publisher" content="Maatram">
 <meta name="robots" content="index, follow, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-image-preview:large, max-video-preview:-1">
 <link rel="canonical" href="https://maatram.co.in/app-gate.html">
-<link rel="alternate" hreflang="en" href="https://maatram.co.in/app-gate.html">
-<link rel="alternate" hreflang="x-default" href="https://maatram.co.in/app-gate.html">
 <meta name="theme-color" content="#06090B">
 <meta name="color-scheme" content="dark">
-<meta name="application-name" content="Maatram">
-<meta name="apple-mobile-web-app-title" content="Maatram">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
 
 <!-- Icons & Manifest -->
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Maatram">
-<meta property="og:locale" content="en_IN">
 <meta property="og:url" content="https://maatram.co.in/app-gate.html">
 <meta property="og:title" content="App Gate & Hard Lock — Block Social Media | Maatram">
-<meta property="og:description" content="Block Instagram, TikTok, YouTube and Snapchat for 5 to 180 minutes with Maatram Hard Lock.">
 <meta property="og:image" content="https://maatram.co.in/og-image.png">
-
-<link rel="dns-prefetch" href="https://fonts.googleapis.com">
-<link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
 <style>
 @font-face{font-family:'Inter Fallback';src:local('Arial');size-adjust:107.12%;ascent-override:90.20%;descent-override:22.48%;line-gap-override:0%}
@@ -175,7 +162,7 @@
   }
   body.locked .lock-badge{display:grid}
 
-  /* My Sites Box */
+  /* My Sites */
   .mysites{background:var(--card);border:1px solid var(--stroke);border-radius:22px;backdrop-filter:blur(14px);padding:24px 26px;margin:-36px 0 34px}
   .ms-head{display:flex;align-items:baseline;gap:10px;font-family:var(--font-display);font-size:17px}
   .ms-head span{font-size:12px;color:var(--dim)}
@@ -190,7 +177,7 @@
   .site-chip button:hover{color:var(--ink);background:rgba(255,255,255,.08)}
   body.locked #siteForm{opacity:.45;pointer-events:none}
 
-  /* Selective Game Blocking Section */
+  /* Game Selective Blocking Section */
   .prem{background:var(--card);border:1px solid rgba(55,182,255,.28);border-radius:26px;backdrop-filter:blur(16px);padding:32px 30px;margin:-12px 0 34px}
   .prem-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:var(--font-display);font-size:24px;font-weight:700}
   .prem-badge{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:5px 12px;border-radius:999px;color:#04120f;background:linear-gradient(90deg,var(--green),var(--blue))}
@@ -205,18 +192,17 @@
   .prem h4 button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--stroke);background:transparent;color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
   .pcount{margin-left:auto;font-size:13px;color:var(--dim)}
   
-  /* Game Grid Cards & Logos */
+  /* Game Grid & Custom SVG Logos */
   .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
   .pt{position:relative;display:grid;justify-items:center;align-content:center;gap:10px;min-height:160px;padding:18px 10px 16px;border-radius:22px;border:1.5px solid var(--stroke);background:rgba(255,255,255,.03);color:var(--ink);font:inherit;cursor:pointer;transition:transform .3s,border-color .25s}
   .pt:hover{transform:translateY(-5px);border-color:rgba(55,182,255,.5)}
   .pt .mono{
-    width:88px;height:88px;border-radius:22px;overflow:hidden;
+    width:84px;height:84px;border-radius:20px;overflow:hidden;
     display:grid;place-items:center;font-family:var(--font-display);
-    font-weight:800;font-size:18px;background:#0d1f1a;color:var(--ink);
-    border:1px solid rgba(255,255,255,.1);
-    box-shadow:0 6px 16px rgba(0,0,0,.3);
+    font-weight:800;background:#0b1915;border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 8px 20px rgba(0,0,0,.4);
   }
-  .pt .mono img{width:100%;height:100%;object-fit:cover;display:block}
+  .pt .mono svg{width:100%;height:100%;display:block}
   .pt .nm{font-family:var(--font-display);font-weight:600;font-size:14px;text-align:center}
   .pt .st{font-size:12px;color:var(--dim)}
   .pt[aria-pressed="true"]{border-color:var(--green);background:rgba(47,227,143,.1)}
@@ -274,7 +260,7 @@
   .reward-box td:last-child{text-align:right;font-weight:800;color:#ffd166}
   .reward-box tr.mood td{padding-top:12px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left}
 
-  /* Lock Zone & Timer Ring */
+  /* Lock Ring & Timer */
   .lock-zone{display:grid;place-items:center;gap:12px;justify-items:center}
   .ring-wrap{position:relative;width:150px;height:150px;display:grid;place-items:center}
   .ring-wrap svg.ring{position:absolute;inset:0;transform:rotate(-90deg);pointer-events:none}
@@ -313,7 +299,7 @@
     background:rgba(255,209,102,.08);
   }
 
-  /* ══════════════ MY GARDEN (SAKURA SECTION) EXACT MATCH ══════════════ */
+  /* ══════════════ MY GARDEN (CLEAN UNFILLED INITIAL STATE) ══════════════ */
   .sakura-card{
     margin-top:34px;
     background:rgba(18,28,25,.75);
@@ -341,7 +327,7 @@
     height:210px;
     border-radius:20px;
     overflow:hidden;
-    background:linear-gradient(180deg,#3b3c63 0%,#69546b 40%,#98636e 70%,#183626 100%);
+    background:linear-gradient(180deg,#202436 0%,#3d3140 40%,#573a42 70%,#122419 100%);
     box-shadow:inset 0 0 30px rgba(0,0,0,.4);
   }
   .tree-illustration canvas{
@@ -416,7 +402,6 @@
   footer{margin-top:70px;text-align:center;color:var(--dim);font-size:12px;letter-spacing:1.5px}
   footer b{color:var(--green);font-weight:600}
 
-  /* Perf Switch */
   #perfBtn{position:fixed;bottom:18px;left:18px;z-index:900;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.18);cursor:pointer;background:rgba(6,18,15,.8);color:#cfe9dd;font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
   #perfBtn .pf-sw{width:28px;height:15px;border-radius:100px;border:1px solid rgba(255,255,255,.3);position:relative;transition:all .25s;flex-shrink:0}
   #perfBtn .pf-sw::after{content:"";position:absolute;top:1.5px;left:2px;width:10px;height:10px;border-radius:50%;background:#cfe9dd;transition:all .25s}
@@ -555,7 +540,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     <div class="site-chips" id="siteChips"></div>
   </section>
 
-  <!-- Selective Mobile Games Blocking with Official Logos -->
+  <!-- Game Selective Blocking with Embedded Brand SVG Badges -->
   <section class="prem">
     <div class="prem-head">
       App Selective Blocking
@@ -582,91 +567,91 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     </h4>
 
     <div class="pgrid" id="pGrid">
+      <!-- BGMI -->
       <button class="pt" data-game="bgmi" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Battlegrounds_Mobile_India_Logo.png" alt="BGMI" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">BGMI</span>
+        <div class="mono" style="background:#131813;border-color:#f39c12">
+          <svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="12" fill="#27ae60"/><rect x="20" y="20" width="60" height="60" rx="8" fill="#111"/><text x="50" y="52" fill="#f39c12" font-family="sans-serif" font-weight="900" font-size="20" text-anchor="middle">BGMI</text><text x="50" y="68" fill="#fff" font-family="sans-serif" font-weight="700" font-size="9" text-anchor="middle">KRAFTON</text></svg>
         </div>
         <div class="nm">BGMI</div>
         <div class="st">Unlocked</div>
       </button>
       
+      <!-- FREE FIRE -->
       <button class="pt" data-game="freefire" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Garena_Free_Fire_logo.svg" alt="Free Fire" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">FF</span>
+        <div class="mono" style="background:#1a0f07;border-color:#e67e22">
+          <svg viewBox="0 0 100 100"><path d="M50 15 C35 35 25 50 25 65 C25 80 35 85 50 85 C65 85 75 80 75 65 C75 50 65 35 50 15 Z" fill="#e67e22"/><path d="M50 30 C40 45 35 55 35 65 C35 75 40 78 50 78 C60 78 65 75 65 65 C65 55 60 45 50 30 Z" fill="#f1c40f"/><text x="50" y="62" fill="#000" font-family="sans-serif" font-weight="900" font-size="16" text-anchor="middle">FF</text></svg>
         </div>
         <div class="nm">Free Fire MAX</div>
         <div class="st">Unlocked</div>
       </button>
 
+      <!-- CALL OF DUTY -->
       <button class="pt" data-game="codm" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/07/Call_of_Duty_logo.svg" alt="Call of Duty" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">COD</span>
+        <div class="mono" style="background:#000;border-color:#7f8c8d">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#0d0d0d"/><text x="50" y="48" fill="#ecf0f1" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle">CALL</text><text x="50" y="64" fill="#bdc3c7" font-family="sans-serif" font-weight="800" font-size="12" text-anchor="middle">OF DUTY</text></svg>
         </div>
         <div class="nm">Call of Duty</div>
         <div class="st">Unlocked</div>
       </button>
 
+      <!-- MINECRAFT -->
       <button class="pt" data-game="minecraft" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png" alt="Minecraft" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">MC</span>
+        <div class="mono" style="background:#27ae60;border-color:#2ea043">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#795548"/><path d="M0 0 L100 0 L100 45 L80 45 L80 35 L60 35 L60 50 L40 50 L40 35 L20 35 L20 45 L0 45 Z" fill="#4caf50"/><rect x="25" y="60" width="15" height="15" fill="#3e2723"/><rect x="60" y="60" width="15" height="15" fill="#3e2723"/></svg>
         </div>
         <div class="nm">Minecraft</div>
         <div class="st">Unlocked</div>
       </button>
 
+      <!-- ROBLOX -->
       <button class="pt" data-game="roblox" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_2022.svg" alt="Roblox" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">RBLX</span>
+        <div class="mono" style="background:#111;border-color:#e74c3c">
+          <svg viewBox="0 0 100 100"><rect x="25" y="25" width="50" height="50" rx="6" fill="#ecf0f1" transform="rotate(-12 50 50)"/><rect x="42" y="42" width="16" height="16" rx="2" fill="#111" transform="rotate(-12 50 50)"/></svg>
         </div>
         <div class="nm">Roblox</div>
         <div class="st">Unlocked</div>
       </button>
 
+      <!-- CLASH OF CLANS -->
       <button class="pt" data-game="coc" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/56/Clash_of_Clans_logo.png" alt="Clash of Clans" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">COC</span>
+        <div class="mono" style="background:#d35400;border-color:#f39c12">
+          <svg viewBox="0 0 100 100"><path d="M50 15 L80 30 L80 65 L50 85 L20 65 L20 30 Z" fill="#f39c12"/><path d="M50 22 L72 34 L72 60 L50 75 L28 60 L28 34 Z" fill="#d35400"/><text x="50" y="56" fill="#fff" font-family="sans-serif" font-weight="900" font-size="22" text-anchor="middle">COC</text></svg>
         </div>
         <div class="nm">Clash of Clans</div>
         <div class="st">Unlocked</div>
       </button>
 
+      <!-- CLASH ROYALE -->
       <button class="pt" data-game="cr" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/en/4/42/Clash_Royale_logo.png" alt="Clash Royale" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">CR</span>
+        <div class="mono" style="background:#2980b9;border-color:#3498db">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#2980b9"/><path d="M25 60 L25 40 L38 50 L50 30 L62 50 L75 40 L75 60 Z" fill="#f1c40f"/><rect x="25" y="63" width="50" height="8" fill="#f39c12"/></svg>
         </div>
         <div class="nm">Clash Royale</div>
         <div class="st">Unlocked</div>
       </button>
 
+      <!-- BRAWL STARS -->
       <button class="pt" data-game="brawl" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/en/b/b3/Brawl_Stars_logo.png" alt="Brawl Stars" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">BS</span>
+        <div class="mono" style="background:#f1c40f;border-color:#e67e22">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#c0392b"/><polygon points="50,15 63,40 90,40 68,57 76,85 50,68 24,85 32,57 10,40 37,40" fill="#f1c40f"/><circle cx="50" cy="50" r="10" fill="#e74c3c"/></svg>
         </div>
         <div class="nm">Brawl Stars</div>
         <div class="st">Unlocked</div>
       </button>
 
+      <!-- SUBWAY SURFERS -->
       <button class="pt" data-game="subway" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/en/0/0c/Subway_surfers_logo.png" alt="Subway Surfers" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">SUB</span>
+        <div class="mono" style="background:#f39c12;border-color:#d35400">
+          <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#f39c12"/><text x="50" y="48" fill="#8e44ad" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle">SUBWAY</text><text x="50" y="68" fill="#c0392b" font-family="sans-serif" font-weight="900" font-size="15" text-anchor="middle">SURF</text></svg>
         </div>
         <div class="nm">Subway Surfers</div>
         <div class="st">Unlocked</div>
       </button>
 
+      <!-- CANDY CRUSH -->
       <button class="pt" data-game="candy" aria-pressed="false">
-        <div class="mono">
-          <img src="https://upload.wikimedia.org/wikipedia/en/b/b5/Candy_Crush_Saga_logo.png" alt="Candy Crush" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span style="display:none">CC</span>
+        <div class="mono" style="background:#8e44ad;border-color:#9b59b6">
+          <svg viewBox="0 0 100 100"><circle cx="40" cy="55" r="22" fill="#e74c3c"/><circle cx="60" cy="45" r="22" fill="#f1c40f"/><circle cx="50" cy="65" r="16" fill="#3498db"/><circle cx="45" cy="40" r="6" fill="#fff" opacity="0.6"/></svg>
         </div>
         <div class="nm">Candy Crush</div>
         <div class="st">Unlocked</div>
@@ -731,7 +716,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
       </table>
     </div>
 
-    <!-- Lock Trigger & Ring Timer -->
+    <!-- Lock Ring & Timer -->
     <div class="lock-zone">
       <div class="ring-wrap">
         <svg class="ring" width="150" height="150" viewBox="0 0 150 150">
@@ -750,62 +735,58 @@ window.maatramAward=window.maatramAward||function(pts,reason){
       <!-- Live Countdown Display -->
       <div id="countdown">05:00</div>
       
-      <!-- Live Points Reward Display Badge -->
+      <!-- Live Points Reward Badge -->
       <div id="timerPtsBadge">+10 PTS REWARD</div>
     </div>
   </section>
 
-  <!-- ══════════════ MY GARDEN (EXACT MATCH TO YOUR SCREENSHOT) ══════════════ -->
+  <!-- ══════════════ MY GARDEN (UNFILLED / ACCOUNT DYNAMIC STATE) ══════════════ -->
   <section class="sakura-card">
     <h3>My garden</h3>
-    <div class="garden-sub" id="gardenStats">37 trees · 2235 min focused · 13 day streak</div>
+    <div class="garden-sub" id="gardenStats">0 trees · 0 min focused · 0 day streak</div>
 
-    <!-- Tree Scene Canvas -->
+    <!-- Empty Canvas (Populates dynamically on account lock completion) -->
     <div class="tree-illustration">
       <canvas id="sakuraCanvas" width="500" height="210"></canvas>
     </div>
 
-    <div class="last-tree-info" id="lastTreeInfo">Last tree: 25 min · 1 leaf lost</div>
+    <div class="last-tree-info" id="lastTreeInfo">Last tree: No sessions completed yet</div>
 
-    <!-- 4 Weeks Grid Section -->
+    <!-- 28-Day Unfilled History Grid -->
     <div class="history-section">
       <div class="history-title">Last 4 weeks</div>
       <div class="sk-grid-28" id="skGrid28">
-        <!-- Week 1 -->
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day" data-day="1"></div>
+        <div class="sk-grid-day" data-day="2"></div>
+        <div class="sk-grid-day" data-day="3"></div>
+        <div class="sk-grid-day" data-day="4"></div>
+        <div class="sk-grid-day" data-day="5"></div>
+        <div class="sk-grid-day" data-day="6"></div>
+        <div class="sk-grid-day" data-day="7"></div>
 
-        <!-- Week 2 -->
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day" data-day="8"></div>
+        <div class="sk-grid-day" data-day="9"></div>
+        <div class="sk-grid-day" data-day="10"></div>
+        <div class="sk-grid-day" data-day="11"></div>
+        <div class="sk-grid-day" data-day="12"></div>
+        <div class="sk-grid-day" data-day="13"></div>
+        <div class="sk-grid-day" data-day="14"></div>
 
-        <!-- Week 3 -->
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day"></div>
-        <div class="sk-grid-day pink-small"></div>
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day" data-day="15"></div>
+        <div class="sk-grid-day" data-day="16"></div>
+        <div class="sk-grid-day" data-day="17"></div>
+        <div class="sk-grid-day" data-day="18"></div>
+        <div class="sk-grid-day" data-day="19"></div>
+        <div class="sk-grid-day" data-day="20"></div>
+        <div class="sk-grid-day" data-day="21"></div>
 
-        <!-- Week 4 -->
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-active"></div>
-        <div class="sk-grid-day pink-small"></div>
+        <div class="sk-grid-day" data-day="22"></div>
+        <div class="sk-grid-day" data-day="23"></div>
+        <div class="sk-grid-day" data-day="24"></div>
+        <div class="sk-grid-day" data-day="25"></div>
+        <div class="sk-grid-day" data-day="26"></div>
+        <div class="sk-grid-day" data-day="27"></div>
+        <div class="sk-grid-day" data-day="28"></div>
       </div>
       <p class="sk-legend-text">Pink = a tree planted that day. Empty = a missed day.</p>
     </div>
@@ -816,21 +797,21 @@ window.maatramAward=window.maatramAward||function(pts,reason){
   </footer>
 </div>
 
-<!-- Performance Mode Switch Button -->
+<!-- Performance Switch -->
 <button type="button" id="perfBtn" aria-label="Toggle performance mode">
   <span class="pf-ic">⚡</span> Performance Mode <span class="pf-sw"></span>
 </button>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  // 1. Mood Category Display (Website Only)
+  // 1. Mood Category Visibility Check
   var isWebsite = true;
   var moodGroup = document.getElementById('moodCategoryGroup');
   if (moodGroup && isWebsite) {
     moodGroup.style.display = 'block';
   }
 
-  // 2. Dynamic Duration & Points Reward Handling
+  // 2. Chip & Points Logic
   var chips = document.querySelectorAll('.chip');
   var countdownEl = document.getElementById('countdown');
   var timerPtsBadge = document.getElementById('timerPtsBadge');
@@ -868,58 +849,82 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // 3. Render Sakura Tree Canvas (Exact vector match)
+  // 3. Garden Dynamic Renderer (Initial empty canvas with baseline landscape)
   var canvas = document.getElementById('sakuraCanvas');
   if (canvas && canvas.getContext) {
     var ctx = canvas.getContext('2d');
     var w = canvas.width;
     var h = canvas.height;
 
-    // Draw Sun
-    ctx.beginPath();
-    ctx.arc(w - 70, 75, 14, 0, Math.PI * 2);
-    ctx.fillStyle = '#fce592';
-    ctx.fill();
+    function drawGardenScene(hasTree) {
+      ctx.clearRect(0, 0, w, h);
 
-    // Draw Ground
-    ctx.beginPath();
-    ctx.ellipse(w / 2, h + 10, w * 0.6, 35, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#1e3827';
-    ctx.fill();
+      // Sky Background
+      var sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, '#202436');
+      sky.addColorStop(0.4, '#3d3140');
+      sky.addColorStop(0.7, '#573a42');
+      sky.addColorStop(1, '#122419');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
 
-    // Draw Trunk
-    ctx.beginPath();
-    ctx.moveTo(w / 2 - 4, h - 20);
-    ctx.quadraticCurveTo(w / 2 - 2, h - 80, w / 2 - 12, h - 110);
-    ctx.quadraticCurveTo(w / 2, h - 70, w / 2 + 6, h - 20);
-    ctx.fillStyle = '#6e442c';
-    ctx.fill();
-
-    // Draw Sakura Foliage Clusters
-    var clusters = [
-      {x: w / 2 - 20, y: h - 120, r: 28},
-      {x: w / 2 + 15, y: h - 125, r: 26},
-      {x: w / 2 - 45, y: h - 110, r: 22},
-      {x: w / 2 + 38, y: h - 112, r: 24},
-      {x: w / 2, y: h - 138, r: 30}
-    ];
-
-    clusters.forEach(function (c) {
+      // Sun / Moon
       ctx.beginPath();
-      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-      ctx.fillStyle = '#fca8cb';
+      ctx.arc(w - 70, 75, 14, 0, Math.PI * 2);
+      ctx.fillStyle = '#fce592';
       ctx.fill();
-    });
 
-    // Falling Petals
-    for (var i = 0; i < 12; i++) {
-      var px = (w / 2 - 80) + Math.random() * 160;
-      var py = (h - 140) + Math.random() * 100;
+      // Hill Ground
       ctx.beginPath();
-      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#fcd0e3';
+      ctx.ellipse(w / 2, h + 10, w * 0.6, 35, 0, 0, Math.PI * 2);
+      ctx.fillStyle = '#1e3827';
       ctx.fill();
+
+      if (hasTree) {
+        // Draw Trunk
+        ctx.beginPath();
+        ctx.moveTo(w / 2 - 4, h - 20);
+        ctx.quadraticCurveTo(w / 2 - 2, h - 80, w / 2 - 12, h - 110);
+        ctx.quadraticCurveTo(w / 2, h - 70, w / 2 + 6, h - 20);
+        ctx.fillStyle = '#6e442c';
+        ctx.fill();
+
+        // Draw Leaves
+        var clusters = [
+          {x: w / 2 - 20, y: h - 120, r: 28},
+          {x: w / 2 + 15, y: h - 125, r: 26},
+          {x: w / 2 - 45, y: h - 110, r: 22},
+          {x: w / 2 + 38, y: h - 112, r: 24},
+          {x: w / 2, y: h - 138, r: 30}
+        ];
+        clusters.forEach(function (c) {
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+          ctx.fillStyle = '#fca8cb';
+          ctx.fill();
+        });
+      } else {
+        // Empty state watermark prompt
+        ctx.font = '600 12px Inter, sans-serif';
+        ctx.fillStyle = '#84ad9a';
+        ctx.textAlign = 'center';
+        ctx.fillText('Complete a Hard Lock to plant your first tree', w / 2, h - 45);
+      }
     }
+
+    // Load from local storage / account
+    var treesCount = parseInt(localStorage.getItem('maatram_trees_count') || '0', 10);
+    var focusedMins = parseInt(localStorage.getItem('maatram_focused_mins') || '0', 10);
+    var streakDays = parseInt(localStorage.getItem('maatram_streak_days') || '0', 10);
+
+    // Update garden stats dynamically based on actual account
+    var gardenStatsEl = document.getElementById('gardenStats');
+    if (gardenStatsEl) {
+      gardenStatsEl.textContent = treesCount + ' trees · ' + focusedMins + ' min focused · ' + streakDays + ' day streak';
+    }
+
+    // Draw canvas based on account state
+    drawGardenScene(treesCount > 0);
   }
 });
 </script>
