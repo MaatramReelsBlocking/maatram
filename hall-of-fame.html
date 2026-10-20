@@ -313,107 +313,111 @@
   </footer>
 </div>
 
+<script src="badges.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  var BADGES = [
-    { id: 'badge1', name: 'Sprout Initiate', min: 0, max: 250, img: 'images/badges/badge1.jpg' },
-    { id: 'badge2', name: 'Silver Bloom', min: 251, max: 750, img: 'images/badges/badge2.jpg' },
-    { id: 'badge3', name: 'Shinobi Shield', min: 751, max: 1750, img: 'images/badges/badge3.jpg' },
-    { id: 'badge4', name: "Golden Mind's Eye", min: 1751, max: 3500, img: 'images/badges/badge4.jpg' },
-    { id: 'badge5', name: 'Crystal Ronin', min: 3501, max: 7000, img: 'images/badges/badge5.jpg' },
-    { id: 'badge6', name: 'Crown Legend', min: 7001, max: 10000, img: 'images/badges/badge6.jpg' }
-  ];
+document.addEventListener('DOMContentLoaded', async function () {
+  const BADGES = window.MAATRAM_BADGES || [];
+  const CAP_LIMIT = 10000;
+  const $ = id => document.getElementById(id);
+  let currentPoints = Math.max(0, Number(localStorage.getItem('maatram_points')) || 0);
+  let authUser = null;
+  const fmt = n => Number(n || 0).toLocaleString();
 
-  var CAP_LIMIT = 10000;
-  var rawPoints = parseInt(localStorage.getItem('maatram_points') || '0', 10);
-  
-  // Cap Reset Rule (10,000 PTS)
-  if (rawPoints >= CAP_LIMIT) {
-    rawPoints = 0;
-    localStorage.setItem('maatram_points', '0');
-    var prestige = parseInt(localStorage.getItem('maatram_prestige') || '0', 10) + 1;
-    localStorage.setItem('maatram_prestige', prestige.toString());
-    alert('🎉 Congratulations! You reached the 10,000 PTS Cap Limit and earned a Prestige Star! Points have auto-reset to 0.');
-  }
-
-  // Determine Active Tier
-  var activeBadge = BADGES[0];
-  var nextBadge = BADGES[1];
-
-  for (var i = 0; i < BADGES.length; i++) {
-    if (rawPoints >= BADGES[i].min) {
-      activeBadge = BADGES[i];
-      nextBadge = BADGES[i + 1] || null;
-    }
-  }
-
-  // Update Progress Section
-  document.getElementById('userBadgeImg').src = activeBadge.img;
-  document.getElementById('userBadgeTitle').textContent = activeBadge.name;
-  document.getElementById('userPtsVal').textContent = rawPoints + ' / 10,000 PTS';
-
-  var fillPct = Math.min(100, Math.round((rawPoints / CAP_LIMIT) * 100));
-  document.getElementById('progressBarFill').style.width = fillPct + '%';
-
-  if (nextBadge) {
-    document.getElementById('nextBadgeText').textContent = 'Next Tier: ' + nextBadge.name;
-    document.getElementById('ptsRemainingText').textContent = (nextBadge.min - rawPoints) + ' PTS needed';
-  } else {
-    document.getElementById('nextBadgeText').textContent = 'Max Tier Achieved!';
-    document.getElementById('ptsRemainingText').textContent = (CAP_LIMIT - rawPoints) + ' PTS to Cap Reset';
-  }
-
-  // Gallery Card Locks
-  BADGES.forEach(function (b) {
-    var card = document.getElementById('card-' + b.id);
-    var tag = document.getElementById('tag-' + b.id);
-    if (rawPoints >= b.min) {
-      if (card) card.classList.remove('locked-card');
-      if (tag) {
-        tag.className = 'status-tag unlocked';
-        tag.textContent = 'Unlocked';
-      }
-    } else {
-      if (card) card.classList.add('locked-card');
-      if (tag) {
-        tag.className = 'status-tag locked';
-        tag.textContent = 'Locked';
-      }
-    }
-  });
-
-  // Populate Sample Leaderboard
-  var students = [
-    { rank: '#1', name: 'Aarav Sharma', pts: 8450 },
-    { rank: '#2', name: 'Priya Patel', pts: 5200 },
-    { rank: '#3', name: 'Rohan Verma', pts: 2800 },
-    { rank: '#4', name: 'Ananya Iyer', pts: 1250 },
-    { rank: '#5', name: 'You (Current Rank)', pts: rawPoints }
-  ];
-
-  students.sort(function (a, b) { return b.pts - a.pts; });
-
-  function getBadgeForPts(pts) {
-    var b = BADGES[0];
-    for (var j = 0; j < BADGES.length; j++) {
-      if (pts >= BADGES[j].min) b = BADGES[j];
-    }
-    return b;
-  }
-
-  var tbody = document.getElementById('lbTableBody');
-  if (tbody) {
-    tbody.innerHTML = '';
-    students.forEach(function (s, idx) {
-      var b = getBadgeForPts(s.pts);
-      var tr = document.createElement('tr');
-      tr.innerHTML = 
-        '<td class="lb-rank">#' + (idx + 1) + '</td>' +
-        '<td><div class="lb-user"><img src="' + b.img + '" class="lb-badge-icon" alt="badge"><span>' + s.name + '</span></div></td>' +
-        '<td style="color:var(--dim);font-size:13px">' + b.name + '</td>' +
-        '<td class="lb-pts">+' + s.pts + ' PTS</td>';
-      tbody.appendChild(tr);
+  function paint(points) {
+    currentPoints = Math.max(0, Number(points) || 0);
+    const active = window.maatramBadgeForPoints(currentPoints) || BADGES[0];
+    const next = BADGES.find(b => b.min > currentPoints) || null;
+    $('userBadgeImg').src = active.img;
+    $('userBadgeImg').alt = active.name;
+    $('userBadgeTitle').textContent = active.name;
+    $('userPtsVal').textContent = fmt(currentPoints) + ' PTS';
+    const floor = active.min;
+    const ceiling = next ? next.min : CAP_LIMIT;
+    const pct = next ? Math.max(0, Math.min(100, ((currentPoints - floor) / Math.max(1, ceiling - floor)) * 100)) : 100;
+    $('progressBarFill').style.width = pct + '%';
+    $('nextBadgeText').textContent = next ? 'Next Tier: ' + next.name : 'Top Tier Achieved';
+    $('ptsRemainingText').textContent = next ? fmt(Math.max(0, next.min - currentPoints)) + ' PTS needed' : 'Prestige is not automatic';
+    BADGES.forEach(function (b) {
+      const card = $('card-' + b.id), tag = $('tag-' + b.id);
+      const unlocked = currentPoints >= b.min;
+      if (card) card.classList.toggle('locked-card', !unlocked);
+      if (tag) { tag.className = 'status-tag ' + (unlocked ? 'unlocked' : 'locked'); tag.textContent = unlocked ? 'Unlocked' : 'Locked'; }
     });
+  }
+  function badgeFor(points) { return window.maatramBadgeForPoints(points) || BADGES[0]; }
+  function showLeaderboard(users, signedIn) {
+    const tbody = $('lbTableBody');
+    tbody.innerHTML = '';
+    if (!signedIn) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="4" style="color:var(--dim);text-align:center;padding:22px">Sign in with Google to view the live student leaderboard.</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+    const rows = users.slice().sort((a,b) => b.points - a.points).slice(0,50);
+    if (!rows.length) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="4" style="color:var(--dim);text-align:center;padding:22px">No scores yet. Finish a focus session to be the first on the board.</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+    rows.forEach((student, index) => {
+      const badge = badgeFor(student.points);
+      const tr = document.createElement('tr');
+      const rank = document.createElement('td'); rank.className = 'lb-rank'; rank.textContent = '#' + (index + 1);
+      const studentCell = document.createElement('td');
+      const userWrap = document.createElement('div'); userWrap.className = 'lb-user';
+      const badgeImg = document.createElement('img'); badgeImg.src = badge.img; badgeImg.alt = badge.name; badgeImg.className = 'lb-badge-icon'; badgeImg.loading = 'lazy';
+      const name = document.createElement('span'); name.textContent = student.name + (student.id === (authUser && authUser.uid) ? ' (you)' : '');
+      userWrap.append(badgeImg, name); studentCell.appendChild(userWrap);
+      const badgeCell = document.createElement('td'); badgeCell.style.cssText = 'color:var(--dim);font-size:13px'; badgeCell.textContent = badge.name;
+      const pointsCell = document.createElement('td'); pointsCell.className = 'lb-pts'; pointsCell.textContent = fmt(student.points) + ' PTS';
+      tr.append(rank, studentCell, badgeCell, pointsCell); tbody.appendChild(tr);
+    });
+  }
+  paint(currentPoints);
+  try {
+    if (!window.MAATRAM_FB || !(location.protocol === 'http:' || location.protocol === 'https:')) {
+      showLeaderboard([], false);
+      return;
+    }
+    const [{initializeApp, getApps, getApp}, {getAuth, onAuthStateChanged}, {getFirestore, collection, query, orderBy, limit, onSnapshot, doc}] = await Promise.all([
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+    ]);
+    const app = getApps().length ? getApp() : initializeApp(window.MAATRAM_FB);
+    const auth = getAuth(app), db = getFirestore(app);
+    let stopBoard = null, stopMe = null;
+    onAuthStateChanged(auth, function (user) {
+      authUser = user;
+      if (stopBoard) stopBoard();
+      if (stopMe) stopMe();
+      stopBoard = stopMe = null;
+      if (!user) { showLeaderboard([], false); paint(Math.max(0, Number(localStorage.getItem('maatram_points')) || 0)); return; }
+      stopMe = onSnapshot(doc(db, 'users', user.uid), snap => {
+        const data = snap.exists() ? snap.data() : {};
+        const pts = Number(data.points) || 0;
+        paint(pts);
+      }, () => {});
+      stopBoard = onSnapshot(query(collection(db, 'users'), orderBy('points', 'desc'), limit(100)), snap => {
+        const month = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0');
+        const users = [];
+        snap.forEach(d => {
+          const data = d.data();
+          if (data.banned === true || data.cycle !== month) return;
+          users.push({ id: d.id, name: data.name || 'Student', points: Number(data.points) || 0 });
+        });
+        showLeaderboard(users, true);
+      }, err => {
+        console.warn('Hall of Fame leaderboard unavailable', err);
+        const tbody = $('lbTableBody');
+        tbody.innerHTML = '<tr><td colspan="4" style="color:var(--dim);text-align:center;padding:22px">The live leaderboard is temporarily unavailable. Please try again later.</td></tr>';
+      });
+    });
+  } catch (error) {
+    console.warn('Hall of Fame setup failed', error);
+    showLeaderboard([], false);
   }
 });
 </script>
