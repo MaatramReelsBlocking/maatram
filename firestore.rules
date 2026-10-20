@@ -160,7 +160,19 @@ service cloud.firestore {
                     || (request.auth != null && resource.data.by == request.auth.uid);
     }
 
-    /* Linked devices (api/link.js): one Hard Lock for the website, phone app and Chrome extension.
+        /* Phone screen time for the Stats page, pushed by the Android app under the same link code.
+       Only a day, a small JSON of minutes per known social app, and a timestamp. Codes cannot be listed. */
+    match /usage/{code} {
+      allow get:    if code.matches('^[A-HJ-NP-Z2-9]{8}$');
+      allow list, delete: if false;
+      allow create, update: if code.matches('^[A-HJ-NP-Z2-9]{8}$')
+                    && request.resource.data.keys().hasOnly(['day','apps','at'])
+                    && request.resource.data.day is string && request.resource.data.day.size() == 10
+                    && request.resource.data.apps is string && request.resource.data.apps.size() <= 200
+                    && request.resource.data.at is int;
+    }
+
+/* Linked devices (api/link.js): one Hard Lock for the website, phone app and Chrome extension.
        Anyone holding a code can read it or start a lock on it (that is what linking means), but a
        running lock can only be extended — never shortened or cancelled — and is capped at 90 min.
        Codes cannot be listed. */

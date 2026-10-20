@@ -347,7 +347,7 @@ const WEB_KEY='maatram_web_v1';          // {day:{domain:minutes}} — copied fr
 const WEB_MAP={'instagram.com':'instagram','snapchat.com':'snapchat','tiktok.com':'tiktok',
   'youtube.com':'youtube','x.com':'other','facebook.com':'other'};
 function loadWeb(){try{return JSON.parse(store.get(WEB_KEY))||{}}catch(_){return{}}}
-/* phone (typed) + laptop (extension) per day; typed entries are never overwritten */
+/* phone (typed, or filled in by the Android app) + laptop (extension) per day; typed entries are never overwritten */
 function merged(){
   const all=loadAll(), web=loadWeb(), out={};
   for(const k of new Set([...Object.keys(all),...Object.keys(web)])){
@@ -496,6 +496,22 @@ function weeklyBonus(){
   }
 }
 addEventListener('maatram:user',e=>{ bonusUid=e.detail||null; weeklyBonus(); });
+
+/* phone screen time: the Android app pushes it under the link code; pull it in and redraw */
+(async function syncPhone(){
+  let c=''; try{c=String(store.get('maatram_link_code')||'');}catch(_){}
+  if(!/^[A-HJ-NP-Z2-9]{8}$/.test(c)) return;
+  try{
+    const r=await fetch('/api/usage?code='+c,{cache:'no-store'}); if(!r.ok) return;
+    const j=await r.json(); if(!j||!/^\d{4}-\d{2}-\d{2}$/.test(j.day||'')||!j.apps) return;
+    const all=loadAll(), d=all[j.day]||{};
+    for(const [id,m] of Object.entries(j.apps)){ if(APPS.some(a=>a.id===id) && m>(d[id]||0)) d[id]=m; }   /* the app's number wins only when it is higher than what was typed */
+    all[j.day]=d; saveAll(all);
+    if(j.day===dayKey()) Object.assign(today,d);
+    if(typeof renderRows==='function') renderRows();
+    if(typeof renderStats==='function') renderStats();
+  }catch(_){}
+})();
 
 /* ask the extension for laptop usage, then draw + check the bonus once */
 const EXT_IDS=['igcfbmdadjlibodcpaibklgeijdacmen','fnchjdjifpnkjdgcccjdlhphiffjefek'];
