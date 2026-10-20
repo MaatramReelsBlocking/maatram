@@ -239,4 +239,689 @@
     display:flex;align-items:center;gap:10px;
   }
   .panel .sub{color:var(--dim);font-size:14px;line-height:1.55;max-width:440px;margin-bottom:26px}
-  .ext-link{display:inline-flex;align-items:center;gap:
+  .ext-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;margin:-10px 0 22px;border-radius:999px;border:1px solid rgba(47,227,143,.35);color:var(--green);background:rgba(47,227,143,.06);font-size:14px;font-weight:600;text-decoration:none}
+  .link-box{margin:-8px 0 22px;padding:14px 16px;border-radius:18px;border:1px solid rgba(55,182,255,.3);background:rgba(55,182,255,.05);font-size:14px;line-height:1.5}
+  .link-box b{color:var(--ink)}
+  .link-box .lk-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .link-box button,.link-box input{min-height:44px;border-radius:999px;font:inherit;font-size:14px}
+  .link-box button{padding:0 16px;border:1px solid rgba(55,182,255,.45);background:rgba(55,182,255,.1);color:var(--ink);cursor:pointer}
+  .link-box button.pri{background:linear-gradient(90deg,var(--green),var(--blue));color:#04130c;border-color:transparent;font-weight:700}
+  .link-box input{padding:0 16px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);color:var(--ink);width:150px;text-transform:uppercase;letter-spacing:2px}
+
+  /* Duration Chips */
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{
+    font-family:var(--font-display);font-size:14px;font-weight:600;
+    padding:10px 18px;border-radius:100px;
+    border:1px solid var(--stroke);color:var(--dim);
+    background:transparent;cursor:pointer;
+    transition:all .25s;
+  }
+  .chips-t{flex-basis:100%;margin-top:12px;font:800 11px var(--font-display);letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+  .chip:hover{color:var(--ink);border-color:rgba(55,182,255,.45)}
+  .chip.active{
+    color:#04120f;border-color:transparent;
+    background:linear-gradient(90deg,var(--green),var(--blue));
+    box-shadow:0 6px 22px -8px rgba(47,227,143,.6);
+  }
+
+  /* Reward Table */
+  .reward-box{border:1px solid rgba(255,209,102,.25);background:rgba(255,209,102,.05);border-radius:18px;padding:18px 20px;min-width:200px}
+  .reward-box h4{font-family:var(--font-display);font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#ffd166;margin:0 0 4px}
+  .reward-box .rb-note{font-size:11.5px;color:var(--dim);margin-bottom:12px}
+  .reward-box table{width:100%;border-collapse:collapse;font-size:13px}
+  .reward-box td{padding:5px 0;color:#cfe9dd}
+  .reward-box td:last-child{text-align:right;font-weight:800;color:#ffd166}
+  .reward-box tr.mood td{padding-top:12px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left}
+
+  /* Lock Zone & Timer Ring */
+  .lock-zone{display:grid;place-items:center;gap:12px;justify-items:center}
+  .ring-wrap{position:relative;width:150px;height:150px;display:grid;place-items:center}
+  .ring-wrap svg.ring{position:absolute;inset:0;transform:rotate(-90deg);pointer-events:none}
+  .ring-bg{stroke:rgba(255,255,255,.07);fill:none;stroke-width:7}
+  .ring-fg{stroke:url(#ringGrad);fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+  #lockBtn{
+    position:relative;z-index:2;
+    width:104px;height:104px;border-radius:50%;
+    border:none;cursor:pointer;
+    background:linear-gradient(135deg,var(--green),var(--blue));
+    color:#04120f;display:grid;place-items:center;
+    font-family:var(--font-display);font-weight:800;font-size:13px;
+    letter-spacing:1px;text-transform:uppercase;
+    transition:transform .3s,box-shadow .3s,background .4s;
+    box-shadow:0 0 42px -6px rgba(47,227,143,.55);
+  }
+  #lockBtn:hover{transform:scale(1.06)}
+  #lockBtn:active{transform:scale(.96)}
+  body.locked #lockBtn{
+    background:linear-gradient(135deg,#ff5d73,#ff9a5d);
+    box-shadow:0 0 42px -6px rgba(255,93,115,.5);
+  }
+  #countdown{
+    font-family:var(--font-display);font-weight:700;font-size:22px;
+    letter-spacing:1px;color:var(--ink);min-height:28px;
+  }
+  #timerPtsBadge{
+    font-family:var(--font-display);
+    font-size:13px;
+    font-weight:800;
+    color:#ffd166;
+    letter-spacing:1px;
+    padding:4px 12px;
+    border-radius:100px;
+    border:1px solid rgba(255,209,102,.35);
+    background:rgba(255,209,102,.08);
+  }
+
+  /* ══════════════ MY GARDEN (SAKURA SECTION) EXACT MATCH ══════════════ */
+  .sakura-card{
+    margin-top:34px;
+    background:rgba(18,28,25,.75);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:28px;
+    backdrop-filter:blur(18px);
+    padding:28px 24px;
+    max-width:540px;
+  }
+  .sakura-card h3{
+    font-family:var(--font-display);
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:4px;
+  }
+  .sakura-card .garden-sub{
+    font-size:13.5px;
+    color:#93baa8;
+    margin-bottom:20px;
+  }
+  .tree-illustration{
+    position:relative;
+    width:100%;
+    height:210px;
+    border-radius:20px;
+    overflow:hidden;
+    background:linear-gradient(180deg,#3b3c63 0%,#69546b 40%,#98636e 70%,#183626 100%);
+    box-shadow:inset 0 0 30px rgba(0,0,0,.4);
+  }
+  .tree-illustration canvas{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+  .last-tree-info{
+    margin-top:14px;
+    font-size:13.5px;
+    color:#84ad9a;
+  }
+  .history-section{
+    margin-top:22px;
+  }
+  .history-title{
+    font-size:13.5px;
+    color:#84ad9a;
+    margin-bottom:12px;
+  }
+  .sk-grid-28{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:10px;
+    max-width:330px;
+  }
+  .sk-grid-day{
+    aspect-ratio:1;
+    border-radius:10px;
+    background:rgba(255,255,255,.06);
+    display:grid;
+    place-items:center;
+  }
+  .sk-grid-day.pink-active::after{
+    content:"";
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#F19BB5;
+    box-shadow:0 0 8px rgba(241,155,181,.6);
+  }
+  .sk-grid-day.pink-small::after{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#F19BB5;
+  }
+  .sk-legend-text{
+    margin-top:16px;
+    font-size:12.5px;
+    color:#739b88;
+    line-height:1.5;
+  }
+
+  /* Universal Nav */
+  #mnav{position:fixed;top:0;left:0;right:0;height:52px;z-index:600;display:flex;align-items:center;gap:5px;padding:0 14px;background:rgba(2,10,8,.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter',sans-serif}
+  #mnav .mn-logo{display:flex;align-items:center;gap:8px;margin-right:10px;text-decoration:none;color:#eafff6}
+  #mnav .mn-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#2fe38f,#37b6ff);display:grid;place-items:center;font-weight:800;color:#04120f;font-size:14px}
+  #mnav .mn-logo b{font-size:13px;font-weight:700}
+  #mnav .mn-spacer{flex:1}
+  #mnav a.mn-link{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#7da99b;text-decoration:none;padding:7px 11px;border-radius:100px;transition:all .25s}
+  #mnav a.mn-link.active{color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff)}
+  #mnavAuth{display:flex;align-items:center;gap:8px;margin-left:6px}
+  #mnavIn{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#04120f;text-decoration:none;padding:8px 16px;border-radius:100px;background:linear-gradient(90deg,#2fe38f,#37b6ff)}
+  #mnavChip{display:none;align-items:center;gap:8px;padding:4px 6px;border-radius:100px;border:1px solid rgba(47,227,143,.3);background:rgba(47,227,143,.06);position:relative}
+  #mnavChip img{width:28px;height:28px;border-radius:50%;border:1px solid #2fe38f}
+  #mnavChip .nm{font-size:12px;font-weight:700;color:#eafff6;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #mnavChip .pt{font-size:10px;font-weight:800;color:#ffd166;letter-spacing:.5px;padding:3px 8px;border-radius:100px;border:1px solid rgba(255,209,102,.35);background:rgba(255,209,102,.08)}
+  #mnavMenu{display:none;position:absolute;top:44px;right:0;min-width:180px;z-index:700;background:rgba(6,18,14,.97);border:1px solid rgba(47,227,143,.25);border-radius:14px;padding:8px}
+
+  footer{margin-top:70px;text-align:center;color:var(--dim);font-size:12px;letter-spacing:1.5px}
+  footer b{color:var(--green);font-weight:600}
+
+  /* Perf Switch */
+  #perfBtn{position:fixed;bottom:18px;left:18px;z-index:900;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.18);cursor:pointer;background:rgba(6,18,15,.8);color:#cfe9dd;font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
+  #perfBtn .pf-sw{width:28px;height:15px;border-radius:100px;border:1px solid rgba(255,255,255,.3);position:relative;transition:all .25s;flex-shrink:0}
+  #perfBtn .pf-sw::after{content:"";position:absolute;top:1.5px;left:2px;width:10px;height:10px;border-radius:50%;background:#cfe9dd;transition:all .25s}
+  html:not(.perf) #perfBtn .pf-sw{background:linear-gradient(90deg,#2fe38f,#37b6ff);border-color:transparent}
+  html:not(.perf) #perfBtn .pf-sw::after{left:14px;background:#04120f}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
+
+<script>
+window.maatramAward=window.maatramAward||function(pts,reason){
+  try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){}
+  try{const c=+localStorage.getItem('maatram_points')||0;
+      localStorage.setItem('maatram_points',Math.max(0,c+Math.round(pts)));}catch(_){}
+  try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
+  try{ parent.postMessage({maatramRelay:{type:'points',pts}},'*'); }catch(_){}
+};
+</script>
+<script>
+(function(){var m=null;try{m=localStorage.getItem('maatram_theme');}catch(_){}if(m!=='minimal')return;document.documentElement.classList.add('minimal');var s=document.createElement("style");s.textContent="html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:\"Plus Jakarta Sans\",\"Sora\",sans-serif;--font-body:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}";document.head.appendChild(s);})();
+</script>
+<script defer src="theme.js?v=6"></script>
+<script defer src="/focuz-bot.js"></script>
+<script defer src="/survey.js"></script>
+<script src="gate.js"></script>
+</head>
+
+<body>
+<canvas id="field"></canvas>
+
+<!-- Navigation -->
+<nav id="mnav" aria-label="Main navigation">
+  <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
+  <span class="mn-spacer"></span>
+  <a class="mn-link" href="/">Home</a>
+  <a class="mn-link" href="timers.html">Timers</a>
+  <a class="mn-link active" href="app-gate.html">App Gate</a>
+  <a class="mn-link" href="study-room.html">Study Room</a>
+  <a class="mn-link" href="wellness/wellness.html">Wellness</a>
+  <a class="mn-link" href="sports.html">Sports</a>
+  <a class="mn-link" href="stats.html">Stats</a>
+  <a class="mn-link" href="leaderboard.html">Leaderboard</a>
+  <a class="mn-link" href="socials.html">Socials</a>
+  <a class="mn-link" href="download.html">Download</a>
+  <a class="mn-link" href="login.html">Account</a>
+  <div id="mnavAuth">
+    <a id="mnavIn" href="login.html">Sign in</a>
+    <div id="mnavChip">
+      <img id="mnavPic" src="icon-32.png" alt="Profile">
+      <span class="nm">Student</span>
+      <span class="pt">+0 PTS</span>
+      <div id="mnavMenu">
+        <a href="login.html">Profile</a>
+        <button type="button" class="out">Sign Out</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap" id="main">
+  <header>
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div>
+        <h1>App Gate</h1>
+        <span>Maatram Hard Lock</span>
+      </div>
+    </div>
+    <div class="status-pill" id="statusPill">Unlocked</div>
+  </header>
+
+  <section class="hero">
+    <h2>Your apps, <em>behind a gate you control.</em></h2>
+    <p>Tap an app to open it — or arm Hard Lock and put every shortcut out of reach until your focus window ends.</p>
+  </section>
+
+  <!-- Apps Grid -->
+  <div class="apps" id="appsGrid">
+    <a class="app" href="https://instagram.com" target="_blank" data-app="instagram">
+      <div class="lock-badge">🔒</div>
+      <div class="icon" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+      </div>
+      <div class="name">Instagram</div>
+      <div class="hint">instagram.com</div>
+    </a>
+
+    <a class="app" href="https://youtube.com" target="_blank" data-app="youtube">
+      <div class="lock-badge">🔒</div>
+      <div class="icon" style="background:linear-gradient(135deg,#ff0000,#cc0000)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </div>
+      <div class="name">YouTube</div>
+      <div class="hint">youtube.com</div>
+    </a>
+
+    <a class="app" href="https://tiktok.com" target="_blank" data-app="tiktok">
+      <div class="lock-badge">🔒</div>
+      <div class="icon" style="background:linear-gradient(135deg,#00f2fe,#4facfe)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 1 1-5.2-1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V5.8a6.34 6.34 0 0 0-1-.08A6.34 6.34 0 1 0 15.7 12V8.2a8.28 8.28 0 0 0 4.84 1.55V6.3a4.85 4.85 0 0 1-.95-.39z"/></svg>
+      </div>
+      <div class="name">TikTok</div>
+      <div class="hint">tiktok.com</div>
+    </a>
+
+    <a class="app" href="https://snapchat.com" target="_blank" data-app="snapchat">
+      <div class="lock-badge">🔒</div>
+      <div class="icon" style="background:linear-gradient(135deg,#fffc00,#e6e300)">
+        <svg viewBox="0 0 24 24" fill="#000"><path d="M12 2C8.6 2 6 4.6 6 8c0 1.2.3 2.3.9 3.2-.2.5-.7.8-1.2.9-.5.1-.8.5-.8 1 0 .6.4 1.1 1 1.2.6.1 1.1.5 1.2 1.1.2 1.1 1.2 1.9 2.3 1.9.4 0 .8-.1 1.2-.3.4.3.9.5 1.4.5s1-.2 1.4-.5c.4.2.8.3 1.2.3 1.1 0 2.1-.8 2.3-1.9.1-.6.6-1 1.2-1.1.6-.1 1-.6 1-1.2 0-.5-.3-.9-.8-1-.5-.1-1-.4-1.2-.9.6-.9.9-2 .9-3.2 0-3.4-2.6-6-6-6z"/></svg>
+      </div>
+      <div class="name">Snapchat</div>
+      <div class="hint">snapchat.com</div>
+    </a>
+
+    <a class="app" href="https://web.whatsapp.com" target="_blank" data-app="whatsapp">
+      <div class="lock-badge">🔒</div>
+      <div class="icon" style="background:linear-gradient(135deg,#25d366,#128c7e)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+      </div>
+      <div class="name">WhatsApp</div>
+      <div class="hint">web.whatsapp.com</div>
+    </a>
+  </div>
+
+  <!-- Custom Sites Box -->
+  <section class="mysites">
+    <div class="ms-head">Your sites <span>Add any other website (e.g. streaming or gaming sites)</span></div>
+    <div class="sub">It is locked with the apps above during Hard Lock in Chrome with the Maatram Extension.</div>
+    <form id="siteForm">
+      <input type="text" id="siteInput" placeholder="e.g. reddit.com or twitch.tv" autocomplete="off">
+      <button type="submit">Add</button>
+    </form>
+    <div class="site-msg" id="siteMsg"></div>
+    <div class="site-chips" id="siteChips"></div>
+  </section>
+
+  <!-- Selective Mobile Games Blocking with Official Logos -->
+  <section class="prem">
+    <div class="prem-head">
+      App Selective Blocking
+      <span class="prem-badge">PREMIUM</span>
+    </div>
+    <p class="sub">Pick the mobile games you want Hard Lock to block. Games are locked by the Maatram Hard Lock phone app.</p>
+    
+    <div class="pmodes">
+      <button class="pm" id="pmAll" aria-checked="true">
+        <b>Lock All Apps & Games</b>
+        <span>Blocks all distracting apps and games on your phone.</span>
+      </button>
+      <button class="pm" id="pmCustom" aria-checked="false">
+        <b>App Selective Blocking</b>
+        <span>Select specific mobile games below to block during Hard Lock.</span>
+      </button>
+    </div>
+
+    <h4>
+      Top 10 mobile games
+      <button type="button" id="pSelectAll">Select all</button>
+      <button type="button" id="pClearAll">Clear</button>
+      <span class="pcount" id="pCount">0 of 10 games selected</span>
+    </h4>
+
+    <div class="pgrid" id="pGrid">
+      <button class="pt" data-game="bgmi" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Battlegrounds_Mobile_India_Logo.png" alt="BGMI" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">BGMI</span>
+        </div>
+        <div class="nm">BGMI</div>
+        <div class="st">Unlocked</div>
+      </button>
+      
+      <button class="pt" data-game="freefire" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Garena_Free_Fire_logo.svg" alt="Free Fire" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">FF</span>
+        </div>
+        <div class="nm">Free Fire MAX</div>
+        <div class="st">Unlocked</div>
+      </button>
+
+      <button class="pt" data-game="codm" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/07/Call_of_Duty_logo.svg" alt="Call of Duty" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">COD</span>
+        </div>
+        <div class="nm">Call of Duty</div>
+        <div class="st">Unlocked</div>
+      </button>
+
+      <button class="pt" data-game="minecraft" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png" alt="Minecraft" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">MC</span>
+        </div>
+        <div class="nm">Minecraft</div>
+        <div class="st">Unlocked</div>
+      </button>
+
+      <button class="pt" data-game="roblox" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_2022.svg" alt="Roblox" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">RBLX</span>
+        </div>
+        <div class="nm">Roblox</div>
+        <div class="st">Unlocked</div>
+      </button>
+
+      <button class="pt" data-game="coc" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/en/5/56/Clash_of_Clans_logo.png" alt="Clash of Clans" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">COC</span>
+        </div>
+        <div class="nm">Clash of Clans</div>
+        <div class="st">Unlocked</div>
+      </button>
+
+      <button class="pt" data-game="cr" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/en/4/42/Clash_Royale_logo.png" alt="Clash Royale" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">CR</span>
+        </div>
+        <div class="nm">Clash Royale</div>
+        <div class="st">Unlocked</div>
+      </button>
+
+      <button class="pt" data-game="brawl" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/en/b/b3/Brawl_Stars_logo.png" alt="Brawl Stars" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">BS</span>
+        </div>
+        <div class="nm">Brawl Stars</div>
+        <div class="st">Unlocked</div>
+      </button>
+
+      <button class="pt" data-game="subway" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/en/0/0c/Subway_surfers_logo.png" alt="Subway Surfers" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">SUB</span>
+        </div>
+        <div class="nm">Subway Surfers</div>
+        <div class="st">Unlocked</div>
+      </button>
+
+      <button class="pt" data-game="candy" aria-pressed="false">
+        <div class="mono">
+          <img src="https://upload.wikimedia.org/wikipedia/en/b/b5/Candy_Crush_Saga_logo.png" alt="Candy Crush" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none">CC</span>
+        </div>
+        <div class="nm">Candy Crush</div>
+        <div class="st">Unlocked</div>
+      </button>
+    </div>
+  </section>
+
+  <!-- Hard Lock Control Panel -->
+  <section class="panel">
+    <div>
+      <h3>Hard Lock Mode</h3>
+      <p class="sub">Pick a focus window. Once armed, every app above goes grey and un-clickable until the timer runs out.</p>
+
+      <!-- Extension Link Box -->
+      <a class="ext-link" href="download.html">Add Maatram Hard Lock to Chrome (desktop)</a>
+      <div class="link-box">
+        <div><b>Link your phone and Chrome extension:</b></div>
+        <div class="lk-row">
+          <button type="button" class="pri" id="btnGenCode">Create link code</button>
+          <input type="text" id="linkCodeInput" placeholder="CODE" maxlength="6">
+          <button type="button" id="btnUseCode">Use code</button>
+        </div>
+      </div>
+
+      <!-- Duration Selection Chips (Max 3 Hours, 90m/2h/3h in Mood Category) -->
+      <div class="chips" id="durationChipsContainer">
+        <!-- Quick Timers -->
+        <button class="chip active" data-min="5" data-pts="10">5 min</button>
+        <button class="chip" data-min="10" data-pts="20">10 min</button>
+        <button class="chip" data-min="15" data-pts="30">15 min</button>
+        <button class="chip" data-min="25" data-pts="50">25 min</button>
+        <button class="chip" data-min="45" data-pts="90">45 min</button>
+        <button class="chip" data-min="60" data-pts="120">60 min</button>
+
+        <!-- MOOD CATEGORY Group (Website Only - Max 3 hours) -->
+        <div id="moodCategoryGroup" style="width: 100%; display: none;">
+          <div class="chips-t">MOOD CATEGORY</div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px;">
+            <button class="chip" data-min="90" data-pts="150">90 min</button>
+            <button class="chip" data-min="120" data-pts="200">2 hr</button>
+            <button class="chip" data-min="180" data-pts="300">3 hr</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reward Table -->
+    <div class="reward-box">
+      <h4>Lock & Earn</h4>
+      <div class="rb-note">+10 pts per 5 min locked</div>
+      <table>
+        <tr><td>5 min</td><td>+10 pts</td></tr>
+        <tr><td>10 min</td><td>+20 pts</td></tr>
+        <tr><td>15 min</td><td>+30 pts</td></tr>
+        <tr><td>25 min</td><td>+50 pts</td></tr>
+        <tr><td>45 min</td><td>+90 pts</td></tr>
+        <tr><td>60 min</td><td>+120 pts</td></tr>
+        <tr class="mood"><td colspan="2">MOOD CATEGORY</td></tr>
+        <tr><td>90 min</td><td>+150 pts</td></tr>
+        <tr><td>2 Hours</td><td>+200 pts</td></tr>
+        <tr><td>3 Hours</td><td>+300 pts</td></tr>
+      </table>
+    </div>
+
+    <!-- Lock Trigger & Ring Timer -->
+    <div class="lock-zone">
+      <div class="ring-wrap">
+        <svg class="ring" width="150" height="150" viewBox="0 0 150 150">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="var(--green)"/>
+              <stop offset="100%" stop-color="var(--blue)"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="75" cy="75" r="66"></circle>
+          <circle class="ring-fg" cx="75" cy="75" r="66" stroke-dasharray="414.69" stroke-dashoffset="414.69"></circle>
+        </svg>
+        <button id="lockBtn">START LOCK</button>
+      </div>
+      
+      <!-- Live Countdown Display -->
+      <div id="countdown">05:00</div>
+      
+      <!-- Live Points Reward Display Badge -->
+      <div id="timerPtsBadge">+10 PTS REWARD</div>
+    </div>
+  </section>
+
+  <!-- ══════════════ MY GARDEN (EXACT MATCH TO YOUR SCREENSHOT) ══════════════ -->
+  <section class="sakura-card">
+    <h3>My garden</h3>
+    <div class="garden-sub" id="gardenStats">37 trees · 2235 min focused · 13 day streak</div>
+
+    <!-- Tree Scene Canvas -->
+    <div class="tree-illustration">
+      <canvas id="sakuraCanvas" width="500" height="210"></canvas>
+    </div>
+
+    <div class="last-tree-info" id="lastTreeInfo">Last tree: 25 min · 1 leaf lost</div>
+
+    <!-- 4 Weeks Grid Section -->
+    <div class="history-section">
+      <div class="history-title">Last 4 weeks</div>
+      <div class="sk-grid-28" id="skGrid28">
+        <!-- Week 1 -->
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+
+        <!-- Week 2 -->
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+
+        <!-- Week 3 -->
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day"></div>
+        <div class="sk-grid-day pink-small"></div>
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-active"></div>
+
+        <!-- Week 4 -->
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-active"></div>
+        <div class="sk-grid-day pink-small"></div>
+      </div>
+      <p class="sk-legend-text">Pink = a tree planted that day. Empty = a missed day.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Powered by <b>MAATRAM</b> · Action ⟹ Value · Built by Team Maatram</p>
+  </footer>
+</div>
+
+<!-- Performance Mode Switch Button -->
+<button type="button" id="perfBtn" aria-label="Toggle performance mode">
+  <span class="pf-ic">⚡</span> Performance Mode <span class="pf-sw"></span>
+</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // 1. Mood Category Display (Website Only)
+  var isWebsite = true;
+  var moodGroup = document.getElementById('moodCategoryGroup');
+  if (moodGroup && isWebsite) {
+    moodGroup.style.display = 'block';
+  }
+
+  // 2. Dynamic Duration & Points Reward Handling
+  var chips = document.querySelectorAll('.chip');
+  var countdownEl = document.getElementById('countdown');
+  var timerPtsBadge = document.getElementById('timerPtsBadge');
+
+  function calculatePoints(mins) {
+    if (mins === 180) return 300; // 3 Hours = 300 PTS
+    if (mins === 120) return 200; // 2 Hours = 200 PTS
+    if (mins === 90) return 150;  // 90 Mins = 150 PTS
+    if (mins === 60) return 120;
+    if (mins === 45) return 90;
+    if (mins === 25) return 50;
+    if (mins === 15) return 30;
+    if (mins === 10) return 20;
+    if (mins === 5) return 10;
+    return Math.round(mins * 2);
+  }
+
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      if (document.body.classList.contains('locked')) return;
+      chips.forEach(function (c) { c.classList.remove('active'); });
+      this.classList.add('active');
+      
+      var mins = parseInt(this.getAttribute('data-min'), 10);
+      var pts = calculatePoints(mins);
+
+      if (countdownEl) {
+        var formattedMins = mins < 10 ? '0' + mins : mins;
+        countdownEl.textContent = formattedMins + ':00';
+      }
+
+      if (timerPtsBadge) {
+        timerPtsBadge.textContent = '+' + pts + ' PTS REWARD';
+      }
+    });
+  });
+
+  // 3. Render Sakura Tree Canvas (Exact vector match)
+  var canvas = document.getElementById('sakuraCanvas');
+  if (canvas && canvas.getContext) {
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width;
+    var h = canvas.height;
+
+    // Draw Sun
+    ctx.beginPath();
+    ctx.arc(w - 70, 75, 14, 0, Math.PI * 2);
+    ctx.fillStyle = '#fce592';
+    ctx.fill();
+
+    // Draw Ground
+    ctx.beginPath();
+    ctx.ellipse(w / 2, h + 10, w * 0.6, 35, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#1e3827';
+    ctx.fill();
+
+    // Draw Trunk
+    ctx.beginPath();
+    ctx.moveTo(w / 2 - 4, h - 20);
+    ctx.quadraticCurveTo(w / 2 - 2, h - 80, w / 2 - 12, h - 110);
+    ctx.quadraticCurveTo(w / 2, h - 70, w / 2 + 6, h - 20);
+    ctx.fillStyle = '#6e442c';
+    ctx.fill();
+
+    // Draw Sakura Foliage Clusters
+    var clusters = [
+      {x: w / 2 - 20, y: h - 120, r: 28},
+      {x: w / 2 + 15, y: h - 125, r: 26},
+      {x: w / 2 - 45, y: h - 110, r: 22},
+      {x: w / 2 + 38, y: h - 112, r: 24},
+      {x: w / 2, y: h - 138, r: 30}
+    ];
+
+    clusters.forEach(function (c) {
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fillStyle = '#fca8cb';
+      ctx.fill();
+    });
+
+    // Falling Petals
+    for (var i = 0; i < 12; i++) {
+      var px = (w / 2 - 80) + Math.random() * 160;
+      var py = (h - 140) + Math.random() * 100;
+      ctx.beginPath();
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fcd0e3';
+      ctx.fill();
+    }
+  }
+});
+</script>
+</body>
+</html>
