@@ -22,7 +22,7 @@ const call=(method,{query={},body,throwBody}={})=>new Promise(done=>{
   ok('GET unknown code is no lock',   (await call('GET',{query:{code:'ABCD2345'}})).j.end===0);
   ok('POST invalid JSON is 400',      (await call('POST',{throwBody:true})).s===400);
   ok('POST null body is 400',         (await call('POST',{body:'null'})).s===400);
-  ok('POST minutes 241 is 400',       (await call('POST',{body:{code:'ABCD2345',minutes:241}})).s===400);
+  ok('POST minutes 181 is 400',       (await call('POST',{body:{code:'ABCD2345',minutes:181}})).s===400);
   const a=await call('POST',{body:{code:'abcd2345',minutes:30,by:'phone'}});
   ok('POST starts a lock',            a.s===200 && a.j.by==='phone' && a.j.end>Date.now());
   ok('GET sees the lock',             (await call('GET',{query:{code:'ABCD2345'}})).j.minutes===30);

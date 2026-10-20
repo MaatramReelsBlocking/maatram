@@ -230,11 +230,11 @@ async function startHardLock(minutes) {
   if (
     !Number.isInteger(minutes) ||
     minutes < 1 ||
-    minutes > 240
+    minutes > 180
   ) {
 
     throw new Error(
-      "Duration must be between 1 and 240 minutes."
+      "Duration must be between 1 and 180 minutes."
     );
 
   }
@@ -442,7 +442,7 @@ chrome.runtime.onMessageExternal.addListener(
 
         if (message.action === "SET_PREFERRED_MINUTES") {
           const m = Number(message.minutes);
-          if (!Number.isInteger(m) || m < 1 || m > 240) throw new Error("Duration must be between 1 and 240 minutes.");
+          if (!Number.isInteger(m) || m < 1 || m > 180) throw new Error("Duration must be between 1 and 180 minutes.");
           await chrome.storage.local.set({ preferredMinutes: m });
           sendResponse({ success: true });
           return;
