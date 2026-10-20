@@ -297,6 +297,8 @@
     background:transparent;cursor:pointer;
     transition:all .25s;
   }
+  .chips-t{flex-basis:100%;margin-top:4px;font:800 11px var(--font-display);letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+  .reward-box tr.mood td{padding-top:12px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left}
   .chip:hover{color:var(--ink);border-color:rgba(55,182,255,.45)}
   .chip.active{
     color:#04120f;border-color:transparent;
@@ -583,6 +585,10 @@ window.maatramAward=window.maatramAward||function(pts,reason){
         <button class="chip" data-min="45">45 min</button>
         <button class="chip" data-min="60">60 min</button>
         <button class="chip" data-min="90">90 min</button>
+        <span class="chips-t">In the Mood</span>
+        <button class="chip" data-min="120">2 hr</button>
+        <button class="chip" data-min="180">3 hr</button>
+        <button class="chip" data-min="240">4 hr</button>
       </div>
     </div>
     <div class="reward-box">
@@ -596,6 +602,10 @@ window.maatramAward=window.maatramAward||function(pts,reason){
         <tr><td>45 min</td><td>+90 pts</td></tr>
         <tr><td>60 min</td><td>+120 pts</td></tr>
         <tr><td>90 min</td><td>+180 pts</td></tr>
+        <tr class="mood"><td colspan="2">In the Mood</td></tr>
+        <tr><td>2 hr</td><td>+300 pts</td></tr>
+        <tr><td>3 hr</td><td>+500 pts</td></tr>
+        <tr><td>4 hr</td><td>+800 pts</td></tr>
       </table>
     </div>
     <div class="lock-zone">
@@ -699,6 +709,9 @@ ringFg.style.strokeDasharray = CIRC;
 ringFg.style.strokeDashoffset = CIRC;
 
 let selMin = 25, tick=null, lockEnd=0, lockTotal=0;
+/* In the Mood: flat reward for a 2, 3 or 4 hour lock (never less than the +10 per 5 min rate) */
+const MOOD=[[240,800],[180,500],[120,300]];
+const moodPts=sec=>{ const m=Math.floor(sec/60), t=MOOD.find(x=>m>=x[0]); return t?t[1]:0; };
 
 chips.addEventListener('click', e=>{
   const c = e.target.closest('.chip'); if(!c || body.classList.contains('locked')) return;
@@ -831,7 +844,7 @@ function claimLock(end,total){
   /* stats.html: minutes kept off socials, per local day */
   try{ const d=new Date(end), k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     const s=JSON.parse(store.get('maatram_saved_v1')||'{}'); s[k]=(s[k]||0)+Math.round(total/60); store.set('maatram_saved_v1',JSON.stringify(s)); }catch(_){}
-  const earned=Math.floor(total/300)*10;
+  const earned=Math.max(Math.floor(total/300)*10, moodPts(total));
   if(earned>0) window.maatramAward(earned,'Hard Lock '+Math.floor(total/60)+'m');
 }
 /* a lock from a linked device or the extension: start it, or stretch the running one

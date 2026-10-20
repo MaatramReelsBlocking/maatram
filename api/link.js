@@ -13,7 +13,7 @@ const { banned } = require('./_guard');
 const PROJECT = 'maatram-859f4';
 const KEY = 'AIzaSyAjiAm61IkH3wB1tjwOyGRrXAuRMKQyCcQ';   // public web key (same as firebase-config.js)
 const CODE = /^[A-HJ-NP-Z2-9]{8}$/;
-const MAX_MIN = 90;
+const MAX_MIN = 240;
 const BY = new Set(['web', 'phone', 'chrome', 'pc']);
 const DOC = (c) => `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/links/${c}?key=${KEY}`;
 const HDR = { 'Content-Type': 'application/json', Referer: 'https://maatram.co.in/' };

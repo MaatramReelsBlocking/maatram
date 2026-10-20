@@ -1,0 +1,27 @@
+/* App Gate "In the Mood": 2/3/4 hr chips, reward table and payout. jsdom, no network. */
+const fs = require('fs'), { JSDOM } = require('jsdom');
+let pass = 0, fail = 0;
+const ok = (n, c) => { c ? pass++ : fail++; console.log((c ? 'PASS ' : 'FAIL ') + n); };
+const html = fs.readFileSync(__dirname + '/app-gate.html', 'utf8');
+const d = new JSDOM(html).window.document;
+const chips = [...d.querySelectorAll('#chips .chip')].map(c => +c.dataset.min);
+ok('chips 5..90 unchanged then 120/180/240', chips.join() === '5,10,15,25,45,60,90,120,180,240');
+ok('title In the Mood sits before the 2 hr chip', /<span class="chips-t">In the Mood<\/span>\s*<button class="chip" data-min="120">2 hr</.test(html));
+ok('reward rows +300 / +500 / +800', ['2 hr|300', '3 hr|500', '4 hr|800'].every(r => { const [l, p] = r.split('|'); return html.includes(`<tr><td>${l}</td><td>+${p} pts</td></tr>`); }));
+const src = html.match(/const MOOD=[\s\S]*?return t\?t\[1\]:0; \};/)[0];
+const moodPts = new Function(src + '; return moodPts;')();
+const earned = t => Math.max(Math.floor(t / 300) * 10, moodPts(t));
+const m = x => x * 60;
+ok('90 min unchanged: +180', earned(m(90)) === 180);
+ok('119 min stays on the old rate (+230)', earned(m(119)) === 230);
+ok('2 hr = +300', earned(m(120)) === 300);
+ok('150 min never pays less than the rate (+300)', earned(m(150)) === 300);
+ok('3 hr = +500', earned(m(180)) === 500);
+ok('4 hr = +800', earned(m(240)) === 800);
+ok('claimLock uses the new formula', /Math\.max\(Math\.floor\(total\/300\)\*10, moodPts\(total\)\)/.test(html));
+ok('api accepts up to 240 min', /const MAX_MIN = 240;/.test(fs.readFileSync(__dirname + '/api/link.js', 'utf8')));
+const bg = fs.readFileSync(__dirname + '/chrome-extension/background.js', 'utf8');
+ok('extension accepts up to 240 min', !/> 180/.test(bg) && (bg.match(/> 240/g) || []).length === 2);
+const pp = fs.readFileSync(__dirname + '/chrome-extension/popup.html', 'utf8');
+ok('extension popup lists 2/3/4 hours', ['120', '180', '240'].every(v => pp.includes(`<option value="${v}">`)));
+console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
