@@ -388,32 +388,40 @@ document.addEventListener('DOMContentLoaded', async function () {
     ]);
     const app = getApps().length ? getApp() : initializeApp(window.MAATRAM_FB);
     const auth = getAuth(app), db = getFirestore(app);
-    let stopBoard = null, stopMe = null;
+    let stopBoards = [], stopMe = null;
     onAuthStateChanged(auth, function (user) {
       authUser = user;
-      if (stopBoard) stopBoard();
+      stopBoards.forEach(stop => stop()); stopBoards = [];
       if (stopMe) stopMe();
-      stopBoard = stopMe = null;
+      stopMe = null;
       if (!user) { showLeaderboard([], false); paint(Math.max(0, Number(localStorage.getItem('maatram_points')) || 0)); return; }
       stopMe = onSnapshot(doc(db, 'users', user.uid), snap => {
         const data = snap.exists() ? snap.data() : {};
-        const pts = Number(data.points) || 0;
+        const pts = (Number(data.lifetime) || 0) + (Number(data.points) || 0);
         paint(pts);
       }, () => {});
-      stopBoard = onSnapshot(query(collection(db, 'users'), orderBy('points', 'desc'), limit(100)), snap => {
-        const month = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0');
+      const byPoints = new Map(), byLifetime = new Map();
+      function rebuildLeaderboard() {
+        const all = new Map([...byLifetime, ...byPoints]);
         const users = [];
-        snap.forEach(d => {
-          const data = d.data();
-          if (data.banned === true || data.cycle !== month) return;
-          users.push({ id: d.id, name: data.name || 'Student', points: Number(data.points) || 0 });
+        all.forEach((data, id) => {
+          if (data.banned === true) return;
+          users.push({ id, name: data.name || 'Student', points: (Number(data.lifetime) || 0) + (Number(data.points) || 0) });
         });
-        showLeaderboard(users, true);
-      }, err => {
-        console.warn('Hall of Fame leaderboard unavailable', err);
-        const tbody = $('lbTableBody');
-        tbody.innerHTML = '<tr><td colspan="4" style="color:var(--dim);text-align:center;padding:22px">The live leaderboard is temporarily unavailable. Please try again later.</td></tr>';
-      });
+        showLeaderboard(users.sort((a,b) => b.points - a.points), true);
+      }
+      function listenBoard(field, target) {
+        return onSnapshot(query(collection(db, 'users'), orderBy(field, 'desc'), limit(100)), snap => {
+          target.clear();
+          snap.forEach(d => target.set(d.id, d.data()));
+          rebuildLeaderboard();
+        }, err => {
+          console.warn('Hall of Fame leaderboard unavailable', err);
+          const tbody = $('lbTableBody');
+          tbody.innerHTML = '<tr><td colspan="4" style="color:var(--dim);text-align:center;padding:22px">The live leaderboard is temporarily unavailable. Please try again later.</td></tr>';
+        });
+      }
+      stopBoards = [listenBoard('points', byPoints), listenBoard('lifetime', byLifetime)];
     });
   } catch (error) {
     console.warn('Hall of Fame setup failed', error);
