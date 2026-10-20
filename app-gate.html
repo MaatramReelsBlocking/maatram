@@ -2,10 +2,7 @@
 <html lang="en">
 <head>
 <script>
-/* ══ MAATRAM Performance Mode — shared across all pages ══
-   Sets window.MAATRAM_PERF (true = performance/low-lag mode) BEFORE any
-   page canvas code runs, so each page's LITE flag can honor it.
-   Default: ON for weak/old devices, user can override and it persists. */
+/* ══ MAATRAM Performance Mode ══ */
 (function(){
   var KEY='maatram_perf';
   var weak = matchMedia('(pointer:coarse)').matches
@@ -26,8 +23,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>App Gate & Hard Lock — Block Social Media | Maatram</title>
 
-<!-- ══════════════ SEO / social metadata (Maatram) ══════════════ -->
-<meta name="description" content="Block Instagram, TikTok, YouTube and Snapchat for 5 to 90 minutes with Maatram Hard Lock, and pay a points toll each time you open a distracting app.">
+<!-- SEO / social metadata -->
+<meta name="description" content="Block Instagram, TikTok, YouTube and Snapchat for 5 minutes to 3 hours with Maatram Hard Lock, and pay a points toll each time you open a distracting app.">
 <meta name="keywords" content="block social media, app blocker, hard lock, instagram blocker, tiktok blocker, focus mode, friction layer">
 <meta name="author" content="Maatram">
 <meta name="publisher" content="Maatram">
@@ -51,36 +48,18 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 
-<!-- Open Graph (WhatsApp / Facebook / LinkedIn) -->
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Maatram">
 <meta property="og:locale" content="en_IN">
 <meta property="og:url" content="https://maatram.co.in/app-gate.html">
 <meta property="og:title" content="App Gate & Hard Lock — Block Social Media | Maatram">
-<meta property="og:description" content="Block Instagram, TikTok, YouTube and Snapchat for 5 to 90 minutes with Maatram Hard Lock, and pay a points toll each time you open a distracting app.">
+<meta property="og:description" content="Block Instagram, TikTok, YouTube and Snapchat for 5 minutes to 3 hours with Maatram Hard Lock.">
 <meta property="og:image" content="https://maatram.co.in/og-image.png">
-<meta property="og:image:secure_url" content="https://maatram.co.in/og-image.png">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Maatram — bringing a change in you. Screen-time control, focus timers and study rooms for students.">
 
-<!-- Twitter / X card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@maatram_97">
-<meta name="twitter:creator" content="@maatram_97">
-<meta name="twitter:title" content="App Gate & Hard Lock — Block Social Media | Maatram">
-<meta name="twitter:description" content="Block Instagram, TikTok, YouTube and Snapchat for 5 to 90 minutes with Maatram Hard Lock, and pay a points toll each time you open a distracting app.">
-<meta name="twitter:image" content="https://maatram.co.in/og-image.png">
-<meta name="twitter:image:alt" content="Maatram — screen-time control, focus timers and study rooms for students.">
-
-<!-- speed: warm up third-party origins early -->
 <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
-<!-- structured data -->
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://maatram.co.in/#org","name":"Maatram","url":"https://maatram.co.in/","logo":{"@type":"ImageObject","url":"https://maatram.co.in/icon-512.png","width":512,"height":512},"slogan":"Bringing a change in you","email":"maatram97@gmail.com","foundingDate":"2026","description":"Maatram is a free, open-source screen-time and focus platform built by students for students.","sameAs":["https://www.instagram.com/maatram_official97/","https://x.com/maatram_97","https://www.linkedin.com/in/maatram-exe-10b295423/","https://github.com/MaatramReelsBlocking/maatram","https://www.reddit.com/user/Maatram97/"]},{"@type":"WebSite","@id":"https://maatram.co.in/#website","url":"https://maatram.co.in/","name":"Maatram","alternateName":"Maatram — Bringing a change in you","inLanguage":"en","publisher":{"@id":"https://maatram.co.in/#org"}},{"@type":"WebPage","@id":"https://maatram.co.in/app-gate.html#webpage","url":"https://maatram.co.in/app-gate.html","name":"App Gate & Hard Lock — Block Social Media | Maatram","description":"Block Instagram, TikTok, YouTube and Snapchat for 5 to 90 minutes with Maatram Hard Lock, and pay a points toll each time you open a distracting app.","inLanguage":"en","isPartOf":{"@id":"https://maatram.co.in/#website"},"about":{"@id":"https://maatram.co.in/#org"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://maatram.co.in/og-image.png"},"breadcrumb":{"@id":"https://maatram.co.in/app-gate.html#breadcrumb"}},{"@type":"BreadcrumbList","@id":"https://maatram.co.in/app-gate.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://maatram.co.in/"},{"@type":"ListItem","position":2,"name":"App Gate","item":"https://maatram.co.in/app-gate.html"}]}]}</script>
-<!-- ═════════════ end SEO block ═════════════ -->
 <style>
 @font-face{font-family:'Inter Fallback';src:local('Arial');size-adjust:107.12%;ascent-override:90.20%;descent-override:22.48%;line-gap-override:0%}
 
@@ -105,8 +84,8 @@
     font-family:var(--font-body);
     overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
+    padding-top:52px!important;
   }
-  #field{position:fixed;inset:0;z-index:0;display:block}
 
   .wrap{
     position:relative;z-index:2;
@@ -148,114 +127,6 @@
   }
   .hero p{color:var(--dim);font-size:16px;max-width:520px;line-height:1.6}
 
-  /* app grid */
-  .apps{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-    gap:18px;margin-bottom:60px;
-  }
-  .app{
-    position:relative;
-    background:var(--card);
-    border:1px solid var(--stroke);
-    border-radius:var(--radius);
-    padding:30px 20px 24px;
-    text-align:center;
-    text-decoration:none;color:var(--ink);
-    backdrop-filter:blur(14px);
-    transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s;
-    overflow:hidden;
-  }
-  .app::after{
-    content:"";position:absolute;inset:0;border-radius:inherit;
-    background:radial-gradient(120px 120px at var(--mx,50%) var(--my,50%),rgba(55,182,255,.14),transparent 70%);
-    opacity:0;transition:opacity .3s;pointer-events:none;
-  }
-  .app:hover::after{opacity:1}
-  .app:hover{transform:translateY(-6px) scale(1.02);border-color:rgba(55,182,255,.4);box-shadow:0 18px 40px -18px rgba(55,182,255,.35)}
-  .app .icon{
-    width:58px;height:58px;margin:0 auto 16px;border-radius:16px;
-    display:grid;place-items:center;
-    transition:transform .35s;
-  }
-  .app:hover .icon{transform:rotate(-6deg) scale(1.08)}
-  .app .icon svg{width:30px;height:30px}
-  .app .name{font-family:var(--font-display);font-weight:600;font-size:15px}
-  .app .hint{font-size:11px;color:var(--dim);margin-top:5px;letter-spacing:.5px}
-
-  /* locked state on cards */
-  body.locked .app{
-    pointer-events:none;
-    filter:grayscale(1) brightness(.55);
-    transform:none !important;
-  }
-  body.locked .app .hint{color:var(--danger)}
-  .lock-badge{
-    position:absolute;top:12px;right:12px;width:24px;height:24px;
-    display:none;place-items:center;color:var(--danger);
-  }
-  body.locked .lock-badge{display:grid}
-
-  /* shake when trying to click while locked */
-  @keyframes shake{
-    10%,90%{transform:translateX(-2px)}
-    20%,80%{transform:translateX(3px)}
-    30%,50%,70%{transform:translateX(-5px)}
-    40%,60%{transform:translateX(5px)}
-  }
-  .apps.deny{animation:shake .5s}
-
-  /* your sites */
-  .mysites{background:var(--card);border:1px solid var(--stroke);border-radius:22px;backdrop-filter:blur(14px);padding:24px 26px;margin:-36px 0 34px}
-  .ms-head{display:flex;align-items:baseline;gap:10px;font-family:var(--font-display);font-size:17px}
-  .ms-head span{font-size:12px;color:var(--dim)}
-  .mysites .sub{margin:6px 0 14px}
-  #siteForm{display:flex;gap:10px;max-width:460px}
-  #siteInput{flex:1;min-width:0;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--stroke);background:rgba(0,0,0,.3);color:var(--ink);font:inherit;font-size:16px}
-  #siteForm button{min-height:44px;padding:0 20px;border-radius:12px;border:0;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--green),var(--blue));color:#04120f}
-  .site-msg{min-height:18px;font-size:12.5px;color:var(--danger);margin-top:8px}
-  .site-chips{display:flex;flex-wrap:wrap;gap:8px}
-  .site-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 6px 5px 12px;border-radius:999px;border:1px solid var(--stroke);font-size:13px}
-  .site-chip button{width:28px;height:28px;border:0;border-radius:50%;background:none;color:var(--dim);font-size:17px;cursor:pointer}
-  .site-chip button:hover{color:var(--ink);background:rgba(255,255,255,.08)}
-  body.locked #siteForm{opacity:.45;pointer-events:none}
-  body.locked .site-chip button{display:none}
-  .app.custom .icon{background:linear-gradient(135deg,#1f3a31,#173048);font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--ink)}
-  .app.custom .name{overflow-wrap:anywhere}
-
-  /* premium blocking: app selective blocking */
-  .prem{background:var(--card);border:1px solid rgba(55,182,255,.28);border-radius:26px;backdrop-filter:blur(16px);padding:32px 30px;margin:-12px 0 34px}
-  .prem-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:var(--font-display);font-size:24px;font-weight:700}
-  .prem-badge{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:5px 12px;border-radius:999px;color:#04120f;background:linear-gradient(90deg,var(--green),var(--blue))}
-  .prem .sub{margin:8px 0 22px;color:var(--dim);font-size:14px;line-height:1.55;max-width:560px}
-  .pmodes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:8px}
-  @media(max-width:620px){.pmodes{grid-template-columns:minmax(0,1fr)}}
-  .pm{text-align:left;min-height:96px;padding:18px 20px;border-radius:20px;border:1px solid var(--stroke);background:rgba(255,255,255,.03);color:var(--ink);font:inherit;cursor:pointer;transition:border-color .25s,background .25s,box-shadow .25s}
-  .pm b{display:block;font-family:var(--font-display);font-size:17px;margin-bottom:6px}
-  .pm span{font-size:13px;line-height:1.45;color:var(--dim)}
-  .pm:hover{border-color:rgba(55,182,255,.45)}
-  .pm[aria-checked="true"]{border-color:var(--green);background:rgba(47,227,143,.08);box-shadow:0 10px 30px -14px rgba(47,227,143,.5)}
-  .prem h4{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:26px 0 12px}
-  .prem h4 button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--stroke);background:transparent;color:var(--ink);font:inherit;font-size:13px;letter-spacing:0;text-transform:none;cursor:pointer}
-  .prem h4 button:hover{border-color:rgba(55,182,255,.45)}
-  .pcount{margin-left:auto;font-size:13px;letter-spacing:0;text-transform:none;color:var(--dim)}
-  .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-  .pt{position:relative;display:grid;justify-items:center;align-content:center;gap:10px;min-height:156px;padding:20px 10px 16px;border-radius:22px;border:1.5px solid var(--stroke);background:rgba(255,255,255,.03);color:var(--ink);font:inherit;cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .25s,background .25s,box-shadow .25s}
-  .pt:hover{transform:translateY(-5px);border-color:rgba(55,182,255,.5)}
-  .pt .mono{width:88px;height:88px;border-radius:22px;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:1px;background:linear-gradient(135deg,#1f3a31,#173048);color:var(--ink)}
-  .pt .nm{font-family:var(--font-display);font-weight:600;font-size:15px;text-align:center;overflow-wrap:anywhere}
-  .pt .st{font-size:12px;letter-spacing:.6px;color:var(--dim)}
-  .pt[aria-pressed="true"]{border-color:var(--green);background:rgba(47,227,143,.1);box-shadow:0 14px 34px -16px rgba(47,227,143,.6)}
-  .pt .mono img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
-  .pt[aria-pressed="true"] .mono{background:linear-gradient(135deg,var(--green),var(--blue));color:#04120f}
-  .pt[aria-pressed="true"] .st{color:var(--green);font-weight:700}
-  .pt[aria-pressed="true"]::after{content:"\2713";position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:800;color:#04120f;background:linear-gradient(135deg,var(--green),var(--blue))}
-  .pnote{margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--dim);max-width:640px}
-  body.locked .prem .pmodes,body.locked .prem h4 button,body.locked .pgrid{opacity:.45;pointer-events:none}
-  body.locked .app.free{pointer-events:auto;filter:none}
-  body.locked .app.free .lock-badge{display:none}
-  body.locked .app.free .hint{color:var(--dim)}
-  @media(prefers-reduced-motion:reduce){.pt,.pm{transition:none}.pt:hover{transform:none}}
-
   /* hard lock panel */
   .panel{
     background:var(--card);
@@ -270,26 +141,18 @@
     font-family:var(--font-display);font-size:24px;font-weight:700;margin-bottom:8px;
     display:flex;align-items:center;gap:10px;
   }
-  .panel h3 svg{width:22px;height:22px;color:var(--green)}
   .panel .sub{color:var(--dim);font-size:14px;line-height:1.55;max-width:440px;margin-bottom:26px}
-  .ext-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;margin:-10px 0 22px;border-radius:999px;border:1px solid rgba(47,227,143,.35);color:var(--green);background:rgba(47,227,143,.06);font-size:14px;font-weight:600;text-decoration:none;transition:background .2s,border-color .2s}
-  .ext-link:hover{background:rgba(47,227,143,.12);border-color:var(--green)}
-  .ext-link svg{width:18px;height:18px}
-  .ext-link.need{background:linear-gradient(90deg,var(--green),var(--blue));color:#04130c;border-color:transparent}
-  .ext-link.on{pointer-events:none}
-  /* linked devices: one Hard Lock for this site, the phone app and the Chrome extension */
-  .link-box{margin:-8px 0 22px;padding:14px 16px;border-radius:18px;border:1px solid rgba(55,182,255,.3);background:rgba(55,182,255,.05);font-size:14px;line-height:1.5}
-  .link-box b{color:var(--ink)}
-  .link-box .lk-code{font-family:ui-monospace,Menlo,monospace;font-size:20px;letter-spacing:3px;color:var(--blue);font-weight:700}
-  .link-box .lk-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
-  .link-box button,.link-box input{min-height:44px;border-radius:999px;font:inherit;font-size:14px}
-  .link-box button{padding:0 16px;border:1px solid rgba(55,182,255,.45);background:rgba(55,182,255,.1);color:var(--ink);cursor:pointer}
-  .link-box button.pri{background:linear-gradient(90deg,var(--green),var(--blue));color:#04130c;border-color:transparent;font-weight:700}
-  .link-box input{padding:0 16px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);color:var(--ink);width:150px;text-transform:uppercase;letter-spacing:2px}
-  .link-box .lk-dim{color:var(--dim);font-size:13px}
-  .link-box .lk-err{color:#ff6e8a;font-size:13px}
 
-  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  /* Chips & Categories */
+  .chips-container{display:flex;flex-direction:column;gap:16px}
+  .chips-row{display:flex;flex-wrap:wrap;gap:10px}
+  .chips-t{
+    font:800 11px var(--font-display);
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--dim);
+    margin-bottom:8px;
+  }
   .chip{
     font-family:var(--font-display);font-size:14px;font-weight:600;
     padding:10px 18px;border-radius:100px;
@@ -297,8 +160,6 @@
     background:transparent;cursor:pointer;
     transition:all .25s;
   }
-  .chips-t{flex-basis:100%;margin-top:4px;font:800 11px var(--font-display);letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
-  .reward-box tr.mood td{padding-top:12px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left}
   .chip:hover{color:var(--ink);border-color:rgba(55,182,255,.45)}
   .chip.active{
     color:#04120f;border-color:transparent;
@@ -306,14 +167,9 @@
     box-shadow:0 6px 22px -8px rgba(47,227,143,.6);
   }
 
-  /* lock button + ring */
+  /* lock button */
   .lock-zone{display:grid;place-items:center;gap:14px;justify-items:center}
-  .ring-wrap{position:relative;width:150px;height:150px;display:grid;place-items:center}
-  .ring-wrap svg.ring{position:absolute;inset:0;transform:rotate(-90deg);pointer-events:none}
-  .ring-bg{stroke:rgba(255,255,255,.07);fill:none;stroke-width:7}
-  .ring-fg{stroke:url(#ringGrad);fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
   #lockBtn{
-    position:relative;z-index:2;
     width:104px;height:104px;border-radius:50%;
     border:none;cursor:pointer;
     background:linear-gradient(135deg,var(--green),var(--blue));
@@ -333,1144 +189,162 @@
     font-family:var(--font-display);font-weight:700;font-size:20px;
     letter-spacing:1px;color:var(--ink);min-height:26px;
   }
-  #countdown.small{font-size:13px;color:var(--dim);font-weight:500;letter-spacing:.5px}
 
-  /* sakura: grows while Hard Lock runs, drops leaves on temptation, garden of finished locks */
-  .sakura{margin-top:22px;background:var(--card);border:1px solid var(--stroke);border-radius:26px;backdrop-filter:blur(16px);
-    padding:28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px;align-items:start}
-  @media(max-width:860px){.sakura{grid-template-columns:minmax(0,1fr);padding:20px}}
-  .sk-scene{position:relative;width:100%;aspect-ratio:370/200;border-radius:22px;overflow:hidden;background:#14080E;box-shadow:0 0 40px rgba(255,110,199,.12)}
-  .sk-scene .sk-clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:filter 1.2s ease}
-  .sk-scene .sk-tint{position:absolute;inset:0;pointer-events:none;transition:background 2s}
-  .sk-scene .sk-fallen i{position:absolute;width:5%;margin-left:-2.5%}
-  .sk-scene .sk-fallen svg{display:block;width:100%;fill:currentColor}
-  .sakura h3{font-family:var(--font-display);font-size:24px;font-weight:700;margin-bottom:6px}
-  .sakura h4{font-family:var(--font-display);font-size:16px;font-weight:700;margin:22px 0 4px}
-  .sk-stage{color:var(--green);font-weight:600;font-size:14px;letter-spacing:.5px;text-transform:uppercase}
-  .sk-dim{color:var(--dim);font-size:14px;line-height:1.55}
-  .sk-leaves{margin-top:14px;padding:14px 16px;border-radius:16px;border:1px solid var(--stroke);font-size:14px;line-height:1.5}
-  .sk-leaves b{color:#C9A55A}.sk-leaves.ok b{color:var(--green)}
-  .sk-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:10px;max-width:320px}
-  .sk-day{aspect-ratio:1;border-radius:9px;background:rgba(255,255,255,.05);display:grid;place-items:center}
-  .sk-day.on{background:rgba(246,188,205,.18)}.sk-day.on i{display:block;border-radius:50%;background:#F19BB5}
-  .sk-day.today{outline:1px solid var(--green)}
-  .sk-note{color:var(--dim);font-size:12px;margin-top:10px}
-
+  /* Nav */
+  #mnav{position:fixed;top:0;left:0;right:0;height:52px;z-index:600;display:flex;align-items:center;gap:5px;
+    padding:0 14px;background:rgba(2,10,8,.82);backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter',sans-serif}
+  #mnav .mn-logo{display:flex;align-items:center;gap:8px;margin-right:10px;text-decoration:none;color:#eafff6}
+  #mnav .mn-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#2fe38f,#37b6ff);
+    display:grid;place-items:center;font-weight:800;color:#04120f;font-size:14px}
+  #mnav .mn-logo b{font-size:13px;font-weight:700}
+  #mnav .mn-spacer{flex:1}
+  #mnav a.mn-link{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    color:#7da99b;text-decoration:none;padding:7px 11px;border-radius:100px;transition:all .25s}
+  #mnav a.mn-link.active{color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff)}
+  
   footer{margin-top:70px;text-align:center;color:var(--dim);font-size:12px;letter-spacing:1.5px}
   footer b{color:var(--green);font-weight:600}
-
-  @media (prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
-  }
-
-
-
-
-/* ══ MAATRAM UNIVERSAL NAV ══ */
-#mnav{position:fixed;top:0;left:0;right:0;height:52px;z-index:600;display:flex;align-items:center;gap:5px;
-  padding:0 14px;background:rgba(2,10,8,.82);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(47,227,143,.15);font-family:'Sora','Inter','Inter Fallback',system-ui,sans-serif;cursor:auto}
-#mnav *{cursor:pointer}
-#mnav .mn-logo{display:flex;align-items:center;gap:8px;margin-right:10px;text-decoration:none;color:#eafff6}
-
-#mnav .mn-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#2fe38f,#37b6ff);
-  display:grid;place-items:center;font-weight:800;color:#04120f;font-size:14px}
-#mnav .mn-logo b{font-size:13px;font-weight:700;letter-spacing:.4px}
-#mnav .mn-spacer{flex:1}
-#mnav a.mn-link{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  color:#7da99b;text-decoration:none;padding:7px 11px;border-radius:100px;transition:all .25s;white-space:nowrap}
-#mnav a.mn-link:hover{color:#eafff6;background:rgba(55,182,255,.1)}
-#mnav a.mn-link.active{color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff)}
-#mnavAuth{display:flex;align-items:center;gap:8px;margin-left:6px}
-#mnavIn{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#04120f;
-  text-decoration:none;padding:8px 16px;border-radius:100px;background:linear-gradient(90deg,#2fe38f,#37b6ff);white-space:nowrap}
-#mnavChip{display:none;align-items:center;gap:8px;padding:4px 6px;border-radius:100px;
-  border:1px solid rgba(47,227,143,.3);background:rgba(47,227,143,.06);position:relative}
-#mnavChip img{width:28px;height:28px;border-radius:50%;border:1px solid #2fe38f}
-#mnavChip .nm{font-size:12px;font-weight:700;color:#eafff6;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#mnavChip .pt{font-size:10px;font-weight:800;color:#ffd166;letter-spacing:.5px;padding:3px 8px;border-radius:100px;
-  border:1px solid rgba(255,209,102,.35);background:rgba(255,209,102,.08);white-space:nowrap}
-#mnavMenu{display:none;position:absolute;top:44px;right:0;min-width:180px;z-index:700;
-  background:rgba(6,18,14,.97);border:1px solid rgba(47,227,143,.25);border-radius:14px;padding:8px;
-  box-shadow:0 18px 50px -12px rgba(0,0,0,.8)}
-#mnavMenu.open{display:block}
-#mnavMenu button,#mnavMenu a{display:block;width:100%;text-align:left;padding:10px 13px;border-radius:9px;
-  background:transparent;border:none;color:#eafff6;font-family:inherit;font-size:12px;font-weight:600;text-decoration:none;transition:background .2s}
-#mnavMenu button:hover,#mnavMenu a:hover{background:rgba(55,182,255,.12)}
-#mnavMenu .out{color:#ff5d73}
-@media(max-width:860px){#mnav,html.minimal #mnav{overflow-x:auto;scrollbar-width:none;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(2,10,8,.96)!important}#mnavMenu{position:fixed;top:52px;right:8px}#mnav::-webkit-scrollbar{display:none}
-  #mnav .mn-logo b{display:none}#mnavChip .nm{display:none}}
-body{padding-top:52px!important}
-
-
-  /* reward table */
-  .reward-box{border:1px solid rgba(255,209,102,.25);background:rgba(255,209,102,.05);border-radius:18px;
-    padding:18px 20px;min-width:200px}
-  .reward-box h4{font-family:var(--font-display);font-size:12px;font-weight:800;letter-spacing:1.5px;
-    text-transform:uppercase;color:#ffd166;margin:0 0 4px}
-  .reward-box .rb-note{font-size:11.5px;color:var(--dim);margin-bottom:12px}
-  .reward-box table{width:100%;border-collapse:collapse;font-size:13px}
-  .reward-box td{padding:5px 0;color:#cfe9dd}
-  .reward-box td:last-child{text-align:right;font-weight:800;color:#ffd166}
-  .reward-box tr+tr td{border-top:1px dashed rgba(255,255,255,.08)}
-  /* ══ performance-mode toggle button (all pages) ══ */
-  #perfBtn{position:fixed;bottom:18px;left:18px;z-index:900;display:flex;align-items:center;gap:8px;
-    padding:8px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.18);cursor:pointer;
-    background:rgba(6,18,15,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#cfe9dd;
-    font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
-    transition:border-color .25s,color .25s}
-  #perfBtn:hover{border-color:rgba(47,227,143,.55);color:#eafff6}
-  #perfBtn .pf-ic{font-size:13px;line-height:1}
-  #perfBtn .pf-sw{width:28px;height:15px;border-radius:100px;border:1px solid rgba(255,255,255,.3);position:relative;transition:all .25s;flex-shrink:0}
-  #perfBtn .pf-sw::after{content:"";position:absolute;top:1.5px;left:2px;width:10px;height:10px;border-radius:50%;background:#cfe9dd;transition:all .25s}
-  html:not(.perf) #perfBtn .pf-sw{background:linear-gradient(90deg,#2fe38f,#37b6ff);border-color:transparent}
-  html:not(.perf) #perfBtn .pf-sw::after{left:14px;background:#04120f}
-  html:not(.perf) #perfBtn{border-color:rgba(47,227,143,.4)}
-  @media(pointer:coarse){#perfBtn{bottom:12px;left:12px}}
-
 </style>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all';this.onload=null">
-<script>
-/* stub so feature code can always call it; hosted engine overrides */
-window.maatramAward=window.maatramAward||function(pts,reason){
-  try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){}
-  try{const c=+localStorage.getItem('maatram_points')||0;
-      localStorage.setItem('maatram_points',Math.max(0,c+Math.round(pts)));}catch(_){}
-  try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
-  try{ parent.postMessage({maatramRelay:{type:'points',pts}},'*'); }catch(_){}
-};
-</script>
-<script>/* Skin class + the few tokens that must exist at first paint, so
-   theme.js itself no longer has to block rendering. */
-(function(){var m=null;try{m=localStorage.getItem('maatram_theme');}catch(_){}if(m!=='minimal')return;document.documentElement.classList.add('minimal');var s=document.createElement("style");s.textContent="html.minimal{--bg:#0B0C0B;--ink:#ECEFEE;--dim:#8A928E;--green:#9CC0B2!important;--blue:#9CC0B2!important;--gold:#C9CFC9!important;--pink:#9CC0B2!important;--silver:#B8BEBA;--bronze:#A8AFA9;--card:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.13);--danger:#D98A94;--radius:24px;--font-display:\"Plus Jakarta Sans\",\"Sora\",sans-serif;--font-body:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;--surface:rgba(255,255,255,.045);--surface-2:rgba(255,255,255,.08);--line:rgba(255,255,255,.11);--line-hi:rgba(255,255,255,.22);--text:#ECEFEE;--muted:#8A928E;--faint:#5C635F;--accent:#9CC0B2!important;--sans:\"Plus Jakarta Sans\",\"Inter\",system-ui,sans-serif;}html.minimal body{background:#0B0C0B!important;color:#ECEFEE}html.minimal *{text-shadow:none!important}";document.head.appendChild(s);})();</script>
-<script defer src="theme.js?v=6"></script><script defer src="/focuz-bot.js"></script><script defer src="/survey.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
+<script defer src="theme.js?v=6"></script>
 <script src="gate.js"></script>
-<style>.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}</style>
-<style id="a11yCSS">
-.skip-link{position:absolute;left:-9999px;top:0;z-index:100000;padding:12px 18px;border-radius:0 0 12px 0;
-  background:#34D399;color:#04120F;font:600 14px/1 Inter,system-ui,sans-serif;text-decoration:none}
-.skip-link:focus{left:0}
-:focus-visible{outline:2px solid #34D399;outline-offset:2px}
-#mfoot{content-visibility:auto;contain-intrinsic-size:auto 620px}
-</style>
-<script defer src="/speed-insights.js"></script>
 </head>
+
 <body>
-<a class="skip-link" href="#main">Skip to main content</a>
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
-  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link active" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link" href="download.html">Download</a><a class="mn-link" href="login.html">Account</a>
-  <div id="mnavAuth">
-    <a id="mnavIn" href="login.html">Sign in</a>
-    <div id="mnavChip">
-      <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" loading="lazy" decoding="async" width="28" height="28">
-      <span class="nm" id="mnavNm"></span>
-      <span class="pt" id="mnavPts">0 PTS</span>
-      <div id="mnavMenu">
-        <a href="leaderboard.html">🏆 My rank</a>
-        <button class="out" id="mnavOut">Sign out</button>
-      </div>
-    </div>
-  </div>
+  <span class="mn-spacer"></span>
+  <a class="mn-link" href="/">Home</a>
+  <a class="mn-link" href="timers.html">Timers</a>
+  <a class="mn-link active" href="app-gate.html">App Gate</a>
+  <a class="mn-link" href="study-room.html">Study Room</a>
+  <a class="mn-link" href="wellness/wellness.html">Wellness</a>
+  <a class="mn-link" href="login.html">Account</a>
 </nav>
 
-<canvas id="field"></canvas>
-
-<div class="wrap" id="main" role="main" tabindex="-1">
+<div class="wrap" id="main">
   <header>
     <div class="brand">
       <div class="brand-mark">M</div>
       <div>
-        <h1>Maatram<span class="sr-only"> App Gate and Hard Lock: block Instagram Reels and YouTube Shorts</span></h1>
-        <span>Action ⟹ Value</span>
+        <h1>App Gate</h1>
+        <span>Maatram Hard Lock</span>
       </div>
     </div>
-    <div class="status-pill" id="statusPill">Gate open</div>
+    <div class="status-pill" id="statusPill">Unlocked</div>
   </header>
 
   <section class="hero">
-    <h2>Your apps, behind a <em>gate you control.</em></h2>
-    <p>Tap an app to open it — or arm Hard Lock and put every shortcut out of reach until your focus window ends.</p>
+    <h2>Block Distractions. <em>Reclaim Focus.</em></h2>
+    <p>Set a Hard Lock duration to restrict social media access on your browser. Select a time limit below to start.</p>
   </section>
 
-  <section class="apps" id="appGrid">
-    <!-- Instagram -->
-    <a class="app" href="https://www.instagram.com" target="_blank" rel="noopener">
-      <span class="lock-badge">🔒</span>
-      <div class="icon" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="1.4" fill="#fff" stroke="none"/></svg>
-      </div>
-      <div class="name">Instagram</div>
-      <div class="hint">instagram.com</div>
-    </a>
-    <!-- Snapchat -->
-    <a class="app" href="https://www.snapchat.com" target="_blank" rel="noopener">
-      <span class="lock-badge">🔒</span>
-      <div class="icon" style="background:#FFFC00">
-        <svg viewBox="0 0 24 24" fill="#111"><path d="M12 2c3.2 0 5.2 2.4 5.2 5.4 0 .8-.05 1.6-.1 2.3.5.2 1-.2 1.4-.2.5 0 1 .3 1 .8 0 .7-.9 1-1.6 1.3-.4.15-.8.35-.9.6-.05.2 0 .45.2.8.7 1.3 1.9 2.3 3.3 2.6.3.07.5.3.5.6 0 .1-.03.2-.08.3-.35.7-1.6.95-2.3 1.05-.1.3-.15.7-.25.95-.08.25-.3.4-.6.35-.4-.05-.9-.15-1.5-.15-.35 0-.7.03-1.05.1-.7.15-1.3.9-2.2 1.4-.5.3-1 .4-1.4.4h-.2c-.4 0-.9-.1-1.4-.4-.9-.5-1.5-1.25-2.2-1.4-.35-.07-.7-.1-1.05-.1-.6 0-1.1.1-1.5.15-.3.05-.5-.1-.6-.35-.1-.25-.15-.65-.25-.95-.7-.1-1.95-.35-2.3-1.05A.66.66 0 0 1 2 16.2c0-.3.2-.53.5-.6 1.4-.3 2.6-1.3 3.3-2.6.2-.35.25-.6.2-.8-.1-.25-.5-.45-.9-.6-.7-.3-1.6-.6-1.6-1.3 0-.5.5-.8 1-.8.4 0 .9.4 1.4.2-.05-.7-.1-1.5-.1-2.3C5.8 4.4 8.8 2 12 2z"/></svg>
-      </div>
-      <div class="name">Snapchat</div>
-      <div class="hint">snapchat.com</div>
-    </a>
-    <!-- TikTok -->
-    <a class="app" href="https://www.tiktok.com" target="_blank" rel="noopener">
-      <span class="lock-badge">🔒</span>
-      <div class="icon" style="background:#000">
-        <svg viewBox="0 0 24 24"><path fill="#25F4EE" d="M9.5 8.8v7.1a2.6 2.6 0 1 1-2.1-2.55V10.2a5.7 5.7 0 1 0 5.2 5.7V9.4a7.3 7.3 0 0 0 4.2 1.3V7.6a4.2 4.2 0 0 1-4.2-4.1h-3.1v5.3z" transform="translate(-.6 -.4)"/><path fill="#FE2C55" d="M10.7 9.6v7.1a2.6 2.6 0 1 1-2.1-2.55V11a5.7 5.7 0 1 0 5.2 5.7v-6.5a7.3 7.3 0 0 0 4.2 1.3V8.4a4.2 4.2 0 0 1-4.2-4.1h-3.1v5.3z" transform="translate(.6 .4)"/><path fill="#fff" d="M10.1 9.2v7.1A2.6 2.6 0 1 1 8 13.75v-3.15a5.7 5.7 0 1 0 5.2 5.7V9.8a7.3 7.3 0 0 0 4.2 1.3V8a4.2 4.2 0 0 1-4.2-4.1h-3.1v5.3z"/></svg>
-      </div>
-      <div class="name">TikTok</div>
-      <div class="hint">tiktok.com</div>
-    </a>
-    <!-- YouTube -->
-    <a class="app" href="https://www.youtube.com" target="_blank" rel="noopener">
-      <span class="lock-badge">🔒</span>
-      <div class="icon" style="background:#FF0000">
-        <svg viewBox="0 0 24 24" fill="#fff"><path d="M10 15.5v-7l6 3.5-6 3.5z"/><rect x="2" y="4.5" width="20" height="15" rx="4" fill="none" stroke="#fff" stroke-width="2"/></svg>
-      </div>
-      <div class="name">YouTube</div>
-      <div class="hint">youtube.com</div>
-    </a>
-    <!-- WhatsApp -->
-    <a class="app" href="https://www.whatsapp.com" target="_blank" rel="noopener">
-      <span class="lock-badge">🔒</span>
-      <div class="icon" style="background:#25D366">
-        <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.25-.13-1.5-.74-1.73-.82-.23-.09-.4-.13-.57.12-.17.25-.65.82-.8.99-.15.17-.3.19-.55.06a6.7 6.7 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.17.04-.31-.02-.44-.06-.13-.57-1.37-.78-1.87-.2-.5-.42-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.6.13.17 1.78 2.72 4.3 3.81.6.26 1.07.42 1.44.53.6.19 1.15.17 1.58.1.48-.07 1.5-.61 1.7-1.2.21-.6.21-1.1.15-1.2-.06-.11-.23-.17-.48-.3z"/></svg>
-      </div>
-      <div class="name">WhatsApp</div>
-      <div class="hint">whatsapp.com</div>
-    </a>
-  </section>
-
-  <section class="mysites" aria-labelledby="mySitesT">
-    <div class="ms-head"><b id="mySitesT">Your sites</b><span id="siteCount"></span></div>
-    <p class="sub">Add any other website, like a game or streaming site. It is locked with the apps above during Hard Lock, in Chrome with the Maatram Hard Lock extension.</p>
-    <form id="siteForm" autocomplete="off">
-      <input id="siteInput" type="text" inputmode="url" placeholder="e.g. netflix.com" maxlength="100" aria-label="Website address">
-      <button type="submit">Add</button>
-    </form>
-    <div class="site-msg" id="siteMsg" role="status"></div>
-    <div class="site-chips" id="siteChips"></div>
-  </section>
-
-  <section class="prem" id="premium" aria-labelledby="premT">
-    <div class="prem-head"><span id="premT">Premium Blocking</span><span class="prem-badge">Premium</span></div>
-    <p class="sub"><b>App Selective Blocking.</b> Pick the mobile games you want Hard Lock to block.</p>
-    <div id="premPick">
-      <h4>Top 10 mobile games <button type="button" id="premGAll">Select all</button><button type="button" id="premGNone">Clear</button><span class="pcount" id="premCount" role="status" aria-live="polite"></span></h4>
-      <div class="pgrid" id="premGames"></div>
-      <p class="pnote">Games are locked by the Maatram Hard Lock phone app: open it, tap <b>Choose apps to lock</b> and use <b>Lock all games</b>. A browser can&rsquo;t block games, so your picks here are saved on this device only. <a href="download.html">Get the app</a></p>
-    </div>
-  </section>
-
+  <!-- Hard Lock Control Panel -->
   <section class="panel">
     <div>
-      <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        Hard Lock Mode
-      </h3>
-      <p class="sub">Pick a focus window. Once armed, every app above goes grey and un-clickable until the timer runs out. No exits, no shortcuts — that's the point.</p>
-      <a class="ext-link need" id="extLink" href="https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path id="extIcon" d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
-        <span id="extLabel">Step 1: Add Maatram Hard Lock to Chrome (desktop)</span>
-      </a>
-      <div class="link-box" id="linkBox" aria-live="polite"></div>
-      <div class="chips" id="chips">
-        <button class="chip" data-min="5">5 min</button>
-        <button class="chip" data-min="10">10 min</button>
-        <button class="chip" data-min="15">15 min</button>
-        <button class="chip active" data-min="25">25 min</button>
-        <button class="chip" data-min="45">45 min</button>
-        <button class="chip" data-min="60">60 min</button>
-        <span class="chips-t">In the Mood</span>
-        <button class="chip" data-min="90">90 min</button>
-        <button class="chip" data-min="120">2 hr</button>
-        <button class="chip" data-min="180">3 hr</button>
+      <h3>Hard Lock Control</h3>
+      <p class="sub">Choose how long you want to lock distracting apps. Maximum lock duration is 3 hours.</p>
+      
+      <!-- Duration Selection Area -->
+      <div class="chips-container">
+        <!-- Standard Quick Durations -->
+        <div>
+          <div class="chips-t">QUICK TIMERS</div>
+          <div class="chips-row">
+            <button class="chip active" data-min="5">5 Mins</button>
+            <button class="chip" data-min="15">15 Mins</button>
+            <button class="chip" data-min="30">30 Mins</button>
+            <button class="chip" data-min="60">60 Mins</button>
+          </div>
+        </div>
+
+        <!-- Mood Category (Website Only - Includes 90m, 2h, 3h | Excludes 4h) -->
+        <div id="moodCategoryWrapper" style="display: none;">
+          <div class="chips-t">MOOD</div>
+          <div class="chips-row">
+            <button class="chip" data-min="90">90 Mins</button>
+            <button class="chip" data-min="120">2 Hours</button>
+            <button class="chip" data-min="180">3 Hours</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="reward-box">
-      <h4>Lock &amp; Earn</h4>
-      <div class="rb-note">+10 pts for every 5 minutes you stay locked</div>
-      <table>
-        <tr><td>5 min</td><td>+10 pts</td></tr>
-        <tr><td>10 min</td><td>+20 pts</td></tr>
-        <tr><td>15 min</td><td>+30 pts</td></tr>
-        <tr><td>25 min</td><td>+50 pts</td></tr>
-        <tr><td>45 min</td><td>+90 pts</td></tr>
-        <tr><td>60 min</td><td>+120 pts</td></tr>
-        <tr class="mood"><td colspan="2">In the Mood</td></tr>
-        <tr><td>90 min</td><td>+180 pts</td></tr>
-        <tr><td>2 hr</td><td>+300 pts</td></tr>
-        <tr><td>3 hr</td><td>+500 pts</td></tr>
-      </table>
-    </div>
+
+    <!-- Lock Action Zone -->
     <div class="lock-zone">
-      <div class="ring-wrap">
-        <svg class="ring" viewBox="0 0 150 150">
-          <defs>
-            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#2fe38f"/>
-              <stop offset="100%" stop-color="#37b6ff"/>
-            </linearGradient>
-          </defs>
-          <circle class="ring-bg" cx="75" cy="75" r="68"/>
-          <circle class="ring-fg" id="ringFg" cx="75" cy="75" r="68"/>
-        </svg>
-        <button id="lockBtn">Lock</button>
-      </div>
-      <div id="countdown" class="small">Ready when you are</div>
+      <button id="lockBtn">START LOCK</button>
+      <div id="countdown">--:--</div>
     </div>
   </section>
 
-  <section class="sakura" id="sakura" aria-labelledby="skH">
-    <div class="sk-art"><div class="sk-scene" id="skScene" role="img" aria-label="Your sakura tree"></div></div>
-    <div>
-      <h3 id="skH">Your sakura</h3>
-      <div class="sk-stage" id="skStage">Waiting for a seed</div>
-      <p class="sk-dim" id="skSub">Start a Hard Lock and a seed is planted. It grows into a blooming sakura while you focus, and the sky follows the real time of day.</p>
-      <div class="sk-leaves ok" id="skLeaves"><b>No leaves lost.</b> Each time you try a locked app, the tree drops a leaf.</div>
-      <h4>My garden</h4>
-      <p class="sk-dim" id="skStats">Finish a Hard Lock to plant your first tree.</p>
-      <div class="sk-grid" id="skGrid" aria-label="Trees planted in the last 4 weeks"></div>
-      <p class="sk-note">Small dot = a blooming tree. Big dot = a full tree (a 90-minute lock). Empty = a missed day. Your garden is saved in this browser.</p>
-    </div>
-  </section>
-
-  <footer>MAATRAM · <b>Action ⟹ Value</b> · Built by Team Maatram, SSVM School of Excellence</footer>
+  <footer>
+    <p>Powered by <b>MAATRAM</b> — Bringing a change in you.</p>
+  </footer>
 </div>
 
-<script src="/sakura.js?v=5"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.3.5/mqtt.min.js"></script>
 <script>
-/* ============ storage (works as downloaded file; falls back in sandboxed views) ============ */
-const store = (() => {
-  try { localStorage.setItem('_t','1'); localStorage.removeItem('_t');
-    return { get:k=>localStorage.getItem(k), set:(k,v)=>localStorage.setItem(k,v), del:k=>localStorage.removeItem(k) };
-  } catch(e){ const m={}; return { get:k=>m[k]??null, set:(k,v)=>m[k]=v, del:k=>delete m[k] }; }
-})();
+document.addEventListener('DOMContentLoaded', function () {
+  // 1. Check if Mood Category exists on the website (Only show if category exists)
+  const isWebsite = true; // Hardcoded true for website deployment
+  const hasMoodCategory = true; // Toggle based on category presence
 
-/* ============ ROOM RELAY — keeps your Study Room seat alive while you're here,
-   and broadcasts strikes to roommates even though the room page is closed ============ */
-const ROOM=(()=>{
-  const SKEY='maatram_room_session';
-  const g=()=>{try{return JSON.parse(store.get(SKEY)||'null')}catch(_){return null}};
-  const patch=p=>{const s=g();if(s){Object.assign(s,p);try{store.set(SKEY,JSON.stringify(s))}catch(_){}}};
-  const uid=()=>store.get('maatram_room_uid')||('g'+Math.random().toString(36).slice(2));
-  const roomTabAlive=()=>{const t=+store.get('maatram_room_alive')||0;return Date.now()-t<4000;};
-  /* one broker for every page (study-room.html uses the same one) so a room never splits;
-     on a drop we retry that same broker with exponential backoff */
-  const BROKER='wss://broker.emqx.io:8084/mqtt';
-  let cli=null, topic='', backoff=2000, retryAt=0;
-  function ensure(){
-    const s=g();
-    if(!s||!s.code||Date.now()-(s.last||0)>5*60*1000){ if(cli){const c=cli;cli=null;try{c.end(true)}catch(_){}} return null; }
-    if(roomTabAlive()){ if(cli){const c=cli;cli=null;try{c.end(true)}catch(_){}} return s; }  // room tab open elsewhere — it handles sync
-    if(!cli && window.mqtt && Date.now()>=retryAt){
-      /* SECURITY: same MQTT wildcard guard as study-room.html */
-      topic='maatram/room/'+String(s.code||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12);
-      try{
-        const me=cli=mqtt.connect(BROKER,{clientId:'maatram_'+uid()+'_g',keepalive:30,reconnectPeriod:0,connectTimeout:8000});
-        me.on('error',()=>{});
-        me.on('connect',()=>{backoff=2000;const s2=g();if(s2)pub({type:'hello',name:s2.name,avatar:s2.avatar,strikes:s2.strikes||0,elapsed:Math.floor((Date.now()-(s2.start||Date.now()))/1000)});});
-        me.on('close',()=>{ if(cli!==me) return;   /* dropped: ensure() reconnects after the backoff */
-          cli=null; try{me.end(true)}catch(_){}
-          retryAt=Date.now()+backoff; backoff=Math.min(backoff*2,60000); });
-      }catch(_){cli=null;}
-    }
-    return s;
+  const moodWrapper = document.getElementById('moodCategoryWrapper');
+  if (moodWrapper && isWebsite && hasMoodCategory) {
+    moodWrapper.style.display = 'block';
   }
-  function pub(o){ if(cli&&cli.connected){o._id=uid();try{cli.publish(topic,JSON.stringify(o))}catch(_){}} }
-  setInterval(()=>{
-    const s=ensure(); if(!s) return;
-    patch({last:Date.now()});
-    if(!roomTabAlive()) pub({type:'ping',elapsed:Math.floor((Date.now()-(s.start||Date.now()))/1000)});
-  },2000);
-  ensure();
-  return { strike(app,ts){
-    const s=ensure(); if(!s) return;
-    const strikes=(s.strikes||0)+1;
-    patch({strikes,last:Date.now()});
-    try{store.set('maatram_social_seen',String(ts));}catch(_){}
-    if(!roomTabAlive()) pub({type:'strike',app,ts,name:s.name,avatar:s.avatar,elapsed:Math.floor((Date.now()-(s.start||Date.now()))/1000)});
-  }};
-})();
 
-/* ============ hard lock logic ============ */
-const body=document.body, pill=document.getElementById('statusPill'),
-      lockBtn=document.getElementById('lockBtn'), cd=document.getElementById('countdown'),
-      ringFg=document.getElementById('ringFg'), chips=document.getElementById('chips'),
-      grid=document.getElementById('appGrid');
-const CIRC = 2*Math.PI*68;
-ringFg.style.strokeDasharray = CIRC;
-ringFg.style.strokeDashoffset = CIRC;
+  // 2. Duration Chip Selection Handling
+  let selectedMinutes = 5;
+  const chips = document.querySelectorAll('.chip');
+  const countdownEl = document.getElementById('countdown');
+  const lockBtn = document.getElementById('lockBtn');
+  const statusPill = document.getElementById('statusPill');
 
-let selMin = 25, tick=null, lockEnd=0, lockTotal=0;
-/* In the Mood: flat reward for a 2 or 3 hour lock (never less than the +10 per 5 min rate) */
-const MOOD=[[180,500],[120,300]];
-const moodPts=sec=>{ const m=Math.floor(sec/60), t=MOOD.find(x=>m>=x[0]); return t?t[1]:0; };
-
-chips.addEventListener('click', e=>{
-  const c = e.target.closest('.chip'); if(!c || body.classList.contains('locked')) return;
-  chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
-  c.classList.add('active'); selMin=+c.dataset.min;
-  /* the Chrome popup picks the same time */
-  sendToMaatramExtension({action:'SET_PREFERRED_MINUTES',minutes:selMin}).catch(()=>{});
-});
-function pickChip(min){
-  const c=chips.querySelector('.chip[data-min="'+min+'"]'); if(!c || body.classList.contains('locked')) return;
-  chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); c.classList.add('active'); selMin=min;
-}
-
-function fmt(s){ const m=Math.floor(s/60), r=s%60; return m+':'+String(r).padStart(2,'0'); }
-
-/* ============ premium: app selective blocking ============ */
-const SEL=(function(){
-  const KEY='maatram_selective_apps', MODE='maatram_block_mode';
-  const GAMES=[['BGMI','BG'],['Free Fire MAX','FF'],['Call of Duty Mobile','CD'],['Minecraft','MC'],['Roblox','RB'],['Clash of Clans','CC'],['Clash Royale','CR'],['Brawl Stars','BS'],['Subway Surfers','SS'],['Candy Crush','CA']];
-  let sel; try{ sel=new Set(JSON.parse(store.get(KEY)||'[]')); }catch(_){ sel=new Set(); }
-  const mode='all';
-  const sec=document.getElementById('premium');
-  function save(){ try{ store.set(KEY,JSON.stringify([...sel])); store.set(MODE,mode); }catch(_){} }
-  /* built-in app cards stay free during a lock when you chose "pick" and left them out */
-  function applyFree(){
-    document.querySelectorAll('#appGrid .app:not(.custom)').forEach(a=>{
-      const n=a.querySelector('.name').textContent;
-      a.classList.toggle('free', mode==='pick' && !sel.has(n));
+  chips.forEach(chip => {
+    chip.addEventListener('click', function () {
+      if (document.body.classList.contains('locked')) return;
+      chips.forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      selectedMinutes = parseInt(this.getAttribute('data-min'), 10);
+      countdownEl.textContent = selectedMinutes + ':00';
     });
-  }
-  function count(){
-    const g=GAMES.filter(x=>sel.has(x[0])).length;
-    document.getElementById('premCount').textContent=g+' of '+GAMES.length+' games selected';
-  }
-  function sync(){
-    document.querySelectorAll('#premium .pt').forEach(b=>b.setAttribute('aria-pressed',sel.has(b.dataset.n)));
-    applyFree(); count();
-  }
-  function build(id,list){
-    const box=document.getElementById(id);
-    list.forEach(x=>{
-      const b=document.createElement('button'); b.type='button'; b.className='pt'; b.dataset.n=x[0];
-      b.innerHTML='<span class="mono"></span><span class="nm"></span><span class="st"></span>';
-      const mono=b.querySelector('.mono'); mono.textContent=x[1]; b.querySelector('.nm').textContent=x[0];
-      /* logo: drop assets/games/<slug>.png in the repo and it shows here; the initials stay if the file is missing */
-      const img=new Image(); img.alt=''; img.decoding='async';
-      img.onload=()=>{ mono.textContent=''; mono.appendChild(img); mono.style.background='none'; };
-      img.src='assets/games/'+x[0].toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.png';
-      b.addEventListener('click',()=>{ if(body.classList.contains('locked')) return;
-        sel.has(x[0])?sel.delete(x[0]):sel.add(x[0]); save(); sync(); });
-      box.appendChild(b);
-    });
-  }
-  function setGroup(list,on){ if(body.classList.contains('locked')) return; list.forEach(x=>on?sel.add(x[0]):sel.delete(x[0])); save(); sync(); }
-  build('premGames',GAMES);
-  document.getElementById('premGAll').onclick=()=>setGroup(GAMES,true);
-  document.getElementById('premGNone').onclick=()=>setGroup(GAMES,false);
-  sync();
-  return {
-    /* social sites are chosen with the app cards above; games are phone-only. null = Chrome default */
-    domains(){ return null; },
-    refresh:applyFree
-  };
-})();
-async function syncSelection(){
-  for(const id of MAATRAM_EXTENSION_IDS){
-    try{ await sendToExtensionId(id,{action:'SET_BLOCK_SELECTION',domains:SEL.domains()}); }catch(_){}
-  }
-}
-
-/* ============ sakura ============ */
-const SK=window.MaatramSakura||null, skScene=document.getElementById('skScene');
-let skLast=0;
-function skRender(){
-  if(!SK) return;
-  skLast=Date.now();
-  const cur=SK.garden.current(), plants=SK.garden.plants(), locked=body.classList.contains('locked');
-  const st=document.getElementById('skStage'), sub=document.getElementById('skSub'), lv=document.getElementById('skLeaves');
-  if(locked && cur){
-    const p=Math.min(1,Math.max(0,1-(cur.end-Date.now())/(cur.end-cur.start))), g=SK.growth(p,cur.min);
-    SK.show(skScene,g,cur.leaves,SK.hourNow());
-    st.textContent=SK.stage(g);
-    sub.textContent=SK.isFull(cur.min)?'A 90-minute lock: stay locked and your sakura grows into a full tree.'
-      :'Any finished lock grows a blooming tree. Lock for 90 minutes to grow a full tree.';
-    const tries=Object.keys(cur.tries).sort((a,b)=>cur.tries[b]-cur.tries[a]).slice(0,3).map(k=>k+' '+cur.tries[k]+'x').join(', ');
-    lv.hidden=false; lv.className='sk-leaves'+(cur.leaves?'':' ok');
-    lv.innerHTML='';
-    const b=document.createElement('b'); b.textContent=cur.leaves?cur.leaves+(cur.leaves===1?' leaf':' leaves')+' dropped. ':'No leaves lost. ';
-    lv.appendChild(b); lv.appendChild(document.createTextNode(cur.leaves?'Tried: '+tries:'Clean focus so far. Each time you try a locked app, the tree drops a leaf.'));
-  } else {
-    const last=plants[plants.length-1];
-    lv.hidden=true;
-    SK.show(skScene,last?SK.target(last.minutes):0,last?last.leaves:0,SK.hourNow());
-    st.textContent=last?(SK.isFull(last.minutes)?'Last tree: a full tree':'Last tree: a blooming tree'):'Waiting for a seed';
-    sub.textContent=last?'Last lock: '+last.minutes+' min, '+(last.leaves?last.leaves+(last.leaves===1?' leaf':' leaves')+' lost.':'no leaves lost.')+' Lock for 90 minutes to grow a full tree.'
-      :'Start a Hard Lock and a seed is planted. Any finished lock grows a blooming tree; a 90-minute lock grows a full tree.';
-  }
-  const streak=SK.garden.streak(plants), mins=plants.reduce((a,p)=>a+p.minutes,0), full=plants.filter(p=>SK.isFull(p.minutes)).length;
-  document.getElementById('skStats').textContent=plants.length
-    ? plants.length+(plants.length===1?' tree':' trees')+' ('+full+' full) · '+mins+' min focused'+(streak?' · '+streak+' day streak':'')
-    : 'Finish a Hard Lock to plant your first tree.';
-  const gridEl=document.getElementById('skGrid'); gridEl.innerHTML='';
-  SK.garden.lastDaysBest(plants,28).forEach((m,i)=>{
-    const d=document.createElement('div'); d.className='sk-day'+(m?' on':'')+(i===27?' today':'');
-    d.title=m?(SK.isFull(m)?'full tree ('+m+' min)':'blooming tree ('+m+' min)'):'no tree';
-    if(m){ const dot=document.createElement('i'), s=SK.isFull(m)?16:9; dot.style.width=dot.style.height=s+'px'; if(SK.isFull(m)) dot.style.background='#FF6EC7'; d.appendChild(dot); }
-    gridEl.appendChild(d);
   });
-}
-addEventListener('resize',()=>{ clearTimeout(skRender.t); skRender.t=setTimeout(skRender,200); });
 
-function engage(endTs, totalSec){
-  lockEnd=endTs; lockTotal=totalSec;
-  if(SK) SK.garden.begin(endTs,totalSec);
-  body.classList.add('locked');
-  if(SK) skRender();
-  pill.textContent='Hard lock armed'; pill.classList.add('locked');
-  lockBtn.textContent='Locked';
-  cd.classList.remove('small');
-  chips.querySelectorAll('.chip').forEach(x=>x.style.opacity=.4);
-  clearInterval(tick);
-  tick=setInterval(update,250); update();
-}
-
-function claimLock(end,total){
-  /* +10 for every full 5 minutes survived — awarded exactly once per lock */
-  /* same lock seen by two tabs/devices can differ by a few ms: treat ends within a minute as one lock */
-  if(Math.abs((+store.get('maatram_lock_claimed')||0)-end)<60000) return;
-  store.set('maatram_lock_claimed', String(end));
-  /* stats.html: minutes kept off socials, per local day */
-  try{ const d=new Date(end), k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    const s=JSON.parse(store.get('maatram_saved_v1')||'{}'); s[k]=(s[k]||0)+Math.round(total/60); store.set('maatram_saved_v1',JSON.stringify(s)); }catch(_){}
-  const earned=Math.max(Math.floor(total/300)*10, moodPts(total));
-  if(earned>0) window.maatramAward(earned,'Hard Lock '+Math.floor(total/60)+'m');
-}
-/* a lock from a linked device or the extension: start it, or stretch the running one
-   keeping its original start (so points and the ring count the whole lock) */
-function extendLock(end,total){
-  if(body.classList.contains('locked')){ total=Math.round((end-(lockEnd-lockTotal*1000))/1000); lockEnd=end; lockTotal=total; }
-  store.set('maatram_lock_end',end); store.set('maatram_lock_total',total);
-  if(!body.classList.contains('locked')) engage(end,total);
-}
-function release(){
-  clearInterval(tick); tick=null;
-  claimLock(lockEnd, lockTotal);
-  if(SK){ SK.garden.settle(); }
-  store.del('maatram_lock_end'); store.del('maatram_lock_total');
-  body.classList.remove('locked');
-  pill.textContent='Gate open'; pill.classList.remove('locked');
-  lockBtn.textContent='Lock';
-  cd.textContent='Focus window complete — nice work.'; cd.classList.add('small');
-  ringFg.style.strokeDashoffset=CIRC;
-  chips.querySelectorAll('.chip').forEach(x=>x.style.opacity=1);
-  skRender();
-  burst();
-}
-
-function update(){
-  const left=Math.max(0, Math.round((lockEnd-Date.now())/1000));
-  cd.textContent=fmt(left);
-  ringFg.style.strokeDashoffset = CIRC*(left/lockTotal);
-  if(Date.now()-skLast>5000) skRender();
-  if(left<=0) release();
-}
-
-   /* ============ Chrome Extension Hard Lock ============ */
-
-/* Web Store ID first, then the unpacked dev copy */
-const MAATRAM_EXTENSION_IDS = [
-  "igcfbmdadjlibodcpaibklgeijdacmen",
-  "fnchjdjifpnkjdgcccjdlhphiffjefek"
-];
-
-
-function sendToExtensionId(id, message) {
-
-  return new Promise((resolve, reject) => {
-
-    if (!window.chrome || !chrome.runtime || !chrome.runtime.sendMessage) {
-      reject(new Error("Extension messaging not available."));
+  // 3. Lock Button Action
+  let timerInterval = null;
+  lockBtn.addEventListener('click', function () {
+    if (document.body.classList.contains('locked')) {
+      alert('Hard Lock is active and cannot be cancelled!');
       return;
     }
 
-    chrome.runtime.sendMessage(id, message, response => {
+    document.body.classList.add('locked');
+    statusPill.classList.add('locked');
+    statusPill.textContent = 'LOCKED';
 
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
+    let totalSeconds = selectedMinutes * 60;
+    
+    timerInterval = setInterval(() => {
+      totalSeconds--;
+      if (totalSeconds <= 0) {
+        clearInterval(timerInterval);
+        document.body.classList.remove('locked');
+        statusPill.classList.remove('locked');
+        statusPill.textContent = 'Unlocked';
+        countdownEl.textContent = 'Done!';
+        alert('Hard Lock completed!');
         return;
       }
-
-      if (!response) {
-        reject(new Error("No response from Maatram Hard Lock extension."));
-        return;
-      }
-
-      resolve(response);
-
-    });
-
-  });
-
-}
-
-
-async function sendToMaatramExtension(message) {
-
-  let lastError;
-
-  for (const id of MAATRAM_EXTENSION_IDS) {
-    try {
-      return await sendToExtensionId(id, message);
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  throw lastError;
-
-}
-
-/* Install button: shown as "Step 1" until the extension answers a ping.
-   "Receiving end does not exist" = not installed; any other reply/error = installed. */
-function pingExtension(id){
-  return new Promise(res=>{
-    try{
-      chrome.runtime.sendMessage(id,{action:"PING"},()=>{
-        const e=chrome.runtime.lastError;
-        res(!e || !/receiving end|establish connection|invalid/i.test(e.message));
-      });
-    }catch(_){ res(false); }
-  });
-}
-async function checkExtension(){
-  let on=false;
-  if(window.chrome && chrome.runtime && chrome.runtime.sendMessage)
-    for(const id of MAATRAM_EXTENSION_IDS) if(await pingExtension(id)){ on=true; break; }
-  const link=document.getElementById('extLink');
-  link.classList.toggle('need',!on); link.classList.toggle('on',on);
-  link.setAttribute('aria-disabled',on);
-  document.getElementById('extIcon').setAttribute('d',on?'M5 12l5 5L20 7':'M12 3v12m0 0-4-4m4 4 4-4M5 21h14');
-  document.getElementById('extLabel').textContent=on?'Maatram Hard Lock extension connected':'Step 1: Add Maatram Hard Lock to Chrome (desktop)';
-}
-checkExtension();
-addEventListener('focus',checkExtension); /* re-check when user returns from the Web Store tab */
-
-/* ============ Linked devices: one Hard Lock for this site, the phone app and Chrome ============
-   A link code (8 letters/digits) is shared by your devices. Starting a lock on any of them stores
-   its end time under the code (api/link.js); the others check every minute and lock too. */
-const LINK_KEY='maatram_link_code', LINK_ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-function linkCode(){ const c=String(store.get(LINK_KEY)||''); return /^[A-HJ-NP-Z2-9]{8}$/.test(c)?c:''; }
-function newCode(){ const a=new Uint32Array(8); crypto.getRandomValues(a); return [...a].map(n=>LINK_ABC[n%LINK_ABC.length]).join(''); }
-const fmtCode=c=>c.slice(0,4)+'-'+c.slice(4);
-let linkMsg='';
-function renderLink(){
-  const box=document.getElementById('linkBox'), c=linkCode(); box.innerHTML='';
-  const p=(html,cls)=>{ const e=document.createElement('div'); if(cls) e.className=cls; e.innerHTML=html; box.appendChild(e); return e; };
-  if(c){
-    p('<b>Devices linked.</b> A Hard Lock started here, in the Maatram Hard Lock app or in the Chrome extension locks all of them. Your code:');
-    const row=p('<span class="lk-code">'+fmtCode(c)+'</span>','lk-row');
-    const copy=document.createElement('button'); copy.type='button'; copy.textContent='Copy code';
-    copy.onclick=()=>{ (navigator.clipboard?navigator.clipboard.writeText(fmtCode(c)):Promise.reject()).then(()=>{copy.textContent='Copied';setTimeout(()=>copy.textContent='Copy code',1500);},()=>{}); };
-    const un=document.createElement('button'); un.type='button'; un.textContent='Unlink this browser';
-    un.onclick=()=>{ if(body.classList.contains('locked')) return; store.del(LINK_KEY); renderLink(); };
-    row.appendChild(copy); row.appendChild(un);
-    p('Type this code in the phone app (Link devices) and in the Chrome extension popup. Keep it private: anyone with it can start a lock on your devices, but nobody can stop one.','lk-dim');
-  } else {
-    p('<b>Lock your phone and other computers too.</b> Create a code, then type it in the Maatram Hard Lock app and the Chrome extension.');
-    const row=p('','lk-row');
-    const mk=document.createElement('button'); mk.type='button'; mk.className='pri'; mk.textContent='Create link code';
-    mk.onclick=()=>{ store.set(LINK_KEY,newCode()); linkMsg=''; renderLink(); pollLink(); };
-    const inp=document.createElement('input'); inp.placeholder='ABCD-2345'; inp.maxLength=9; inp.setAttribute('aria-label','Link code from another device');
-    const use=document.createElement('button'); use.type='button'; use.textContent='Use code';
-    use.onclick=()=>{ const v=inp.value.toUpperCase().replace(/[^A-Z0-9]/g,''); if(!/^[A-HJ-NP-Z2-9]{8}$/.test(v)){ linkMsg='That code should be 8 letters or digits, like ABCD-2345.'; renderLink(); return; } store.set(LINK_KEY,v); linkMsg=''; renderLink(); pollLink(); };
-    row.appendChild(mk); row.appendChild(inp); row.appendChild(use);
-  }
-  if(linkMsg) p(linkMsg,'lk-err');
-}
-async function pushLink(min){
-  const c=linkCode(); if(!c) return;
-  try{
-    const r=await fetch('/api/link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:c,minutes:min,by:'web'})});
-    linkMsg=r.ok||r.status===409?'':'Could not reach your other devices. They will not lock this time.';
-  }catch(_){ linkMsg='Offline: your other devices will not lock this time.'; }
-  renderLink();
-}
-/* a lock started on the phone or in Chrome locks this page too (clock-corrected with the server's time) */
-async function pollLink(){
-  const c=linkCode(); if(!c || document.hidden) return;
-  try{
-    const r=await fetch('/api/link?code='+c,{cache:'no-store'}); if(!r.ok) return;
-    const d=await r.json(), end=d.end+(Date.now()-d.now);
-    if(d.end>d.now+3000 && end>lockEnd+5000){
-      extendLock(end,d.minutes*60);
-      /* lock the sites in this Chrome too, even if the extension here has no link code.
-         Round down so Chrome never outlasts the shared lock (rounding up re-locked this page after it ended). */
-      sendToMaatramExtension({action:'START_HARD_LOCK',durationMinutes:Math.max(1,Math.floor((end-Date.now())/60000))}).catch(()=>{});
-    }
-  }catch(_){}
-}
-renderLink();
-setInterval(pollLink,30000); setTimeout(pollLink,1500);
-document.addEventListener('visibilitychange',()=>{ if(!document.hidden) pollLink(); });
-let starting=false; // a double tap must not start the lock twice
-lockBtn.addEventListener('click', async ()=>{
-
-  if(starting) return;
-
-  if(body.classList.contains('locked')){
-
-    // Hard Lock: no early exit
-    grid.classList.remove('deny');
-
-    void grid.offsetWidth;
-
-    grid.classList.add('deny');
-
-    return;
-
-  }
-
-
-  const total =
-    selMin * 60;
-
-  const end =
-    Date.now() + total * 1000;
-
-
-  starting=true;
-  try {
-
-    /* Start Chrome extension blocking (your sites first, so they lock too) */
-
-    await syncSites(getSites());
-    await syncSelection();
-
-    const response =
-      await sendToMaatramExtension({
-
-        action:
-          "START_HARD_LOCK",
-
-        durationMinutes:
-          selMin
-
-      });
-
-
-    if(!response.success){
-
-      throw new Error(
-        response.error ||
-        "Could not start Hard Lock."
-      );
-
-    }
-
-    if(linkCode()) pushLink(selMin);
-
-
-    /* Start the existing Maatram webpage lock */
-
-    store.set(
-      'maatram_lock_end',
-      end
-    );
-
-    store.set(
-      'maatram_lock_total',
-      total
-    );
-
-
-    engage(
-      end,
-      total
-    );
-
-
-  }
-  catch(error){
-
-    console.error(
-      "Maatram Hard Lock:",
-      error
-    );
-
-    /* Linked devices: no extension in this browser is fine, the phone and other computers still lock */
-    if(linkCode()){
-      store.set('maatram_lock_end', end); store.set('maatram_lock_total', total);
-      engage(end, total); pushLink(selMin);
-      return;
-    }
-
-
-    if (confirm(
-      "Maatram Hard Lock extension is not connected.\n\n" +
-      "Make sure the Maatram Hard Lock extension is installed and enabled.\n\n" +
-      "Open the Chrome Web Store to install it?"
-    )) window.open("https://chromewebstore.google.com/detail/maatram-hard-lock/igcfbmdadjlibodcpaibklgeijdacmen", "_blank", "noopener");
-
-  }
-  finally { starting=false; }
-
-});
-
-/* block clicks on apps while locked (belt & suspenders) + shake feedback */
-grid.addEventListener('click', e=>{
-  const card0=e.target.closest('.app');
-  if(card0 && card0.classList.contains('free')) return;   /* not in your block list */
-  if(body.classList.contains('locked')){
-    e.preventDefault(); e.stopPropagation();
-    grid.classList.remove('deny'); void grid.offsetWidth; grid.classList.add('deny');
-    /* locked cards ignore the pointer, so find the tapped one by position */
-    const tried=[...grid.querySelectorAll('.app')].find(a=>{ const r=a.getBoundingClientRect(); return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom; });
-    if(SK && tried){ SK.garden.tempted(tried.querySelector('.name').textContent); skRender(); }
-    return;
-  }
-  /* SYNC: report social-app opens to the Study Room page */
-  const opened = e.target.closest('.app');
-  if(opened){
-    const evt = { app: opened.querySelector('.name').textContent, ts: Date.now() };
-    try{ new BroadcastChannel('maatram').postMessage({type:'social_open', ...evt}); }catch(_){}
-    try{ store.set('maatram_social_open', JSON.stringify(evt)); }catch(_){}
-    try{ parent.postMessage({maatramRelay:{type:'social_open', ...evt}},'*'); }catch(_){}
-    try{ ROOM.strike(evt.app, evt.ts); }catch(_){}
-    window.maatramAward(-10,evt.app+' opened');
-  }
-}, true);
-
-/* ============ Your sites: extra sites locked along with the apps ============ */
-const SITES_KEY='maatram_custom_sites', MAX_SITES=50;
-function normSite(v){
-  const d=String(v||'').trim().toLowerCase().replace(/^[a-z][a-z0-9+.-]*:\/\//,'').split(/[\/?#:]/)[0].replace(/^www\./,'');
-  return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) && !/(^|\.)maatram\.co\.in$/.test(d) ? d : '';
-}
-function getSites(){ try{ const a=JSON.parse(store.get(SITES_KEY)||'[]'); return Array.isArray(a)?a.filter(normSite):[]; }catch(_){ return []; } }
-/* Send the list to every installed copy (Web Store + dev). Extensions older than 1.2.0
-   answer "Unknown message action" and cannot block your sites, so say so instead of failing silently. */
-async function syncSites(list){
-  let ok=false;
-  for(const id of MAATRAM_EXTENSION_IDS){
-    try{ const r=await sendToExtensionId(id,{action:'SET_CUSTOM_SITES',sites:list}); if(r.success || !/unknown/i.test(r.error||'')) ok=true; }catch(_){}
-  }
-  const msg=document.getElementById('siteMsg');
-  if(list.length && !ok) msg.textContent='Your sites need Maatram Hard Lock extension 1.2.0 or newer. Update the extension to lock them; the apps above still lock.';
-  else if(/^Your sites need/.test(msg.textContent)) msg.textContent='';
-  return ok;
-}
-function spot(a){ a.addEventListener('pointermove',e=>{ const r=a.getBoundingClientRect(); a.style.setProperty('--mx',(e.clientX-r.left)+'px'); a.style.setProperty('--my',(e.clientY-r.top)+'px'); }); }
-function saveSites(list){ store.set(SITES_KEY,JSON.stringify(list)); renderSites(); syncSites(list); }
-function renderSites(){
-  const list=getSites(), box=document.getElementById('siteChips');
-  grid.querySelectorAll('.app.custom').forEach(n=>n.remove());
-  box.textContent='';
-  list.forEach(d=>{
-    const a=document.createElement('a'); a.className='app custom'; a.href='https://'+d; a.target='_blank'; a.rel='noopener';
-    a.innerHTML='<span class="lock-badge">🔒</span><div class="icon"></div><div class="name"></div><div class="hint">Your site</div>';
-    a.querySelector('.icon').textContent=d[0].toUpperCase(); a.querySelector('.name').textContent=d;
-    grid.appendChild(a); spot(a);
-    const c=document.createElement('span'); c.className='site-chip'; c.textContent=d;
-    const x=document.createElement('button'); x.type='button'; x.textContent='×'; x.setAttribute('aria-label','Remove '+d);
-    x.addEventListener('click',()=>{ if(!body.classList.contains('locked')) saveSites(getSites().filter(s=>s!==d)); });
-    c.appendChild(x); box.appendChild(c);
-  });
-  document.getElementById('siteCount').textContent=list.length?list.length+' added':'';
-}
-document.getElementById('siteForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  const inp=document.getElementById('siteInput'), msg=document.getElementById('siteMsg');
-  if(body.classList.contains('locked')){ msg.textContent='You can change your sites after the lock ends.'; return; }
-  const d=normSite(inp.value), list=getSites();
-  if(!d){ msg.textContent='Type a website address, like netflix.com'; return; }
-  if(list.includes(d)){ msg.textContent=d+' is already on your list.'; return; }
-  if(list.length>=MAX_SITES){ msg.textContent='You can add up to '+MAX_SITES+' sites.'; return; }
-  msg.textContent=''; inp.value=''; saveSites(list.concat(d));
-});
-renderSites(); SEL.refresh();
-/* The extension holds the master copy (sites and time can also be changed in its popup).
-   On load / coming back to this tab: take its list and time. Older extensions or a first
-   run with an empty extension list: send this page's list instead. */
-async function pullFromExtension(){
-  try{
-    const r=await sendToMaatramExtension({action:'GET_SETTINGS'});
-    if(!r || !r.success) throw 0;
-    const ext=(r.sites||[]).filter(normSite), mine=getSites();
-    if(!r.set && !ext.length && mine.length){ syncSites(mine); }
-    else { store.set(SITES_KEY,JSON.stringify(ext)); renderSites(); }
-    if(r.minutes) pickChip(Number(r.minutes));
-  }catch(_){
-    /* extension without GET_SETTINGS (1.3.2): read its list first so sites added in the popup aren't wiped */
-    try{
-      const r=await sendToMaatramExtension({action:'GET_CUSTOM_SITES'});
-      const ext=(r&&r.success&&r.sites||[]).filter(normSite);
-      if(ext.length){ store.set(SITES_KEY,JSON.stringify(ext)); renderSites(); return; }
-    }catch(_){}
-    syncSites(getSites());
-  }
-}
-pullFromExtension();
-document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ pullFromExtension(); pullLock(); } });
-/* A lock started from the Chrome popup shows here too (and a longer one extends this page's lock). */
-async function pullLock(){
-  if(document.hidden) return;
-  try{
-    const r=await sendToMaatramExtension({action:'GET_STATUS'});
-    if(!r || !r.success || !r.active) return;
-    const end=Number(r.endTime); if(!(end>Date.now()+3000) || end<=lockEnd+5000) return;
-    /* extension 1.3.2 sends no startTime: count whole minutes left (a just-started popup lock pays in full) */
-    const total=r.startTime ? Math.max(60,Math.round((end-Number(r.startTime))/1000)) : Math.ceil((end-Date.now())/60000)*60;
-    extendLock(end,total);
-  }catch(_){}
-}
-setTimeout(pullLock,800); setInterval(pullLock,10000);
-
-/* restore lock across refresh */
-(function(){
-  const end=+store.get('maatram_lock_end'), total=+store.get('maatram_lock_total');
-  if(end && total){
-    if(end>Date.now()) engage(end,total);
-    else{ /* lock finished while page was closed — pay it out now */
-      claimLock(end,total);
-      if(SK) SK.garden.settle();
-      store.del('maatram_lock_end'); store.del('maatram_lock_total');
-    }
-  }
-  skRender();
-})();
-
-/* spotlight follow on cards */
-document.querySelectorAll('.app').forEach(a=>{
-  a.addEventListener('pointermove', e=>{
-    const r=a.getBoundingClientRect();
-    a.style.setProperty('--mx',(e.clientX-r.left)+'px');
-    a.style.setProperty('--my',(e.clientY-r.top)+'px');
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      countdownEl.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }, 1000);
   });
 });
-
-/* ============ interactive background: magnetic firefly constellation ============ */
-const cv=document.getElementById('field'), ctx=cv.getContext('2d');
-const LITE=(window.MAATRAM_PERF!==undefined)?window.MAATRAM_PERF:(matchMedia('(pointer:coarse)').matches||innerWidth<820||(navigator.hardwareConcurrency||8)<=4);
-let W,H,DPR;
-function resize(){ DPR=LITE?1:Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight;
-  cv.width=W*DPR; cv.height=H*DPR; cv.style.width=W+'px'; cv.style.height=H+'px'; ctx.setTransform(DPR,0,0,DPR,0,0); }
-resize(); addEventListener('resize',resize);
-
-const mouse={x:-9999,y:-9999,down:false};
-addEventListener('pointermove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
-addEventListener('pointerleave',()=>{mouse.x=-9999;mouse.y=-9999});
-addEventListener('pointerdown',()=>mouse.down=true);
-addEventListener('pointerup',()=>mouse.down=false);
-
-const N = Math.floor(Math.min(90, Math.floor(innerWidth/14)) / (LITE?2:1));   /* LITE/perf: half the particles */
-const P=[];
-for(let i=0;i<N;i++){
-  P.push({
-    x:Math.random()*innerWidth, y:Math.random()*innerHeight,
-    vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35,
-    r:1+Math.random()*2.2,
-    hue: Math.random()<.5 ? 150 : 200, // green or blue family
-    tw: Math.random()*Math.PI*2
-  });
-}
-
-let bursts=[];
-function burst(){
-  for(let i=0;i<(LITE?16:40);i++){
-    const a=Math.random()*Math.PI*2, s=2+Math.random()*4;
-    bursts.push({x:W/2,y:H/2,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,hue:Math.random()<.5?150:200});
-  }
-}
-
-const reduced = (window.MAATRAM_PERF===true) || matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-function frame(t){
-  ctx.clearRect(0,0,W,H);
-  // ambient vignette glow
-  const g=ctx.createRadialGradient(W*.5,H*.15,0,W*.5,H*.15,H*.9);
-  const lockedNow=body.classList.contains('locked');
-  g.addColorStop(0, lockedNow?'rgba(255,93,115,.05)':'rgba(47,227,143,.06)');
-  g.addColorStop(1,'transparent');
-  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-
-  for(const p of P){
-    // magnetic behaviour: attract gently, repel hard when pressed OR when locked
-    const dx=mouse.x-p.x, dy=mouse.y-p.y, d2=dx*dx+dy*dy;
-    if(d2<160*160){
-      const d=Math.sqrt(d2)||1, f=(160-d)/160;
-      const repel = mouse.down || lockedNow;
-      const k = repel ? -.6 : .18;
-      p.vx += (dx/d)*f*k*.35;
-      p.vy += (dy/d)*f*k*.35;
-    }
-    p.x+=p.vx; p.y+=p.vy;
-    p.vx*=.985; p.vy*=.985;
-    p.vx+=(Math.random()-.5)*.02; p.vy+=(Math.random()-.5)*.02;
-    if(p.x<-20)p.x=W+20; if(p.x>W+20)p.x=-20;
-    if(p.y<-20)p.y=H+20; if(p.y>H+20)p.y=-20;
-
-    p.tw+=.04;
-    const glow=.35+.35*Math.sin(p.tw);
-    const hue = lockedNow ? 350 : p.hue;
-    ctx.beginPath();
-    ctx.fillStyle=`hsla(${hue},85%,62%,${glow})`;
-    if(!LITE){ ctx.shadowColor=`hsla(${hue},90%,60%,.8)`; ctx.shadowBlur=10; }   /* per-particle blur is the costly part */
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
-    if(!LITE) ctx.shadowBlur=0;
-  }
-
-  // connective threads
-  ctx.lineWidth=.6;
-  for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
-    const a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy;
-    if(d2<110*110){
-      const o=(1-Math.sqrt(d2)/110)*.22;
-      ctx.strokeStyle = lockedNow?`rgba(255,93,115,${o})`:`rgba(55,182,255,${o})`;
-      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
-    }
-  }
-
-  // celebration bursts
-  bursts=bursts.filter(b=>b.life>0);
-  for(const b of bursts){
-    b.x+=b.vx;b.y+=b.vy;b.vy+=.05;b.life-=.015;
-    ctx.beginPath();
-    ctx.fillStyle=`hsla(${b.hue},90%,60%,${b.life})`;
-    ctx.arc(b.x,b.y,2.5*b.life,0,Math.PI*2);ctx.fill();
-  }
-
-  if(!reduced) requestAnimationFrame(frame);
-}
-if(!reduced) requestAnimationFrame(frame); else frame(0);
 </script>
-
-<script>
-/* ══ universal nav auth (Firebase session shared across all pages) ══ */
-(async()=>{
-  const chip=document.getElementById('mnavChip'),inBtn=document.getElementById('mnavIn'),
-        menu=document.getElementById('mnavMenu');
-  if(!chip)return;
-  chip.addEventListener('click',e=>{ if(!e.target.closest('#mnavMenu')) menu.classList.toggle('open'); });
-  document.addEventListener('click',e=>{ if(!e.target.closest('#mnavChip')) menu.classList.remove('open'); });
-  if(!(location.protocol==='http:'||location.protocol==='https:'))return;  // file:// → nav stays simple
-  try{
-    const [{initializeApp,getApps,getApp},{getAuth,onAuthStateChanged,signOut}]=await Promise.all([
-      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
-    ]);
-    const app=getApps().length?getApp():initializeApp(window.MAATRAM_FB);
-    const auth=getAuth(app);
-    /* Firestore is only ever touched once somebody is signed in, so it loads on
-       demand instead of up front. Signed-out visitors — and page-speed tests —
-       never download it. */
-    let db=null,doc=null,onSnapshot=null,runTransaction=null,fsReady=null;
-    const loadFs=()=>fsReady||(fsReady=import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
-      .then(m=>{ doc=m.doc; onSnapshot=m.onSnapshot; runTransaction=m.runTransaction; db=m.getFirestore(app); }));
-    let unsub=null;
-    /* ══ Maatram points engine (all pages) ══ */
-    let __mtUser=null, __mtAuthKnown=false;
-    window.maatramAward=async function(pts,reason){
-      pts=Math.round(pts); if(!pts) return;
-      /* local bank (works offline / signed-out) */
-      try{
-        const cur=+localStorage.getItem('maatram_points')||0;
-        localStorage.setItem('maatram_points',Math.max(0,cur+pts));
-      }catch(_){}
-      try{ new BroadcastChannel('maatram').postMessage({type:'points',pts}); }catch(_){}
-      try{ parent.postMessage({maatramRelay:{type:'points',pts}},'*'); }catch(_){}
-      mtToast(pts,reason);
-      /* cloud write: queued per account, paced to match firestore.rules
-         (gains: at most 1 point per 6 s since the last gain, 100 per write) */
-      if(!__mtAuthKnown){ try{localStorage.setItem('maatram_pend_early',String((+localStorage.getItem('maatram_pend_early')||0)+Math.round(pts)));}catch(_){} }
-      else if(__mtUser){
-        const K='maatram_pend_'+__mtUser.uid;
-        try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+pts)); }catch(_){}
-        mtFlush();
-      }
-    };
-    async function mtFlush(){
-      if(!__mtUser) return;
-      const uid=__mtUser.uid, K='maatram_pend_'+uid, pend=()=>+localStorage.getItem(K)||0;
-      const run=async()=>{
-        const p=pend(); if(!p) return 0;
-        if(typeof loadFs==='function') await loadFs();
-        const {serverTimestamp}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-        const res=await runTransaction(db,async t=>{
-          const r=doc(db,'users',uid), s=await t.get(r), d=s.exists()?s.data():{}, cur=d.points||0;
-          if(p<0){ const nx=Math.max(0,cur-100,cur+p); t.set(r,{points:nx},{merge:true}); return {used:nx===0?p:nx-cur,wait:0}; }
-          const since=(Date.now()-(d.awardAt?d.awardAt.toMillis():0))/1000-3, want=Math.min(100,p,3000-cur);
-          if(want<=0) return {used:p,wait:0};   /* monthly ceiling reached: drop the rest */
-          if(Math.floor(since/6)<want) return {used:0,wait:Math.ceil(want*6-since)};
-          t.set(r,{points:cur+want,awardAt:serverTimestamp()},{merge:true}); return {used:want,wait:0};
-        });
-        localStorage.setItem(K,String(pend()-res.used));
-        return res.wait||(pend()?1:0);
-      };
-      let wait=0;
-      const locked=()=>navigator.locks?navigator.locks.request('maatram_pts',run):run();
-      try{ wait=await (mtFlush.q=(mtFlush.q||Promise.resolve()).catch(()=>{}).then(locked)); }   /* one flush at a time, per tab and across tabs */
-      catch(e){ console.warn('points write',e); wait=60; }
-      clearTimeout(mtFlush.t); if(wait) mtFlush.t=setTimeout(mtFlush,wait*1000);
-    }
-    function mtToast(pts,reason){
-      const t=document.createElement('div');
-      t.textContent=(pts>0?'+':'')+pts+' PTS'+(reason?' · '+reason:'');
-      t.style.cssText='position:fixed;top:64px;left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 32px);z-index:900;font-family:Sora,Inter,sans-serif;'
-        +'font-weight:800;font-size:13px;letter-spacing:1px;padding:11px 20px;border-radius:100px;'
-        +'backdrop-filter:blur(10px);transition:all .5s cubic-bezier(.2,1.3,.3,1);opacity:0;transform:translateY(-14px);'
-        +(pts>0?'color:#04120f;background:linear-gradient(90deg,#2fe38f,#37b6ff);box-shadow:0 8px 30px -8px rgba(47,227,143,.7);'
-               :'color:#fff;background:linear-gradient(90deg,#ff5d73,#ff9a5d);box-shadow:0 8px 30px -8px rgba(255,93,115,.7);');
-      document.body.appendChild(t);
-      requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='none';});
-      setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(-14px)';},2600);
-      setTimeout(()=>t.remove(),3200);
-    }
-
-    onAuthStateChanged(auth,async u=>{
-      __mtUser=u;
-      if(!__mtAuthKnown){ __mtAuthKnown=true; let e=0;   /* points earned before sign-in was known go to this account */
-        try{ e=+localStorage.getItem('maatram_pend_early')||0; localStorage.removeItem('maatram_pend_early'); }catch(_){}
-        if(u&&e){ const K='maatram_pend_'+u.uid; try{ localStorage.setItem(K,String((+localStorage.getItem(K)||0)+e)); }catch(_){} } }
-      if(u) mtFlush();
-      if(unsub){unsub();unsub=null;}
-      if(u){
-        if(inBtn)inBtn.style.display='none';chip.style.display='flex';
-        document.getElementById('mnavPic').src=u.photoURL||'';
-        document.getElementById('mnavNm').textContent=(u.displayName||'You').split(' ')[0];
-        await loadFs();
-        if(__mtUser!==u) return;               /* signed out again while loading */
-        unsub=onSnapshot(doc(db,'users',u.uid),s=>{
-          document.getElementById('mnavPts').textContent=((s.exists()&&s.data().points)||0)+' PTS';
-        },()=>{});
-      }else{
-        if(inBtn)inBtn.style.display='inline-block';chip.style.display='none';
-      }
-    });
-    document.getElementById('mnavOut').onclick=()=>{menu.classList.remove('open');signOut(auth);};
-  }catch(e){console.warn('nav auth',e);}
-})();
-</script>
-<button id="perfBtn" type="button" aria-pressed="false" aria-label="Toggle performance mode" title="Toggle performance mode (less animation, zero lag)">
-  <span class="pf-ic">⚡</span><span class="pf-sw"></span><span id="perfLbl">Performance</span>
-</button>
-<script>
-/* ══ performance toggle behavior ══ */
-(function(){
-  var KEY='maatram_perf', btn=document.getElementById('perfBtn'), lbl=document.getElementById('perfLbl');
-  function paint(on){
-    document.documentElement.classList.toggle('perf',on);
-    btn.setAttribute('aria-pressed',String(!on));
-    lbl.textContent = on ? 'Performance: Off' : 'Performance: On';
-  }
-  paint(!!window.MAATRAM_PERF);
-  btn.addEventListener('click',function(){
-    var on=!(localStorage.getItem(KEY)==='1');
-    try{localStorage.setItem(KEY,on?'1':'0');}catch(_){}
-    /* reload so canvases rebuild at the new detail level — clean + reliable */
-    location.reload();
-  });
-})();
-</script>
-
 </body>
 </html>
