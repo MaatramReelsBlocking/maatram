@@ -146,7 +146,17 @@
     position:relative;
   }
   .badge-card:hover{transform:translateY(-6px);border-color:rgba(55,182,255,.4)}
-  .badge-card.locked-card{opacity:.55;filter:grayscale(.7)}
+
+  /* Locked cards stay fully coloured — only the status tag changes */
+  .badge-card.locked-card{
+    opacity:1;
+    filter:none;
+  }
+  .badge-card.locked-card .b-img{
+    filter:none;
+    opacity:1;
+  }
+
   .badge-card .b-img{
     width:110px;height:110px;margin:0 auto 16px;
     object-fit:cover;border-radius:50%;
@@ -160,7 +170,11 @@
     font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
   }
   .status-tag.unlocked{background:rgba(47,227,143,.12);color:var(--green);border:1px solid rgba(47,227,143,.3)}
-  .status-tag.locked{background:rgba(255,255,255,.05);color:var(--dim);border:1px solid rgba(255,255,255,.1)}
+  .status-tag.locked{
+    background:rgba(255,209,102,.12);
+    color:var(--gold);
+    border:1px solid rgba(255,209,102,.35);
+  }
 
   footer{margin-top:70px;text-align:center;color:var(--dim);font-size:12px;letter-spacing:1.5px}
   footer b{color:var(--green);font-weight:600}
@@ -234,7 +248,7 @@
       <h4>Tier 2: Silver Bloom</h4>
       <div class="b-range">251 – 750 PTS</div>
       <p class="b-desc">Your discipline begins to blossom like the silver lotus in quiet focus.</p>
-      <span class="status-tag locked" id="tag-badge2">Locked</span>
+      <span class="status-tag locked" id="tag-badge2">Going to unlock</span>
     </div>
 
     <!-- Tier 3 -->
@@ -243,7 +257,7 @@
       <h4>Tier 3: Shinobi Shield</h4>
       <div class="b-range">751 – 1,750 PTS</div>
       <p class="b-desc">Endurance in the face of digital distraction. Mastered true patience.</p>
-      <span class="status-tag locked" id="tag-badge3">Locked</span>
+      <span class="status-tag locked" id="tag-badge3">Going to unlock</span>
     </div>
 
     <!-- Tier 4 -->
@@ -252,7 +266,7 @@
       <h4>Tier 4: Golden Mind's Eye</h4>
       <div class="b-range">1,751 – 3,500 PTS</div>
       <p class="b-desc">Unwavering laser vision. Distractions no longer pierce your concentration.</p>
-      <span class="status-tag locked" id="tag-badge4">Locked</span>
+      <span class="status-tag locked" id="tag-badge4">Going to unlock</span>
     </div>
 
     <!-- Tier 5 -->
@@ -261,7 +275,7 @@
       <h4>Tier 5: Crystal Ronin</h4>
       <div class="b-range">3,501 – 7,000 PTS</div>
       <p class="b-desc">A masterless warrior of deep focus, cutting through time sinks cleanly.</p>
-      <span class="status-tag locked" id="tag-badge5">Locked</span>
+      <span class="status-tag locked" id="tag-badge5">Going to unlock</span>
     </div>
 
     <!-- Tier 6 -->
@@ -270,7 +284,7 @@
       <h4>Tier 6: Crown Legend</h4>
       <div class="b-range">7,001 – 10,000 PTS (Cap Limit)</div>
       <p class="b-desc">Conquered the mountain peak! At 10,000 PTS, points auto-reset to prestige.</p>
-      <span class="status-tag locked" id="tag-badge6">Locked</span>
+      <span class="status-tag locked" id="tag-badge6">Going to unlock</span>
     </div>
   </div>
 
@@ -308,7 +322,10 @@ document.addEventListener('DOMContentLoaded', async function () {
       const card = $('card-' + b.id), tag = $('tag-' + b.id);
       const unlocked = currentPoints >= b.min;
       if (card) card.classList.toggle('locked-card', !unlocked);
-      if (tag) { tag.className = 'status-tag ' + (unlocked ? 'unlocked' : 'locked'); tag.textContent = unlocked ? 'Unlocked' : 'Locked'; }
+      if (tag) {
+        tag.className = 'status-tag ' + (unlocked ? 'unlocked' : 'locked');
+        tag.textContent = unlocked ? 'Unlocked' : 'Going to unlock';
+      }
     });
   }
   paint(currentPoints);
