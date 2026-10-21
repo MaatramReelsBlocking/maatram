@@ -113,16 +113,21 @@
   }
   @media(max-width:720px){.active-badge-card{grid-template-columns:1fr;text-align:center}}
   .badge-img-wrapper{
-    width:130px;height:130px;border-radius:50%;
-    background:radial-gradient(circle,rgba(47,227,143,.15) 0%,transparent 70%);
-    border:2px solid var(--stroke);
+    width:130px;height:130px;
+    background:transparent;
+    border:none;
     display:grid;place-items:center;margin:0 auto;
     position:relative;
-    overflow:hidden;
+    overflow:visible;
   }
-  .badge-img-wrapper img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .badge-img-wrapper img{
+    width:100%;height:100%;
+    object-fit:contain;
+    background:transparent;
+    border-radius:0;
+  }
   .active-info h3{font-family:var(--font-display);font-size:24px;font-weight:700;margin-bottom:6px}
-  .active-info .pts-val{font-size:15px;color:var(--gold);font-weight:800;letter-spacing:1px;margin-bottom:14px}
+  .active-info .pts-val{font-size:15px;color:var(--gold);font-weight:900;letter-spacing:1px;margin-bottom:14px}
   .progress-bar-bg{width:100%;height:10px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden;margin-bottom:8px}
   .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));width:0%;transition:width .5s ease}
   .progress-text{font-size:12.5px;color:var(--dim);display:flex;justify-content:space-between}
@@ -147,7 +152,7 @@
   }
   .badge-card:hover{transform:translateY(-6px);border-color:rgba(55,182,255,.4)}
 
-  /* Locked cards stay fully coloured — only the status tag changes */
+  /* Locked cards stay fully coloured */
   .badge-card.locked-card{
     opacity:1;
     filter:none;
@@ -159,11 +164,20 @@
 
   .badge-card .b-img{
     width:110px;height:110px;margin:0 auto 16px;
-    object-fit:cover;border-radius:50%;
-    box-shadow:0 8px 20px rgba(0,0,0,.3);
+    object-fit:contain;
+    background:transparent;
+    border-radius:0;
+    box-shadow:none;
   }
   .badge-card h4{font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:6px}
-  .badge-card .b-range{font-size:13px;color:var(--gold);font-weight:800;letter-spacing:1px;margin-bottom:12px}
+  .badge-card .b-range{
+    font-family:var(--font-display);
+    font-size:16px;
+    color:var(--gold);
+    font-weight:900;
+    letter-spacing:.8px;
+    margin-bottom:12px;
+  }
   .badge-card .b-desc{font-size:12.5px;color:var(--dim);line-height:1.5;margin-bottom:16px}
   .status-tag{
     display:inline-block;padding:6px 16px;border-radius:100px;
@@ -237,7 +251,7 @@
     <div class="badge-card" id="card-badge1">
       <img src="images/badges/badge1.jpg" alt="Sprout Initiate" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 1: Sprout Initiate</h4>
-      <div class="b-range">0 – 250 PTS</div>
+      <div class="b-range"><strong>0 – 250 PTS</strong></div>
       <p class="b-desc">Planted the seed of focus. Unlocked when you begin your focus journey with Maatram.</p>
       <span class="status-tag unlocked" id="tag-badge1">Unlocked</span>
     </div>
@@ -246,45 +260,45 @@
     <div class="badge-card locked-card" id="card-badge2">
       <img src="images/badges/badge2.jpg" alt="Silver Bloom" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 2: Silver Bloom</h4>
-      <div class="b-range">251 – 750 PTS</div>
+      <div class="b-range"><strong>251 – 750 PTS</strong></div>
       <p class="b-desc">Your discipline begins to blossom like the silver lotus in quiet focus.</p>
-      <span class="status-tag locked" id="tag-badge2">Going to unlock</span>
+      <span class="status-tag locked" id="tag-badge2">Grind to unlock</span>
     </div>
 
     <!-- Tier 3 -->
     <div class="badge-card locked-card" id="card-badge3">
       <img src="images/badges/badge3.jpg" alt="Shinobi Shield" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 3: Shinobi Shield</h4>
-      <div class="b-range">751 – 1,750 PTS</div>
+      <div class="b-range"><strong>751 – 1,750 PTS</strong></div>
       <p class="b-desc">Endurance in the face of digital distraction. Mastered true patience.</p>
-      <span class="status-tag locked" id="tag-badge3">Going to unlock</span>
+      <span class="status-tag locked" id="tag-badge3">Grind to unlock</span>
     </div>
 
     <!-- Tier 4 -->
     <div class="badge-card locked-card" id="card-badge4">
       <img src="images/badges/badge4.jpg" alt="Golden Mind's Eye" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 4: Golden Mind's Eye</h4>
-      <div class="b-range">1,751 – 3,500 PTS</div>
+      <div class="b-range"><strong>1,751 – 3,500 PTS</strong></div>
       <p class="b-desc">Unwavering laser vision. Distractions no longer pierce your concentration.</p>
-      <span class="status-tag locked" id="tag-badge4">Going to unlock</span>
+      <span class="status-tag locked" id="tag-badge4">Grind to unlock</span>
     </div>
 
     <!-- Tier 5 -->
     <div class="badge-card locked-card" id="card-badge5">
       <img src="images/badges/badge5.jpg" alt="Crystal Ronin" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 5: Crystal Ronin</h4>
-      <div class="b-range">3,501 – 7,000 PTS</div>
+      <div class="b-range"><strong>3,501 – 7,000 PTS</strong></div>
       <p class="b-desc">A masterless warrior of deep focus, cutting through time sinks cleanly.</p>
-      <span class="status-tag locked" id="tag-badge5">Going to unlock</span>
+      <span class="status-tag locked" id="tag-badge5">Grind to unlock</span>
     </div>
 
     <!-- Tier 6 -->
     <div class="badge-card locked-card" id="card-badge6">
       <img src="images/badges/badge6.jpg" alt="Crown Legend" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 6: Crown Legend</h4>
-      <div class="b-range">7,001 – 10,000 PTS (Cap Limit)</div>
+      <div class="b-range"><strong>7,001 – 10,000 PTS (Cap Limit)</strong></div>
       <p class="b-desc">Conquered the mountain peak! At 10,000 PTS, points auto-reset to prestige.</p>
-      <span class="status-tag locked" id="tag-badge6">Going to unlock</span>
+      <span class="status-tag locked" id="tag-badge6">Grind to unlock</span>
     </div>
   </div>
 
@@ -324,7 +338,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       if (card) card.classList.toggle('locked-card', !unlocked);
       if (tag) {
         tag.className = 'status-tag ' + (unlocked ? 'unlocked' : 'locked');
-        tag.textContent = unlocked ? 'Unlocked' : 'Going to unlock';
+        tag.textContent = unlocked ? 'Unlocked' : 'Grind to unlock';
       }
     });
   }
