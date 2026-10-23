@@ -35,7 +35,7 @@
 
   function close(){ if(box){ box.remove(); box=null; document.removeEventListener('keydown',onKey); } }
   function onKey(e){ if(e.key==='Escape') skip(); }
-  function skip(){ if(ctx) ss('maatram_mood_skip_'+ctx.uid,today()); close(); }
+  function skip(){ close(); }   /* skipping is not remembered: the popup returns on the next open until a mood is saved */
 
   function open(edit){
     if(!ctx||box) return;
@@ -87,7 +87,6 @@
     if(started) return; started=true;
     var day=today();
     if(ls('maatram_mood_'+uid)===day) return;            /* already checked in today */
-    if(ss('maatram_mood_skip_'+uid)===day) return;       /* skipped this session */
     try{
       var s=await F.getDoc(F.doc(db,'users',uid,'moods',day));
       if(s.exists()){ ls('maatram_mood_'+uid,day); return; }

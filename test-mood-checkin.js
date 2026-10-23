@@ -33,7 +33,8 @@ function page(uid,fs_,shared){const d=new JSDOM('<body></body>',{url:'https://ma
   // skip
   W4.document.getElementById('moodSkip').click();
   ok('skip closes popup, writes nothing',!W4.document.getElementById('moodBox')&&!('users/u2/moods/'+day in store));
-  ok('skip suppressed for rest of session',W4.sessionStorage.getItem('maatram_mood_skip_u2')===day);
+  const W4b=page();await W4b.maatramMood.start('u2',{},F);
+  ok('skipped: popup returns on next open, same day',!!W4b.document.getElementById('moodBox'));
   // edit today's mood: update path, one doc
   const W5=page();W5.maatramMood.start('u1',{},F);await new Promise(r=>setTimeout(r,20));W5.maatramMood.openEdit('happy');
   W5.document.querySelector('[data-k=tired]').click();W5.document.getElementById('moodSave').click();await new Promise(r=>setTimeout(r,50));
