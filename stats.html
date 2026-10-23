@@ -216,6 +216,11 @@ body{padding-top:52px!important}
   html:not(.perf) #perfBtn{border-color:rgba(47,227,143,.4)}
   @media(pointer:coarse){#perfBtn{bottom:12px;left:12px}}
 
+  .mj-tabs{display:flex;gap:8px;margin:10px 0 6px}.mj-tabs button{min-height:36px;padding:0 16px;border-radius:100px;border:1px solid var(--stroke);background:none;color:var(--dim);font:600 13px var(--font-body);cursor:pointer}.mj-tabs button[aria-pressed=true]{background:var(--green);color:#04120f;border-color:var(--green)}
+  #mjSvg{width:100%;height:auto;display:block}#mjSvg circle{cursor:pointer}#mjSvg text{fill:var(--dim);font:11px var(--font-body)}
+  .mj-sum{display:flex;flex-wrap:wrap;gap:16px;margin:8px 0;font-size:13.5px}.mj-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--dim);margin-top:8px}
+  #mjDetail{min-height:20px;font-size:13px;margin-top:8px}.mj-note{font-size:11.5px;color:var(--dim);margin-top:10px;line-height:1.5}
+  #mjEdit{margin-left:8px;background:none;border:0;color:var(--green);cursor:pointer;font:600 13px var(--font-body);text-decoration:underline;padding:8px 4px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -315,6 +320,13 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     </div>
   </div>
 
+  <div class="card" id="moodJourney" style="margin-top:18px">
+    <h3>Your Mood Journey</h3>
+    <p class="sub">Private to you. Check in daily to see your history.</p>
+    <div class="mj-tabs" role="group" aria-label="Range"><button type="button" data-d="7" aria-pressed="true">7 days</button><button type="button" data-d="30" aria-pressed="false">30 days</button></div>
+    <div id="mjBody"><div class="empty-note">Loading…</div></div>
+    <p class="mj-note">The 0–5 scale is only for drawing the line. It is not a clinical or scientific measurement and does not diagnose anything.</p>
+  </div>
 
 <footer>MAATRAM · <b>Action ⟹ Value</b> · Data never leaves your device</footer>
 </div>
@@ -707,6 +719,68 @@ if(!reduced)requestAnimationFrame(loop);else loop(0);
     });
     document.getElementById('mnavOut').onclick=()=>{menu.classList.remove('open');signOut(auth);};
   }catch(e){console.warn('nav auth',e);}
+})();
+</script>
+<script defer src="/mood.js"></script>
+<script>
+(function(){
+  var days=7,rows={},uid=null,ok=false;
+  var body=document.getElementById('mjBody'); if(!body) return;
+  function M(){ return window.maatramMood.MOODS; }
+  function byKey(k){ return M().filter(function(m){return m.k===k;})[0]; }
+  function ds(n){ var a=[],t=new Date(); for(var i=n-1;i>=0;i--){ var d=new Date(t.getFullYear(),t.getMonth(),t.getDate()-i); a.push(window.maatramMood.today(d)); } return a; }
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function draw(){
+    if(!window.maatramMood){ return setTimeout(draw,150); }
+    if(!ok) return;
+    var list=ds(days), got=list.filter(function(d){return rows[d];});
+    var td=rows[window.maatramMood.today()], tm=td&&byKey(td.mood);
+    if(!Object.keys(rows).length){ body.innerHTML='<div class="empty-note">Your mood journey starts here. Check in daily to see your history.</div>'; return; }
+    var W=600,H=250,L=40,R=12,T=14,B=34,pw=W-L-R,ph=H-T-B;
+    var x=function(i){return L+(list.length==1?pw/2:i*pw/(list.length-1));}, y=function(v){return T+ph-(v/5)*ph;};
+    var svg='<svg id="mjSvg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Mood line chart, last '+days+' days">';
+    M().forEach(function(m){ svg+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(m.v)+'" y2="'+y(m.v)+'" stroke="currentColor" opacity=".12"/><text x="'+(L-8)+'" y="'+(y(m.v)+4)+'" text-anchor="end">'+m.e+'</text>'; });
+    var step=days==7?1:5;
+    list.forEach(function(d,i){ if(i%step==0||i==list.length-1) svg+='<text x="'+x(i)+'" y="'+(H-10)+'" text-anchor="middle">'+d.slice(8)+'/'+d.slice(5,7)+'</text>'; });
+    var seg=[],cur=[];
+    list.forEach(function(d,i){ if(rows[d]){ cur.push(x(i)+','+y(byKey(rows[d].mood).v)); } else { if(cur.length) seg.push(cur); cur=[]; } });
+    if(cur.length) seg.push(cur);
+    seg.forEach(function(p){ if(p.length>1) svg+='<polyline points="'+p.join(' ')+'" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linejoin="round"/>'; });
+    list.forEach(function(d,i){ var r=rows[d]; if(!r) return; var m=byKey(r.mood);
+      svg+='<circle cx="'+x(i)+'" cy="'+y(m.v)+'" r="6" fill="var(--green)" tabindex="0" data-d="'+d+'" aria-label="'+d+': '+m.n+'"><title>'+d+': '+m.n+'</title></circle>'; });
+    svg+='</svg>';
+    var cnt={}; got.forEach(function(d){ cnt[rows[d].mood]=(cnt[rows[d].mood]||0)+1; });
+    var top=null; got.forEach(function(d){ var k=rows[d].mood; if(!top||cnt[k]>=cnt[top]) top=k; });
+    var sum='<div class="mj-sum"><span><b>'+got.length+'</b> check-in'+(got.length==1?'':'s')+' in '+days+' days</span>'
+      +(top?'<span>Most frequent: <b>'+byKey(top).e+' '+byKey(top).n+'</b></span>':'')+'</div>';
+    var leg='<div class="mj-leg">'+M().map(function(m){return '<span>'+m.e+' '+m.n+' ('+m.v+')</span>';}).join('')+'</div>';
+    body.innerHTML='<div>Today: '+(tm?tm.e+' <b>'+tm.n+'</b>':'<span style="color:var(--dim)">no check-in yet</span>')
+      +'<button type="button" id="mjEdit">'+(tm?'Change today\u2019s mood':'Check in now')+'</button></div>'+sum+svg+'<div id="mjDetail" role="status">Tap a point for details.</div>'+leg;
+    document.getElementById('mjEdit').onclick=function(){ window.maatramMood.openEdit(tm&&tm.mood); };
+    [].forEach.call(body.querySelectorAll('circle'),function(c){ var f=function(){ var m=byKey(rows[c.dataset.d].mood); document.getElementById('mjDetail').textContent=c.dataset.d+': '+m.e+' '+m.n; };
+      c.addEventListener('click',f); c.addEventListener('mouseenter',f); c.addEventListener('focus',f); });
+  }
+  [].forEach.call(document.querySelectorAll('.mj-tabs button'),function(b){ b.onclick=function(){ days=+b.dataset.d; [].forEach.call(b.parentNode.children,function(o){o.setAttribute('aria-pressed',String(o===b));}); draw(); }; });
+  async function load(u){
+    uid=u.uid;
+    try{
+      var A=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'), F=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      var db=F.getFirestore(A.getApps().length?A.getApp():A.initializeApp(window.MAATRAM_FB));
+      var from=ds(30)[0];
+      var q=F.query(F.collection(db,'users',u.uid,'moods'),F.where('date','>=',from),F.orderBy('date'));
+      var s=await F.getDocs(q); rows={}; s.forEach(function(d){ var v=d.data(); if(byKey(v.mood)) rows[v.date]=v; });
+      ok=true; draw();
+    }catch(e){ body.innerHTML='<div class="empty-note">Could not load your mood history right now.</div>'; }
+  }
+  addEventListener('maatram:mood',function(e){ rows[e.detail.date]={mood:e.detail.mood,date:e.detail.date}; ok=true; draw(); });
+  (async function(){
+    if(!/^https?:$/.test(location.protocol)){ body.innerHTML='<div class="empty-note">Sign in to see your mood journey.</div>'; return; }
+    try{
+      var A=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'), U=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+      var auth=U.getAuth(A.getApps().length?A.getApp():A.initializeApp(window.MAATRAM_FB));
+      U.onAuthStateChanged(auth,function(u){ if(u) load(u); else { ok=false; body.innerHTML='<div class="empty-note">Sign in to see your mood journey.</div>'; } });
+    }catch(e){ body.innerHTML='<div class="empty-note">Could not load your mood history right now.</div>'; }
+  })();
 })();
 </script>
 <button id="perfBtn" type="button" aria-pressed="false" aria-label="Toggle performance mode" title="Toggle performance mode (less animation, zero lag)">

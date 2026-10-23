@@ -139,6 +139,9 @@
              }); }catch(e){}
         try{ await roll(F,db,user.uid,d); }catch(e){ }   /* never block the page on this */
         reveal();
+        /* daily mood check-in (mood.js): optional, never blocks the page */
+        try{ var ms2=function(){ if(window.maatramMood) window.maatramMood.start(user.uid,db,F); };
+          if(window.maatramMood) ms2(); else { var mc=document.createElement('script'); mc.src='/mood.js'; mc.onload=ms2; document.head.appendChild(mc); } }catch(e){}
       });
     })();
   }

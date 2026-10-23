@@ -131,6 +131,26 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    /* ── daily mood check-in (mood.js) ──
+       users/{uid}/moods/{YYYY-MM-DD}: private, owner-only read and write, never listed on the
+       leaderboard. Doc id is the local date, so one record per day. Delete is allowed (user can erase). */
+    match /users/{uid}/moods/{day} {
+      allow read, delete: if isOwner(uid);
+      allow create: if isOwner(uid)
+                    && get(/databases/$(database)/documents/users/$(uid)).data.get('banned', false) != true
+                    && neu().keys().hasOnly(['uid','mood','date','timestamp'])
+                    && neu().uid == uid
+                    && neu().date == day
+                    && day.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+                    && neu().mood in ['veryhappy','happy','okay','sad','stressed','tired']
+                    && neu().timestamp == request.time;
+      allow update: if isOwner(uid)
+                    && neu().keys().hasOnly(['uid','mood','date','timestamp','updatedAt'])
+                    && neu().uid == uid && neu().date == old().date && neu().timestamp == old().timestamp
+                    && neu().mood in ['veryhappy','happy','okay','sad','stressed','tired']
+                    && neu().updatedAt == request.time;
+    }
+
     /* ── sports events ──
        Any signed-in user lists one. The author can take their own listing
        down; the moderator address can take any listing down.
