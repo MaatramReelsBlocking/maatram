@@ -65,7 +65,7 @@
     save.onclick=async function(){
       if(!sel) return; save.disabled=true; msg.textContent='Saving…';
       try{ await write(sel); msg.textContent='Saved.'; setTimeout(close,500); }
-      catch(e){ save.disabled=false; msg.textContent='Could not save. Check your connection and try again.'; }
+      catch(e){ save.disabled=false; msg.textContent=(e&&e.code==='permission-denied')?'Blocked by Firestore rules. Publish the latest firestore.rules in the Firebase console.':'Could not save. Check your connection and try again.'; }
     };
     (grid.querySelector('[aria-checked=true]')||grid.firstChild).focus();
   }
@@ -91,7 +91,8 @@
     try{
       var s=await F.getDoc(F.doc(db,'users',uid,'moods',day));
       if(s.exists()){ ls('maatram_mood_'+uid,day); return; }
-    }catch(e){ return; }                                 /* can't verify: don't nag */
+    }catch(e){ try{console.warn('mood check',e);}catch(_){}
+      if(!(e&&e.code==='permission-denied')) return; }   /* offline: don't nag. denied: show it so save reports the cause */
     if(ls('maatram_mood_'+uid)===day) return;            /* another tab saved meanwhile */
     open();
   }

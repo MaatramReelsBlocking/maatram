@@ -770,7 +770,7 @@ if(!reduced)requestAnimationFrame(loop);else loop(0);
       var q=F.query(F.collection(db,'users',u.uid,'moods'),F.where('date','>=',from),F.orderBy('date'));
       var s=await F.getDocs(q); rows={}; s.forEach(function(d){ var v=d.data(); if(byKey(v.mood)) rows[v.date]=v; });
       ok=true; draw();
-    }catch(e){ body.innerHTML='<div class="empty-note">Could not load your mood history right now.</div>'; }
+    }catch(e){ console.warn('mood load',e); body.innerHTML='<div class="empty-note">'+(e&&e.code==='permission-denied'?'Mood storage is not enabled yet: publish the latest firestore.rules in the Firebase console.':'Could not load your mood history right now.')+'</div>'; }
   }
   addEventListener('maatram:mood',function(e){ rows[e.detail.date]={mood:e.detail.mood,date:e.detail.date}; ok=true; draw(); });
   (async function(){
