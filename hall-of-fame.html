@@ -112,21 +112,18 @@
   }
   @media(max-width:720px){.active-badge-card{grid-template-columns:1fr;text-align:center}}
   
-  /* Active Badge Image Wrapper - Circular Boundary Restored */
+  /* Active badge: transparent artwork, centred, no clipping box */
   .badge-img-wrapper{
-    width:130px;height:130px;
-    border-radius:50%;
-    border:2px solid var(--stroke);
-    background:transparent;
+    width:150px;height:150px;
     display:grid;place-items:center;margin:0 auto;
     position:relative;
-    overflow:hidden;
   }
   .badge-img-wrapper img{
     width:100%;height:100%;
-    object-fit:cover;
-    background:transparent;
-    border-radius:50%;
+    object-fit:contain;
+    background:none;
+    border:0;border-radius:0;
+    filter:drop-shadow(0 10px 22px rgba(0,0,0,.45));
   }
   
   .active-info h3{font-family:var(--font-display);font-size:24px;font-weight:700;margin-bottom:6px}
@@ -149,6 +146,7 @@
     border-radius:24px;
     padding:26px 20px;
     text-align:center;
+    display:flex;flex-direction:column;align-items:center;
     backdrop-filter:blur(14px);
     transition:transform .3s,border-color .3s;
     position:relative;
@@ -165,16 +163,16 @@
     opacity:1;
   }
 
-  /* Grid Badge Image - Circular Boundary Restored */
+  /* Grid badge: transparent artwork, same footprint on every card */
   .badge-card .b-img{
-    width:110px;height:110px;margin:0 auto 16px;
-    object-fit:cover;
-    border-radius:50%;
-    border:2px solid var(--stroke);
-    background:transparent;
-    box-shadow:0 8px 20px rgba(0,0,0,.3);
+    width:120px;height:120px;margin:0 auto 16px;
+    display:block;
+    object-fit:contain;
+    border:0;border-radius:0;
+    background:none;
+    filter:drop-shadow(0 8px 16px rgba(0,0,0,.4));
   }
-  
+
   .badge-card h4{font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:6px}
   .badge-card .b-range{
     font-family:var(--font-display);
@@ -185,6 +183,7 @@
     margin-bottom:12px;
   }
   .badge-card .b-desc{font-size:12.5px;color:var(--dim);line-height:1.5;margin-bottom:16px}
+  .badge-card .status-tag{margin-top:auto}
   .status-tag{
     display:inline-block;padding:6px 16px;border-radius:100px;
     font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
@@ -235,7 +234,7 @@
   <!-- User Active Badge Section -->
   <section class="active-badge-card">
     <div class="badge-img-wrapper">
-      <img id="userBadgeImg" src="images/badges/badge1.jpg" alt="Active Badge">
+      <img id="userBadgeImg" src="images/badges/badge1.webp" alt="Active Badge">
     </div>
     <div class="active-info">
       <h3 id="userBadgeTitle">Sprout Initiate</h3>
@@ -255,7 +254,7 @@
   <div class="badges-grid" id="badgesGrid">
     <!-- Tier 1 -->
     <div class="badge-card" id="card-badge1">
-      <img src="images/badges/badge1.jpg" alt="Sprout Initiate" class="b-img" width="110" height="110" loading="lazy">
+      <img src="images/badges/badge1.webp" alt="Sprout Initiate" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 1: Sprout Initiate</h4>
       <div class="b-range"><strong>0 – 250 PTS</strong></div>
       <p class="b-desc">Planted the seed of focus. Unlocked when you begin your focus journey with Maatram.</p>
@@ -264,7 +263,7 @@
 
     <!-- Tier 2 -->
     <div class="badge-card locked-card" id="card-badge2">
-      <img src="images/badges/badge2.jpg" alt="Silver Bloom" class="b-img" width="110" height="110" loading="lazy">
+      <img src="images/badges/badge2.webp" alt="Silver Bloom" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 2: Silver Bloom</h4>
       <div class="b-range"><strong>251 – 750 PTS</strong></div>
       <p class="b-desc">Your discipline begins to blossom like the silver lotus in quiet focus.</p>
@@ -273,7 +272,7 @@
 
     <!-- Tier 3 -->
     <div class="badge-card locked-card" id="card-badge3">
-      <img src="images/badges/badge3.jpg" alt="Shinobi Shield" class="b-img" width="110" height="110" loading="lazy">
+      <img src="images/badges/badge3.webp" alt="Shinobi Shield" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 3: Shinobi Shield</h4>
       <div class="b-range"><strong>751 – 1,750 PTS</strong></div>
       <p class="b-desc">Endurance in the face of digital distraction. Mastered true patience.</p>
@@ -282,7 +281,7 @@
 
     <!-- Tier 4 -->
     <div class="badge-card locked-card" id="card-badge4">
-      <img src="images/badges/badge4.jpg" alt="Golden Mind's Eye" class="b-img" width="110" height="110" loading="lazy">
+      <img src="images/badges/badge4.webp" alt="Golden Mind's Eye" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 4: Golden Mind's Eye</h4>
       <div class="b-range"><strong>1,751 – 3,500 PTS</strong></div>
       <p class="b-desc">Unwavering laser vision. Distractions no longer pierce your concentration.</p>
@@ -291,7 +290,7 @@
 
     <!-- Tier 5 -->
     <div class="badge-card locked-card" id="card-badge5">
-      <img src="images/badges/badge5.jpg" alt="Crystal Ronin" class="b-img" width="110" height="110" loading="lazy">
+      <img src="images/badges/badge5.webp" alt="Crystal Ronin" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 5: Crystal Ronin</h4>
       <div class="b-range"><strong>3,501 – 7,000 PTS</strong></div>
       <p class="b-desc">A masterless warrior of deep focus, cutting through time sinks cleanly.</p>
@@ -300,7 +299,7 @@
 
     <!-- Tier 6 -->
     <div class="badge-card locked-card" id="card-badge6">
-      <img src="images/badges/badge6.jpg" alt="Crown Legend" class="b-img" width="110" height="110" loading="lazy">
+      <img src="images/badges/badge6.webp" alt="Crown Legend" class="b-img" width="110" height="110" loading="lazy">
       <h4>Tier 6: Crown Legend</h4>
       <div class="b-range"><strong>7,001 – 10,000 PTS (Cap Limit)</strong></div>
       <p class="b-desc">Conquered the mountain peak! At 10,000 PTS, points auto-reset to prestige.</p>
