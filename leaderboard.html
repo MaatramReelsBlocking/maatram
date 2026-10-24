@@ -133,6 +133,13 @@
   .rank-badge img{width:34px;height:34px;object-fit:cover;border-radius:50%;border:1px solid var(--stroke);vertical-align:middle;flex:0 0 auto}
   .rowu .rank-badge{font-size:11.5px;justify-content:flex-start}
   .rowu .rank-badge img{width:30px;height:30px}
+  [hidden]{display:none!important}
+  .gate{margin:18px auto 0;max-width:460px;text-align:center;padding:26px 22px;border:1px solid var(--stroke);border-radius:18px;background:rgba(255,255,255,.04);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .gate-big{font-size:34px;line-height:1}
+  .gate-h{display:block;font-family:var(--font-display);font-weight:800;font-size:17px;margin:12px 0 14px}
+  .gbar{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .gbar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .6s ease}
+  .gate-p{color:var(--dim);font-size:14px;line-height:1.5;margin:14px 0 0}
   .pod.p1{order:2;padding-top:26px;padding-bottom:34px;border-color:rgba(255,209,102,.5);box-shadow:0 0 44px -14px rgba(255,209,102,.45)}
   .pod.p1 .face{width:72px;height:72px;font-size:28px;border-color:var(--gold);box-shadow:0 0 24px rgba(255,209,102,.6)}
   .pod.p1 .pt{color:var(--gold)}
@@ -300,6 +307,13 @@ body{padding-top:52px!important}
   <div class="podium" id="podium"></div>
   <div class="list" id="list"></div>
 
+  <section id="gate" class="gate" hidden aria-live="polite">
+    <div class="gate-big" aria-hidden="true">🌱</div>
+    <b class="gate-h" id="gateH"></b>
+    <div class="gbar" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" aria-label="Members joined toward opening the board"><i id="gateFill"></i></div>
+    <p class="gate-p" id="gateP"></p>
+  </section>
+
   <div id="empty">
     <div class="big">🏆</div>
     <b id="emptyH">The throne is empty.</b>
@@ -377,12 +391,33 @@ function badgeHtml(u){
   const b=f(u.lifetimePoints===undefined?u.points:u.lifetimePoints);
   return '<div class="rank-badge"><img src="'+esc(b.thumb||b.img)+'" alt="" decoding="async" width="32" height="32"><em>'+esc(b.name)+'</em></div>';
 }
+/* The board stays hidden until it has enough real members to be worth ranking. */
+const MIN_MEMBERS=10;
+function memberCount(){ return new Set([...cloudUsers,...cloudLife].map(u=>u.id)).size; }
+function showGate(n){
+  const rank=cloudUsers.findIndex(u=>u.id===myId);
+  const filled=Math.min(n,MIN_MEMBERS);
+  $('podium').hidden=true; $('list').hidden=true; $('empty').style.display='none';
+  $('gate').hidden=false;
+  $('gateH').textContent = rank>=0
+    ? "Leaderboard opens at 10 members · you're "+n+" of 10"
+    : "Leaderboard opens at 10 members · "+n+" of 10 joined";
+  $('gateFill').style.width=(filled*10)+'%';
+  $('gateFill').parentElement.setAttribute('aria-valuenow',String(filled));
+  $('gateP').textContent = rank===0
+    ? "You're first here. Invite a friend to see where you stand."
+    : rank>0
+      ? rank+(rank===1?" person is":" people are")+" ahead of you this month."
+      : "Earn points this month to take your place on the board.";
+}
 function render(){
   const cloudSrc = TAB==='month'?cloudUsers:cloudLife;
   const users=CLOUD?[...cloudSrc]:[...board.users].sort((a,b)=>b.points-a.points);
   const pod=$('podium'),list=$('list'),empty=$('empty');
   pod.innerHTML='';list.innerHTML='';
   $('join').style.display=(CLOUD||myId)?'none':'flex';
+  if(CLOUD&&AUTH==='in'&&memberCount()<MIN_MEMBERS){ showGate(memberCount()); return; }
+  $('gate').hidden=true; pod.hidden=false; list.hidden=false;
   if(!users.length){emptyText();empty.style.display=(CLOUD&&AUTH==='pending')?'none':'block';return;}
   empty.style.display='none';
   const seen=k=>{const had=shown.has(TAB+k);shown.add(TAB+k);return had;};
