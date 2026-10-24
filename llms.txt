@@ -9,7 +9,7 @@ Everything on the site runs on one points balance: finishing focus sessions, stu
 - [Home](https://maatram.co.in/): what Maatram is, its six tools (Focus Timers, App Gate, Study Room, Screen Stats, Leaderboard, Wellness), FAQ.
 - [Focus Timers](https://maatram.co.in/timers.html): Pomodoro 25/5 and Deep Work 90/15 timers with points and streaks.
 - [App Gate](https://maatram.co.in/app-gate.html): hard lock for social apps, 5 to 90 minutes.
-- [Study Room](https://maatram.co.in/study-room.html): five students on one room code, synced timers, strikes and chat.
+- [Study Room](https://maatram.co.in/study-room.html): up to five people on one room code, synced timers, strikes and chat.
 - [Screen Stats](https://maatram.co.in/stats.html): daily per-app screen-time logging, weekly charts and bonus.
 - [Leaderboard](https://maatram.co.in/leaderboard.html): live ranking of signed-in students by points.
 - [Wellness](https://maatram.co.in/wellness/wellness.html): private 7-day meal plan and four daily checks (meals, hydration, activity, sleep), +25 points each, up to +100 a day. Plan and checks stay on the device.
