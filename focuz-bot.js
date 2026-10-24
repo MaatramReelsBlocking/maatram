@@ -70,17 +70,17 @@
 
     // Android
     { id: 'android', q: 'Is there an Android app?', k: ['android', 'apk', 'phone app', 'mobile app', 'download', 'install', 'play store'],
-      a: "yes, Android 5.1 and above. it runs App Gate, Hard Lock and Maatram Shield natively, so blocking keeps working outside the browser. it's not on the Play Store, grab the APK from the site. no iPhone app yet.", l: ['Get the app', '/download.html'] },
+      a: "yes, Android 5.1 and above. it runs App Gate and Hard Lock natively, so blocking keeps working outside the browser. it's not on the Play Store, grab the APK from the site. no iPhone app yet.", l: ['Get the app', '/download.html'] },
     { id: 'not-installed', q: '"App not installed" error', k: ['app not installed', 'not installed', 'install failed', 'wont install', 'cant install', 'installation error'],
       a: "an older Maatram is still on the phone. version 1.1 is signed with a different key, so uninstall the old one first, then install again. open the APK from the Files app, not a chat preview.", l: ['Install guide', '/download.html'] },
     { id: 'playprotect', q: 'Blocked by Play Protect', k: ['play protect', 'blocked', 'harmful', 'unsafe', 'warning', 'virus', 'download anyway'],
       a: "Play Protect warns about anything not from the Play Store. tap More details → Install anyway. it's a warning about the source, not the file. you can check the file's SHA-256 on the download page if you're sus.", l: ['Install guide', '/download.html'] },
     { id: 'shield', q: 'Hard Lock does nothing on my phone', k: ['nothing on my phone', 'hard lock does nothing', 'not blocking on phone', 'shield', 'maatram shield', 'accessibility', 'not blocking', 'doesnt block', 'lock not working', 'hard lock not working'],
-      a: "Maatram Shield is off, or the system killed it. go to Settings → Accessibility → Maatram Shield and turn it on. without Shield the timers run but nothing actually gets blocked.", l: ['Install guide', '/download.html'] },
-    { id: 'restricted', q: 'Shield switch is greyed out', k: ['restricted setting', 'restricted', 'greyed out', 'grayed out', 'cant enable', 'financial information', 'allow restricted'],
-      a: 'on Android 13+, go to Settings → Apps → Maatram → ⋮ → Allow restricted settings. then come back and turn on Maatram Shield in Accessibility.' },
-    { id: 'samsung', q: 'Shield keeps turning off (Samsung)', k: ['shield turning off', 'keeps turning off', 'samsung', 'turns off', 'stops working', 'killed', 'battery', 'sleeping apps', 'keeps stopping'],
-      a: "Samsung loves killing apps lol. keep it alive: lock Maatram in Recents, set Battery to Unrestricted, and remove it from Sleeping apps. then re-enable Shield in Accessibility." },
+      a: "Hard Lock is off, or the system killed it. go to Settings → Accessibility → Hard Lock and turn it on. without Hard Lock the timers run but nothing actually gets blocked.", l: ['Install guide', '/download.html'] },
+    { id: 'restricted', q: 'Hard Lock switch is greyed out', k: ['restricted setting', 'restricted', 'greyed out', 'grayed out', 'cant enable', 'financial information', 'allow restricted'],
+      a: 'on Android 13+, go to Settings → Apps → Maatram → ⋮ → Allow restricted settings. then come back and turn on Hard Lock in Accessibility.' },
+    { id: 'samsung', q: 'Hard Lock keeps turning off (Samsung)', k: ['shield turning off', 'keeps turning off', 'samsung', 'turns off', 'stops working', 'killed', 'battery', 'sleeping apps', 'keeps stopping'],
+      a: "Samsung loves killing apps lol. keep it alive: lock Maatram in Recents, set Battery to Unrestricted, and remove it from Sleeping apps. then re-enable Hard Lock in Accessibility." },
 
     // Misc
     { id: 'lag', q: 'The site is slow or laggy', k: ['slow', 'lag', 'laggy', 'performance', 'battery drain', 'heavy', 'hang', 'freeze'],

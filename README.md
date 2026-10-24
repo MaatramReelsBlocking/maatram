@@ -95,7 +95,7 @@ open directly. The only build step: `index.js` and `theme.js` are terser-minifie
 - **Hosting:** Vercel
 - **Study-room sync:** public MQTT broker over WebSocket
 - **Android:** Capacitor wrapper, `com.maatram.app`, with native blocking by a Java
-  `AccessibilityService` ("Maatram Shield"); the APK (v1.1) is published on `download.html`
+  `AccessibilityService` ("Hard Lock"); the APK (v1.1) is published on `download.html`
 - **Theming:** shared `theme.js`, two skins (neon / minimal glass), stored in `localStorage`
 - **Analytics:** Microsoft Clarity (via `speed-insights.js`), Vercel Web Analytics and Vercel
   Speed Insights
@@ -159,7 +159,7 @@ else — timers, the gate, stats — works offline against `localStorage`.
 ### Android
 
 The Android project is not in this repository; the built APK is published on
-`download.html`. On the phone, enable **Maatram Shield** once under Settings →
+`download.html`. On the phone, enable **Hard Lock** once under Settings →
 Accessibility. On Android 13+ a sideloaded build is blocked by "restricted settings" first:
 Settings → Apps → Maatram → ⋮ → Allow restricted settings.
 

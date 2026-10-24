@@ -758,14 +758,14 @@ html.minimal body{background:radial-gradient(60vmax 50vmax at 85% 10%,rgba(156,1
       <li class="gate" data-step="5">
         <span class="num" aria-hidden="true">5</span>
         <div class="card">
-          <h3>Switch on Maatram Shield</h3>
-          <p>Shield is the accessibility service that actually blocks apps during a Hard
-            Lock. Open <span class="path">Settings → Accessibility → Maatram Shield</span>
+          <h3>Switch on Hard Lock</h3>
+          <p>Hard Lock is the accessibility service that actually blocks apps during a Hard
+            Lock. Open <span class="path">Settings → Accessibility → Hard Lock</span>
             and turn it on. Without this, the timers still run but nothing gets blocked.</p>
           <p>On Android 13 and above the switch may be greyed out with a
             <b>Restricted setting</b> message. Go to
             <span class="path">Settings → Apps → Maatram → ⋮ → Allow restricted settings</span>,
-            then come back and enable Shield.</p>
+            then come back and enable Hard Lock.</p>
           <p>On Samsung, keep the service alive: lock Maatram in Recents, set Battery to
             <b>Unrestricted</b>, and remove it from <b>Sleeping apps</b>.</p>
           <button class="tick" type="button">Mark done</button>
@@ -783,7 +783,7 @@ html.minimal body{background:radial-gradient(60vmax 50vmax at 85% 10%,rgba(156,1
           from the <b>Files</b> app.</li>
         <li>If Play Protect says <b>App blocked to protect your device</b>, tap
           <b>More details</b>, then <b>Install anyway</b>.</li>
-        <li>Turn on the shield: <span class="path">Settings → Accessibility → Maatram Focus Shield</span>.
+        <li>Turn on Hard Lock: <span class="path">Settings → Accessibility → Hard Lock</span>.
           If it shows <b>Restricted setting</b>, tap OK, then go to
           <span class="path">Settings → Apps → Maatram Hard Lock → ⋮ → Allow restricted settings</span>
           and turn the shield on again.</li>
@@ -843,7 +843,7 @@ Linux     sha256sum maatram-hardlock-v2.6.5-beta.apk</pre>
       <dt>Size</dt><dd>3 529 006 bytes · 3.37 MB</dd>
       <dt>Requires</dt><dd>Android 8.0 (API 26) or newer · built against API 34</dd>
       <dt>Permissions</dt><dd>Start at boot · exact alarms · see installed apps (to choose apps to lock) · ask to run without battery limits · "Hard Lock is on" notification while a lock runs</dd>
-      <dt>Service</dt><dd>BlockerService (Maatram Focus Shield) — the accessibility service
+      <dt>Service</dt><dd>BlockerService (Hard Lock) — the accessibility service
         that blocks apps during a Hard Lock</dd>
       <dt>Device admin</dt><dd>Optional — stops the app being uninstalled while a lock runs</dd>
       <dt>Signing</dt><dd>Debug key, new for every build</dd>
@@ -860,7 +860,7 @@ Linux     sha256sum maatram-hardlock-v2.6.5-beta.apk</pre>
         then install again.</dd>
       <dt>Blocked by Play Protect</dt><dd>Tap More details, then Install anyway. It is a
         warning about the source, not about the file.</dd>
-      <dt>Hard Lock does nothing</dt><dd>Maatram Shield is off, or the system killed it.
+      <dt>Hard Lock does nothing</dt><dd>Hard Lock is off, or the system killed it.
         Re-enable it in Accessibility and follow the Samsung steps in gate 5.</dd>
       <dt>Hard Lock: shield greyed out</dt><dd>Restricted setting. Tap the shield once, tap OK,
         then Settings → Apps → Maatram Hard Lock → ⋮ → Allow restricted settings. No such
