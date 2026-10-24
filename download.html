@@ -357,9 +357,9 @@ html.minimal body{background:radial-gradient(60vmax 50vmax at 85% 10%,rgba(156,1
 
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
- <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="hall-of-fame.html">Hall of Fame</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link active" href="download.html">Download</a><a class="mn-link" href="login.html">Account</a>
+ <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="hall-of-fame.html">Hall of Fame</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link active" href="download.html">Download</a><a class="mn-link" href="login.html">Profile</a>
   <div id="mnavAuth">
-    <a id="mnavIn" href="login.html">Sign in</a>
+    <a id="mnavIn" href="login.html">Save my points</a>
     <div id="mnavChip">
       <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" loading="lazy" decoding="async" width="28" height="28">
       <span class="nm" id="mnavNm"></span>
@@ -508,7 +508,7 @@ html.minimal body{background:radial-gradient(60vmax 50vmax at 85% 10%,rgba(156,1
   <div class="apps" id="apps">
     <article class="app" data-os="android-full" aria-labelledby="appFull">
       <div class="cell-head"><span class="sys">Platform</span><span class="n">01</span></div>
-      <span class="tag">Stable, not updated</span>
+      <span class="tag">Stable</span>
       <div class="ttl"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></span><h2 id="appFull">Maatram, full app</h2></div>
       <p>Every feature from the website, plus native app blocking.</p>
       <ul class="chips">
@@ -524,9 +524,9 @@ html.minimal body{background:radial-gradient(60vmax 50vmax at 85% 10%,rgba(156,1
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/>
           </svg>
-          Download APK<span class="sr-only"> — Maatram full app</span>
+          Get Maatram for Android
         </a>
-        <a class="ghost" href="#verify">Check the file is genuine</a>
+        <a class="ghost" href="#verify">Make sure it's really ours</a>
       </div>
     </article>
 
@@ -550,7 +550,7 @@ html.minimal body{background:radial-gradient(60vmax 50vmax at 85% 10%,rgba(156,1
           </svg>
           Download APK<span class="sr-only"> — Maatram Hard Lock</span>
         </a>
-        <a class="ghost" href="#verify-lock">Check the file is genuine</a>
+        <a class="ghost" href="#verify-lock">Make sure it's really ours</a>
       </div>
     </article>
 
@@ -579,7 +579,7 @@ html.minimal body{background:radial-gradient(60vmax 50vmax at 85% 10%,rgba(156,1
         <li>Windows shows <b>Unknown publisher</b> because the file is not code-signed. Click <b>More info</b>, then <b>Run anyway</b>.</li>
         <li>Allow administrator rights. Maatram needs them to edit the hosts file and close apps.</li>
         <li><b>Why the warning?</b> Windows warns about any new app that is not code-signed yet, however safe. Maatram is open source, so <a href="https://github.com/MaatramReelsBlocking/maatram-windows" target="_blank" rel="noopener">you can read every line</a> it runs.</li>
-        <li><b>Check the file is genuine.</b> In PowerShell run <code>Get-FileHash .\Maatram.Hard.Lock_0.1.0_x64-setup.exe</code>. The SHA-256 must be <code style="word-break:break-all">f455fa702834f8765818986ae06a5fd3fa7a13ec694bb6aff9e86372df3e4e39</code>.</li>
+        <li><b>Make sure it's really ours.</b> In PowerShell run <code>Get-FileHash .\Maatram.Hard.Lock_0.1.0_x64-setup.exe</code>. The SHA-256 must be <code style="word-break:break-all">f455fa702834f8765818986ae06a5fd3fa7a13ec694bb6aff9e86372df3e4e39</code>.</li>
         <li>If something goes wrong, right-click <a href="https://github.com/MaatramReelsBlocking/maatram-windows/blob/main/Maatram-Restore.bat" target="_blank" rel="noopener">Maatram-Restore.bat</a> and choose <b>Run as administrator</b>. Uninstalling also ends any running lock.</li>
       </ol>
     </article>
@@ -799,7 +799,7 @@ html.minimal body{background:radial-gradient(60vmax 50vmax at 85% 10%,rgba(156,1
   </section>
 
   <section id="verify" class="rv">
-    <h2>Check the file is genuine</h2>
+    <h2>Make sure it's really ours</h2>
     <p class="sub">These are the SHA-256 hashes of the exact files we publish. If your
       copy hashes to something else, it is not the file we published — delete it.</p>
     <h3 class="for">Full app · maatram-v1.2.apk</h3>

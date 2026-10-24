@@ -441,9 +441,9 @@ window.maatramAward=window.maatramAward||function(pts,reason){
 <h1 class="sr-only">Maatram focus timers — Pomodoro and Deep Work study timers</h1>
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
-  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link active" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="hall-of-fame.html">Hall of Fame</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link" href="download.html">Download</a><a class="mn-link" href="login.html">Account</a>
+  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link active" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="hall-of-fame.html">Hall of Fame</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link" href="download.html">Download</a><a class="mn-link" href="login.html">Profile</a>
   <div id="mnavAuth">
-    <a id="mnavIn" href="login.html">Sign in</a>
+    <a id="mnavIn" href="login.html">Save my points</a>
     <div id="mnavChip">
       <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" loading="lazy" decoding="async" width="28" height="28">
       <span class="nm" id="mnavNm"></span>
@@ -480,7 +480,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
   <div class="modes">
     <button class="mode" data-mode="pomodoro" aria-pressed="true" data-r>
       <span class="m-pts">+25 pts</span>
-      <div class="m-name">Pomodoro <span class="info-btn" tabindex="0" aria-label="About Pomodoro">i<span class="info-tip"><b>Pomodoro — 25 min focus / 5 min break</b>Short, repeatable sprints that beat procrastination. Benefits: easier to start, trains sustained attention, frequent breaks prevent burnout, and each finished sprint gives a quick win.<br><br><b>Points:</b> +25 pts per completed focus session, added to your leaderboard total.</span></span></div>
+      <div class="m-name">Pomodoro <span class="info-btn" tabindex="0" aria-label="About Pomodoro">i<span class="info-tip"><b>Pomodoro — 25 min focus / 5 min break</b>Short, repeatable sprints that beat procrastination. Benefits: easier to start, trains sustained attention, frequent breaks prevent burnout, and each finished sprint gives a quick win.<br><br><b>Points:</b> +25 pts for every sprint you finish.</span></span></div>
       <div class="m-split">25 / 5</div>
     </button>
     <button class="mode" data-mode="deep" aria-pressed="false" data-r>
@@ -520,7 +520,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     </div>
 
     <div class="ctr" data-r>
-      <button class="btn btn-go" id="go">Start</button>
+      <button class="btn btn-go" id="go">Begin focus</button>
       <button class="btn" id="reset">Reset</button>
     </div>
 
@@ -540,12 +540,12 @@ window.maatramAward=window.maatramAward||function(pts,reason){
   <div class="pu-glow" id="pu-glow"></div>
   <div class="ring"></div><div class="ring"></div><div class="ring"></div>
   <div class="pu-in">
-    <div class="pu-eye" id="pu-eye">Session complete</div>
+    <div class="pu-eye" id="pu-eye">Session done. Points banked.</div>
     <h2 class="pu-h" id="pu-h">Power up</h2>
     <div class="pu-pts" id="pu-pts">+0</div>
     <p class="pu-sub" id="pu-sub"></p>
     <div class="pu-act">
-      <button class="btn btn-go" id="pu-break">Take the break</button>
+      <button class="btn btn-go" id="pu-break">Breathe. Break time.</button>
       <button class="btn" id="pu-skip">Skip</button>
     </div>
   </div>

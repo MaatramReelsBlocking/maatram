@@ -447,9 +447,9 @@ window.maatramAward=window.maatramAward||function(pts,reason){
   <a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="hall-of-fame.html">Hall of Fame</a>
   <a class="mn-link" href="socials.html">Socials</a>
   <a class="mn-link" href="download.html">Download</a>
-  <a class="mn-link" href="login.html">Account</a>
+  <a class="mn-link" href="login.html">Profile</a>
   <div id="mnavAuth">
-    <a id="mnavIn" href="login.html">Sign in</a>
+    <a id="mnavIn" href="login.html">Save my points</a>
     <div id="mnavChip">
       <img id="mnavPic" src="icon-32.png" alt="Profile">
       <span class="nm">Student</span>
@@ -533,7 +533,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     <div class="sub">It is locked with the apps above during Hard Lock in Chrome with the Maatram Extension.</div>
     <form id="siteForm">
       <input type="text" id="siteInput" placeholder="e.g. reddit.com or twitch.tv" autocomplete="off">
-      <button type="submit">Add</button>
+      <button type="submit">Lock a site</button>
     </form>
     <div class="site-msg" id="siteMsg"></div>
     <div class="site-chips" id="siteChips"></div>
@@ -560,7 +560,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
 
     <h4>
       Top 10 mobile games
-      <button type="button" id="pSelectAll">Select all</button>
+      <button type="button" id="pSelectAll">Pick all</button>
       <button type="button" id="pClearAll">Clear</button>
       <span class="pcount" id="pCount">0 of 10 games selected</span>
     </h4>
@@ -907,7 +907,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.font = '600 12px Inter, sans-serif';
         ctx.fillStyle = '#84ad9a';
         ctx.textAlign = 'center';
-        ctx.fillText('Complete a Hard Lock to plant your first tree', w / 2, h - 45);
+        ctx.fillText('Finish a lock to plant your first tree', w / 2, h - 45);
       }
     }
 

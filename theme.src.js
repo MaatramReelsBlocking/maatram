@@ -467,7 +467,7 @@
 
     wrap.innerHTML=
       '<section class="m-sec" id="m-why"><div class="m-rev">'
-      +'<div class="m-eyebrow">The problem</div>'
+      +'<div class="m-eyebrow">Where the time goes</div>'
       +'<h2>Hours disappear <em>ten minutes</em> at a time.</h2>'
       +'<p class="m-lead">Nobody decides to lose an evening to a feed. It goes one unlock at a time, '
       +'and the app is built so you never feel it happen. Maatram puts the cost back where you can see it.</p>'
@@ -480,7 +480,7 @@
       +'</div></section>'
 
       +'<section class="m-sec" id="m-what"><div class="m-rev">'
-      +'<div class="m-eyebrow">What is inside</div>'
+      +'<div class="m-eyebrow">Inside Maatram</div>'
       +'<h2>Six tools. <em>One mission.</em></h2>'
       +'<p class="m-lead">Every feature pays out or charges you in points, so focus and distraction '
       +'both show up on the same scoreboard.</p></div>'
@@ -488,7 +488,7 @@
 
       +'<section class="m-sec" id="m-how"><div class="m-rev">'
       +'<div class="m-eyebrow">How it works</div>'
-      +'<h2>Sign in. Lock up. <em>Keep score.</em></h2>'
+      +'<h2>Sign in. Lock in. <em>Earn.</em></h2>'
       +'<p class="m-lead">Sign in with Google, pick a tool, and start earning. Points sync live across '
       +'every page and every device you use.</p>'
       +'<div class="m-cta"><a class="pri" href="login.html">Sign in with Google</a>'
@@ -496,8 +496,8 @@
       +'</div></section>'
 
       +'<section class="m-sec" id="m-who"><div class="m-rev">'
-      +'<div class="m-eyebrow">Who built it</div>'
-      +'<h2>The <em>founders</em>.</h2>'
+      +'<div class="m-eyebrow">The team behind it</div>'
+      +'<h2>Four students. <em>One app.</em></h2>'
       +'<p class="m-lead">Maatram is a school venture from SSVM School of Excellence. '
       +'Inspired by Gen Z, made by Gen Z, made for Gen Z. Action gives value.</p>'
       +'<ul class="m-team"><li><b>Ram Saravanan</b><span>Chief Executive Officer</span></li><li><b>Ashwanth Kumar</b><span>Chief Operating Officer</span></li><li><b>Ridhun S.</b><span>Chief Financial Officer</span></li><li><b>Vivan V R</b><span>Social Media &amp; Marketing</span></li></ul>'

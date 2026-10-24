@@ -326,9 +326,9 @@ window.maatramAward=window.maatramAward||function(pts,reason){
 <a class="skip-link" href="#main">Skip to main content</a>
 <nav id="mnav" aria-label="Main navigation">
   <a class="mn-logo" href="/"><span class="mn-mark">M</span><b>MAATRAM</b></a>
-  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link active" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="hall-of-fame.html">Hall of Fame</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link" href="download.html">Download</a><a class="mn-link" href="login.html">Account</a>
+  <span class="mn-spacer"></span><a class="mn-link" href="/">Home</a><a class="mn-link" href="timers.html">Timers</a><a class="mn-link" href="app-gate.html">App Gate</a><a class="mn-link active" href="study-room.html">Study Room</a><a class="mn-link" href="wellness/wellness.html">Wellness</a><a class="mn-link" href="sports.html">Sports</a><a class="mn-link" href="stats.html">Stats</a><a class="mn-link" href="leaderboard.html">Leaderboard</a><a class="mn-link" href="hall-of-fame.html">Hall of Fame</a><a class="mn-link" href="socials.html">Socials</a><a class="mn-link" href="ratings.html">Ratings</a><a class="mn-link" href="download.html">Download</a><a class="mn-link" href="login.html">Profile</a>
   <div id="mnavAuth">
-    <a id="mnavIn" href="login.html">Sign in</a>
+    <a id="mnavIn" href="login.html">Save my points</a>
     <div id="mnavChip">
       <img id="mnavPic" referrerpolicy="no-referrer" alt="Maatram user profile photo" loading="lazy" decoding="async" width="28" height="28">
       <span class="nm" id="mnavNm"></span>
@@ -349,20 +349,20 @@ window.maatramAward=window.maatramAward||function(pts,reason){
       <div class="brand-mark">M</div>
       <div><h1>Maatram<span class="sr-only"> virtual study room: study with me online with friends</span></h1><span>Study Room</span></div>
     </div>
-    <div class="conn-badge" id="connBadge"><span class="dot"></span><span id="connTxt">Connecting…</span></div>
+    <div class="conn-badge" id="connBadge"><span class="dot"></span><span id="connTxt">Finding your room…</span></div>
   </header>
 
   <!-- LOBBY -->
   <div id="lobby">
     <h2>Study together.<br><em>Distraction-free.</em></h2>
-    <p>Pick a name, share the room code with up to 4 friends, and join. If any of you open a social app on the App Gate, everyone sees the strike in real time.</p>
+    <p>Grab your friends. Share the code. Go. If any of you open a social app on the App Gate, everyone sees the strike in real time.</p>
     <div class="lobby-form">
       <input id="nameInput" maxlength="20" placeholder="Your name (e.g. Arjun)" autocomplete="off">
       <div class="room-row">
         <input id="codeInput" maxlength="12" placeholder="Room code" autocomplete="off" style="text-transform:uppercase;letter-spacing:2px">
         <button class="gen" id="genBtn" title="Generate random code">🎲</button>
       </div>
-      <button id="joinBtn" disabled>Join Room</button>
+      <button id="joinBtn" disabled>Enter the room</button>
       <button id="lobbyShare" type="button">Share this code</button>
     </div>
   </div>
@@ -372,16 +372,16 @@ window.maatramAward=window.maatramAward||function(pts,reason){
     <div class="room-header">
       <h2>Room <span id="roomCodeDisplay"></span></h2>
       <div class="room-actions">
-        <button id="shareBtn" type="button">Share link</button>
+        <button id="shareBtn" type="button">Invite friends</button>
         <button id="leaveBtn">Leave room</button>
       </div>
     </div>
     <div class="seats" id="seats">
-      <div class="seat empty" id="seat0"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 1</div><div class="empty-label">waiting…</div></div>
-      <div class="seat empty" id="seat1"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 2</div><div class="empty-label">waiting…</div></div>
-      <div class="seat empty" id="seat2"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 3</div><div class="empty-label">waiting…</div></div>
-      <div class="seat empty" id="seat3"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 4</div><div class="empty-label">waiting…</div></div>
-      <div class="seat empty" id="seat4"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 5</div><div class="empty-label">waiting…</div></div>
+      <div class="seat empty" id="seat0"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 1</div><div class="empty-label">Empty seat. Invite a friend.</div></div>
+      <div class="seat empty" id="seat1"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 2</div><div class="empty-label">Empty seat. Invite a friend.</div></div>
+      <div class="seat empty" id="seat2"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 3</div><div class="empty-label">Empty seat. Invite a friend.</div></div>
+      <div class="seat empty" id="seat3"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 4</div><div class="empty-label">Empty seat. Invite a friend.</div></div>
+      <div class="seat empty" id="seat4"><span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat 5</div><div class="empty-label">Empty seat. Invite a friend.</div></div>
     </div>
     <div class="bottom-row">
       <div class="log">
@@ -417,7 +417,7 @@ window.maatramAward=window.maatramAward||function(pts,reason){
 </div></dialog>
 <div id="kicked" role="dialog" aria-modal="true" aria-labelledby="kickedTitle">
   <div class="box">
-    <h2 id="kickedTitle">Struck out. 🚫</h2>
+    <h2 id="kickedTitle">Strike three. Seat closed.</h2>
     <p>Three social opens during your session. The room has ended your seat. Take a breath and come back focused.</p>
     <button id="kickedOk">Back to lobby</button>
   </div>
@@ -464,7 +464,7 @@ const topicFor=code=>'maatram/room/'+cleanCode(code);
 function connect(code){
   roomCode=code;
   if(client){ const c=client; client=null; try{c.end(true)}catch(_){}}
-  setBadge('','Connecting…');
+  setBadge('','Finding your room…');
   if(!window.mqtt){ setBadge('err','Offline'); return; }   /* MQTT library blocked / offline */
   const me=client=mqtt.connect(BROKER,{clientId:'maatram_'+myId,keepalive:30,reconnectPeriod:0,connectTimeout:8000});
   client.on('connect',()=>{
@@ -669,7 +669,7 @@ function renderSeats(){
     const seat=$(sid); const p=all[i];
     if(!p){
       seat.className='seat empty';
-      seat.innerHTML=`<span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat ${i+1}</div><div class="empty-label">waiting…</div>`;
+      seat.innerHTML=`<span class="avatar">🪑</span><div class="sname" style="color:var(--dim)">Seat ${i+1}</div><div class="empty-label">Empty seat. Invite a friend.</div>`;
       return;
     }
     seat.className='seat occupied'+(p.me?' me':'');
@@ -790,7 +790,7 @@ chatInput.addEventListener('keydown',e=>{ if(e.key==='Enter') sendChat(); });
    STATUS BADGE
 ═══════════════════════════════════════════════ */
 function setBadge(cls,txt){ const b=$('connBadge');b.className='conn-badge '+cls;$('connTxt').textContent=txt; }
-setBadge('','Connecting…');
+setBadge('','Finding your room…');
 
 /* ═══════════════════════════════════════════════
    BACKGROUND: aurora ribbons + ripples
