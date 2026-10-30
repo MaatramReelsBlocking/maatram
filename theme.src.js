@@ -500,7 +500,7 @@
       +'<h2>Four students. <em>One app.</em></h2>'
       +'<p class="m-lead">Maatram is a school venture from SSVM School of Excellence. '
       +'Inspired by Gen Z, made by Gen Z, made for Gen Z. Action gives value.</p>'
-      +'<ul class="m-team"><li><b>Ram Saravanan</b><span>Chief Executive Officer</span></li><li><b>Ashwanth Kumar</b><span>Chief Operating Officer</span></li><li><b>Ridhun S.</b><span>Chief Financial Officer</span></li><li><b>Vivan V R</b><span>Social Media &amp; Marketing</span></li></ul>'
+      +'<ul class="m-team"><li><b>Ram Saravanan</b><span>Chief Executive Officer</span></li><li><b>Aswanth Kumar.J</b><span>Chief Operating Officer</span></li><li><b>Ridhun S.</b><span>Chief Financial Officer</span></li><li><b>Vivan V R</b><span>Social Media &amp; Marketing</span></li></ul>'
       +'</div></section>';
 
     document.body.appendChild(wrap);
