@@ -97,7 +97,7 @@ chrome-extension/   Maatram Hard Lock extension source
 
 ## Team
 
-Ram Saravanan, Ashwanth Kumar, Ridhun S. and Vivan V R.
+Ram Saravanan, Aswanth Kumar.J, Ridhun S. and Vivan V R.
 
 ## License
 
