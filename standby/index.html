@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" id="metaTheme" content="#04120f" />
+<title>Maatram · StandBy Dock</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style>
+  :root{
+    --ac:#4ade80;
+    --ac2:#22d3ee;
+    --ink:#eafff6;
+  }
+  html,body{height:100%}
+  body{
+    margin:0; background:#04120f; color:var(--ink);
+    font-family:'Sora',sans-serif; overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  body{height:100dvh}
+  ::selection{background:var(--ac); color:#04120f}
+
+  .font-orbitron{font-family:'Orbitron',sans-serif}
+  .font-sora{font-family:'Sora',sans-serif}
+  .font-mono-t{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums}
+
+  /* ---------- StandBy glass surface ---------- */
+  .standby-glass{
+    background:rgba(9,18,14,.55);
+    backdrop-filter:blur(18px) saturate(150%);
+    -webkit-backdrop-filter:blur(18px) saturate(150%);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 10px 34px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+
+  .no-scrollbar::-webkit-scrollbar{display:none}
+  .no-scrollbar{scrollbar-width:none}
+
+  /* ---------- tooltips ---------- */
+  [data-tip]{position:relative}
+  [data-tip]::after{
+    content:attr(data-tip);
+    position:absolute; bottom:calc(100% + 10px); left:50%;
+    transform:translateX(-50%) translateY(4px);
+    background:#0a130e; border:1px solid rgba(255,255,255,.12);
+    color:#eafff6; font:600 10px 'Sora',sans-serif; letter-spacing:.06em;
+    padding:4px 9px; border-radius:7px; white-space:nowrap;
+    opacity:0; pointer-events:none; transition:all .18s ease; z-index:60;
+  }
+  [data-tip]:hover::after{opacity:1; transform:translateX(-50%) translateY(0)}
+  [data-tip].tip-b::after{bottom:auto; top:calc(100% + 10px); transform:translateX(-50%) translateY(-4px)}
+  [data-tip].tip-b:hover::after{transform:translateX(-50%) translateY(0)}
+
+  /* ---------- dock buttons ---------- */
+  .dock-btn{
+    width:38px;height:38px;border-radius:9999px;flex:none;cursor:pointer;
+    display:grid;place-items:center;color:rgba(234,255,246,.6);
+    transition:all .18s ease; border:none; background:transparent;
+  }
+  .dock-btn:hover{color:#eafff6;background:rgba(255,255,255,.08);transform:translateY(-3px)}
+  .dock-btn:hover svg{filter:drop-shadow(0 0 7px color-mix(in srgb, var(--ac) 70%, transparent))}
+  .dock-btn:active{transform:translateY(-1px) scale(.94)}
+  .dock-btn.active{
+    background:var(--ac); color:#05130e;
+    box-shadow:0 0 20px color-mix(in srgb, var(--ac) 55%, transparent);
+  }
+  .dock-btn.wide{width:auto;padding:0 13px;gap:7px;display:inline-flex;font:600 10.5px 'Sora',sans-serif;letter-spacing:.12em}
+
+  .sep{width:1px;height:22px;background:rgba(255,255,255,.09);flex:none;margin:0 5px}
+
+  .theme-dot{
+    width:15px;height:15px;border-radius:9999px;flex:none;cursor:pointer;
+    border:2px solid transparent;transition:all .18s ease;padding:0;
+  }
+  .theme-dot:hover{transform:scale(1.35)}
+  .theme-dot.active{border-color:rgba(255,255,255,.9);box-shadow:0 0 12px currentColor}
+
+  /* equalizer bars */
+  .eq{display:none;align-items:flex-end;gap:2px;height:12px}
+  .eq i{width:2.5px;border-radius:2px;background:currentColor;animation:eqk .9s ease-in-out infinite}
+  .eq i:nth-child(2){animation-delay:.18s}
+  .eq i:nth-child(3){animation-delay:.36s}
+  @keyframes eqk{0%,100%{height:3px}50%{height:12px}}
+  .amb.active .ic{display:none}
+  .amb.active .eq{display:flex}
+
+  /* ---------- mini chips (24H / SEC / header toggles) ---------- */
+  .mini-chip{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;
+    letter-spacing:.22em;padding:5px 10px;border-radius:9999px;cursor:pointer;
+    border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.38);
+    background:transparent;transition:all .2s ease;flex:none;
+  }
+  .mini-chip:hover{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.25)}
+  .mini-chip.on{
+    color:var(--ac);
+    border-color:color-mix(in srgb, var(--ac) 45%, transparent);
+    background:color-mix(in srgb, var(--ac) 12%, transparent);
+    text-shadow:0 0 12px color-mix(in srgb, var(--ac) 60%, transparent);
+  }
+
+  /* ---------- clock bits ---------- */
+  .colon-blink{animation:blink 1s steps(1) infinite}
+  @keyframes blink{0%,55%{opacity:1}56%,100%{opacity:.22}}
+
+  /* split-flap cards */
+  .flap{
+    position:relative;border-radius:10px;overflow:hidden;flex:none;
+    background:linear-gradient(180deg,#182019 0%,#0e1410 49.7%,#050906 50.3%,#0a100b 100%);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:inset 0 -16px 26px rgba(0,0,0,.5), inset 0 10px 18px rgba(255,255,255,.045), 0 12px 28px rgba(0,0,0,.45);
+  }
+  .flap::before{
+    content:'';position:absolute;inset:0 0 50% 0;
+    background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.015));
+    pointer-events:none;
+  }
+  .flap::after{
+    content:'';position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;
+    background:rgba(0,0,0,.9);box-shadow:0 1px 0 rgba(255,255,255,.06);pointer-events:none;
+  }
+  .flap .digit{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-family:'Orbitron',sans-serif;font-weight:800;line-height:1;
+    color:var(--ink);text-shadow:0 0 22px color-mix(in srgb, var(--ac) 45%, transparent);
+  }
+  .flap .digit.drop{animation:flapIn .3s cubic-bezier(.2,.9,.3,1.2)}
+  @keyframes flapIn{from{transform:perspective(700px) rotateX(88deg);opacity:.2}to{transform:perspective(700px) rotateX(0);opacity:1}}
+  .flap-lg{width:1.14em;height:1.5em;font-size:clamp(2.5rem,7.6vw,5.4rem)}
+  .flap-sm{width:1.14em;height:1.5em;font-size:clamp(1.35rem,4vw,2.9rem)}
+  .flap-lg .digit{font-size:.72em}
+  .flap-sm .digit{font-size:.72em}
+  .flap-colon{
+    display:flex;flex-direction:column;gap:.5em;justify-content:center;align-items:center;
+    color:var(--ac);padding:0 .12em;flex:none;
+  }
+  .flap-colon i{width:.14em;height:.14em;border-radius:9999px;background:currentColor;box-shadow:0 0 10px currentColor}
+
+  /* analog face */
+  .tick-min{stroke:rgba(255,255,255,.14);stroke-width:1.5}
+  .tick-maj{stroke:rgba(255,255,255,.45);stroke-width:3}
+  .tick-q{stroke:var(--ac);stroke-width:3.5}
+
+  /* ---------- view transitions ---------- */
+  .view-enter{animation:viewIn .5s cubic-bezier(.2,.7,.2,1)}
+  @keyframes viewIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+  .boot{animation:viewIn .8s cubic-bezier(.2,.7,.2,1) both}
+  .boot-d1{animation-delay:.08s}.boot-d2{animation-delay:.2s}.boot-d3{animation-delay:.34s}
+
+  /* prompt bar */
+  .prompt-pop{animation:pop .24s cubic-bezier(.2,.8,.3,1.1)}
+  @keyframes pop{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+
+  /* toast */
+  #toast{
+    position:fixed;top:64px;left:50%;transform:translate(-50%,-8px);z-index:70;
+    padding:7px 16px;border-radius:9999px;font:700 12px 'Sora',sans-serif;letter-spacing:.02em;
+    color:#04120f;background:var(--ac);
+    box-shadow:0 0 26px color-mix(in srgb, var(--ac) 60%, transparent);
+    opacity:0;pointer-events:none;transition:all .3s ease;white-space:nowrap;
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  #dimmer{
+    position:fixed;inset:0;background:#000;opacity:0;z-index:30;
+    pointer-events:none;transition:opacity .8s ease;
+  }
+  #dimmer.on{opacity:.55}
+  #vignette{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 46%, transparent 52%, rgba(0,0,0,.55) 100%);
+  }
+  #ambient{position:fixed;inset:0;z-index:0}
+
+  .pulse-dot{animation:pulseD 1.6s ease-in-out infinite}
+  @keyframes pulseD{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--ac) 55%, transparent)}50%{box-shadow:0 0 0 6px transparent}}
+
+
+  /* ---- clock faces ported from Maatram Sanctuary ---- */
+  .flip-card{
+    position:relative;
+    background:linear-gradient(180deg, rgba(22,34,30,.92) 0%, rgba(10,17,15,.96) 50%, rgba(14,24,21,.94) 100%);
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 20px 45px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.1);
+    overflow:hidden;
+  }
+  .flip-card::after{
+    content:'';position:absolute;left:0;right:0;top:50%;height:2px;
+    background:rgba(0,0,0,.75);box-shadow:0 1px 0 rgba(255,255,255,.05);z-index:5;pointer-events:none;
+  }
+  @keyframes colonPulse{0%,100%{opacity:1}50%{opacity:.28}}
+  .colon-pulse{animation:colonPulse 1s ease-in-out infinite}
+  .maatram-glass{
+    background:rgba(8,18,15,.62);
+    backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 16px 40px -12px rgba(0,0,0,.7), inset 0 1px 0 0 rgba(255,255,255,.07);
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .colon-blink,.colon-pulse,.pulse-dot,.eq i{animation:none}
+  }
+</style>
+</head>
+
+<body class="select-none">
+
+<canvas id="ambient"></canvas>
+<div id="vignette"></div>
+<div id="dimmer"></div>
+
+<main class="relative z-10 h-full flex flex-col p-4 sm:p-6">
+
+  <!-- ═══════════ HEADER · ultra-minimal status bar ═══════════ -->
+  <header class="boot flex items-center justify-between gap-3 flex-wrap">
+
+    <!-- brand (not clickable — no fake clicks) -->
+    <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full standby-glass">
+      <div id="mLogo" class="w-6 h-6 rounded-lg grid place-items-center font-orbitron font-black text-xs text-[#04120f]">M</div>
+      <span class="font-orbitron font-bold text-xs tracking-[0.28em] hidden sm:inline">MAATRAM</span>
+      <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full pulse-dot" style="background:var(--ac)"></span>
+    </div>
+
+    <!-- view switcher : Clock / Focus only -->
+    <nav class="inline-flex items-center gap-1 p-1 rounded-full standby-glass" aria-label="View">
+      <button id="btnViewClock" data-tip="Pure clock · key C cycles face" class="view-btn tip-b inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-sora font-semibold transition-all cursor-pointer">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span class="hidden sm:inline">Clock</span>
+      </button>
+      <button id="btnViewFocus" data-tip="Focus timer · Space starts" class="view-btn tip-b inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-sora font-semibold transition-all cursor-pointer">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 2h4"/><path d="M12 14l3-3"/><circle cx="12" cy="14" r="8"/></svg>
+        <span class="hidden sm:inline">Focus</span>
+      </button>
+    </nav>
+
+    <!-- real visual toggles -->
+    <div class="inline-flex items-center gap-1.5 px-2 py-1.5 rounded-full standby-glass">
+      <button id="tglOrbits" class="mini-chip on tip-b" data-tip="Orbital rings" title="Toggle orbital rings">ORBITS</button>
+      <button id="tglParticles" class="mini-chip on tip-b" data-tip="Particle field" title="Toggle particles">DUST</button>
+      <a href="/" class="mini-chip tip-b" data-tip="Main page" title="Back to main page">HOME</a>
+    </div>
+  </header>
+
+  <!-- ═══════════ STAGE ═══════════ -->
+  <section class="flex-1 min-h-0 grid place-items-center py-2">
+
+    <!-- VIEW 1 · PURE GIANT CLOCK -->
+    <div id="viewClock" class="view flex flex-col items-center">
+      <div id="clockFace" class="boot boot-d1"></div>
+
+      <div class="boot boot-d2 mt-6 flex items-center gap-3.5">
+        <button id="tgl24" class="mini-chip" title="Toggle 24-hour">24H</button>
+        <div id="dateLine" class="font-mono-t text-[11px] tracking-[0.4em] uppercase text-white/45 whitespace-nowrap"></div>
+        <button id="tglSec" class="mini-chip on" title="Toggle seconds">SEC</button>
+      </div>
+
+      <label class="boot boot-d2 mt-7 group inline-flex items-center gap-2.5 standby-glass rounded-full pl-4 pr-2.5 py-2 cursor-text transition-colors hover:border-white/20 focus-within:border-white/25">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/35 group-focus-within:text-[var(--ac)] transition-colors"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        <input id="intention" maxlength="80" spellcheck="false" autocomplete="off"
+          class="bg-transparent outline-none text-sm font-sora font-medium placeholder-white/30 w-[min(58vw,330px)]"
+          placeholder="Set a focus intention…" />
+      </label>
+
+      <!-- live timer mini-pill (always synced) -->
+      <div class="boot boot-d3 mt-4 inline-flex items-center gap-3 standby-glass rounded-full pl-4 pr-1.5 py-1.5">
+        <span id="miniDot" class="w-2 h-2 rounded-full flex-none" style="background:var(--ac)"></span>
+        <span id="miniTime" class="font-mono-t font-bold text-sm">25:00</span>
+        <span id="miniLabel" class="text-[9.5px] font-sora font-semibold tracking-[0.2em] uppercase text-white/40 hidden sm:inline">Pomodoro</span>
+        <button id="miniToggle" data-tip="Start / pause · Space" class="w-8 h-8 rounded-full grid place-items-center text-[#05130e] cursor-pointer transition-all active:scale-90 border-none" style="background:var(--ac)"></button>
+      </div>
+    </div>
+
+    <!-- VIEW 2 · GIANT FOCUS RING -->
+    <div id="viewFocus" class="view hidden flex-col items-center">
+      <div id="presetRow" class="inline-flex items-center gap-1 p-1 rounded-full standby-glass"></div>
+
+      <div class="relative mt-8 w-[min(78vw,300px)] aspect-square">
+        <svg viewBox="0 0 260 260" class="w-full h-full -rotate-90">
+          <circle cx="130" cy="130" r="112" stroke="rgba(255,255,255,.07)" stroke-width="10" fill="none"/>
+          <circle id="ringProg" cx="130" cy="130" r="112" stroke="var(--ac)" stroke-width="10"
+            stroke-linecap="round" fill="none"
+            style="transition:stroke-dashoffset .6s linear; filter:drop-shadow(0 0 7px color-mix(in srgb, var(--ac) 65%, transparent))"/>
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span id="focusMode" class="text-[9.5px] font-sora font-bold tracking-[0.34em] uppercase mb-2" style="color:var(--ac)">Pomodoro</span>
+          <span id="focusTime" class="font-mono-t font-black text-6xl sm:text-7xl tracking-tight" style="text-shadow:0 0 30px color-mix(in srgb, var(--ac) 45%, transparent)">25:00</span>
+          <span id="focusSub" class="text-xs font-medium text-white/50 mt-2.5 max-w-[190px] truncate px-2"></span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 mt-8">
+        <button id="focusToggle" class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-sora font-bold text-xs uppercase tracking-[0.22em] text-[#05130e] cursor-pointer transition-all active:scale-95 border-none" style="background:var(--ac)"></button>
+        <button id="focusReset" data-tip="Reset timer" class="p-3.5 rounded-full standby-glass text-white/65 hover:text-white cursor-pointer transition-all active:scale-90 border-none">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FLOATING STAND-BY DOCK ═══════════ -->
+  <footer class="boot boot-d3 flex justify-center pb-1">
+    <div class="standby-glass rounded-full px-2.5 py-2 flex items-center gap-1 max-w-full overflow-x-auto no-scrollbar">
+
+      <!-- AI launchers 1–5 -->
+      <button class="dock-btn" data-tip="Gemini · 1" data-ai="0">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10z"/></svg>
+      </button>
+      <button class="dock-btn" data-tip="ChatGPT · 2" data-ai="1">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.182a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.91 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.989 5.989 0 0 0 3.998-2.9 6.056 6.056 0 0 0-.747-7.073zm-9.022 12.608a4.475 4.475 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.169a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.758a.771.771 0 0 0 .78 0l5.843-3.369v2.333a.08.08 0 0 1-.033.061L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.814 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855-5.833-3.387 2.02-1.164a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.104v-5.677a.79.79 0 0 0-.409-.681zm2.01-3.023-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.681 4.66zm-14.24 4.135-2.02-1.164a.08.08 0 0 1-.038-.057V6.074a4.5 4.5 0 0 1 7.376-3.454l-.142.081L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.362 2.603-1.501 2.603 1.501v3.004l-2.603 1.501-2.603-1.501z"/></svg>
+      </button>
+      <button class="dock-btn" data-tip="Pi · 3" data-ai="2">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><text x="12" y="17.5" text-anchor="middle" font-size="15.5" font-weight="700" fill="currentColor" font-family="Sora, sans-serif">π</text></svg>
+      </button>
+      <button class="dock-btn" data-tip="Claude · 4" data-ai="3">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg>
+      </button>
+      <button class="dock-btn" data-tip="Groq · 5" data-ai="4">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M19 5H5v14h14v-7h-7"/></svg>
+      </button>
+
+      <button id="btnPrompt" class="dock-btn" data-tip="Prompt bar · /">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M19 3v4M21 5h-4"/></svg>
+      </button>
+
+      <span class="sep"></span>
+
+      <!-- ambient soundscapes -->
+      <button class="dock-btn amb" data-tip="Rain" data-amb="rain">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6M8 14v6M12 16v6"/></svg>
+        <span class="eq"><i></i><i></i><i></i></span>
+      </button>
+      <button class="dock-btn amb" data-tip="Brown noise" data-amb="brown">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+        <span class="eq"><i></i><i></i><i></i></span>
+      </button>
+      <button class="dock-btn amb" data-tip="40 Hz binaural · headphones" data-amb="binaural">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>
+        <span class="eq"><i></i><i></i><i></i></span>
+      </button>
+
+      <span class="sep"></span>
+
+      <!-- theme dots (built by JS) -->
+      <span id="themeDots" class="flex items-center gap-2 px-1.5"></span>
+
+      <span class="sep"></span>
+
+      <!-- face · dim · fullscreen -->
+      <button id="btnFace" class="dock-btn wide" data-tip="Clock face · C">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+        <span id="faceLabel">NEON</span>
+      </button>
+      <button id="btnDim" class="dock-btn" data-tip="Night dimmer · D">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+      <button id="btnFull" class="dock-btn" data-tip="Fullscreen · F">
+        <svg id="icExpand" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        <svg id="icShrink" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>
+      </button>
+    </div>
+  </footer>
+</main>
+
+<!-- ═══════════ SPOTLIGHT PROMPT BAR ═══════════ -->
+<div id="promptWrap" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-40 w-[min(92vw,620px)]">
+  <div class="standby-glass rounded-xl p-2.5 flex items-center gap-2" style="border-color:color-mix(in srgb, var(--ac) 30%, rgba(255,255,255,.08))">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-none ml-2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+    <input id="promptInput" maxlength="300" spellcheck="false" autocomplete="off"
+      class="flex-1 min-w-0 bg-transparent outline-none text-sm font-sora placeholder-white/30 py-1.5"
+      placeholder="Type a prompt — it's copied, then your AI opens" />
+    <span id="promptTargets" class="flex items-center gap-1 flex-none pr-1"></span>
+    <button id="promptClose" class="dock-btn flex-none" style="width:30px;height:30px" title="Close · Esc">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   MAATRAM · STAND-BY DOCK — pure clock + focus, zero fake clicks
+   ════════════════════════════════════════════════════════════ */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+/* ---------- data ---------- */
+const THEMES = [
+  { id:'mint',    name:'Aurora Mint',    ac:'#4ade80', ac2:'#22d3ee', bgA:'#0a1f16', bgB:'#04120f' },
+  { id:'biolume', name:'Biolume',        ac:'#2dd4bf', ac2:'#38bdf8', bgA:'#07201f', bgB:'#020b0d' },
+  { id:'ember',   name:'Solar Ember',    ac:'#fbbf24', ac2:'#fb7185', bgA:'#241305', bgB:'#110702' },
+  { id:'red',     name:'Night Red OLED', ac:'#ff453a', ac2:'#ff9f0a', bgA:'#000000', bgB:'#000000' },
+  { id:'frost',   name:'Arctic Frost',   ac:'#7dd3fc', ac2:'#a5b4fc', bgA:'#0a1626', bgB:'#030812' },
+  { id:'orchid',  name:'Night Orchid',   ac:'#e879f9', ac2:'#f472b6', bgA:'#1a0b22', bgB:'#0a0410' },
+];
+const TIMER_PRESETS = [
+  { id:'sprint',   label:'Sprint',    minutes:15 },
+  { id:'pomodoro', label:'Pomodoro',  minutes:25 },
+  { id:'deep',     label:'Deep Work', minutes:50 },
+  { id:'break',    label:'Break',     minutes:5  },
+];
+const FACES = ['neon','flip','minimal','analog'];
+const FACE_NAMES = { neon:'NEON', flip:'FLIP', minimal:'MINIMAL', analog:'ANALOG' };
+const AI = [
+  { name:'Gemini',  url:'https://gemini.google.com', mark:'✦' },
+  { name:'ChatGPT', url:'https://chatgpt.com',       mark:'◎' },
+  { name:'Pi',      url:'https://pi.ai',             mark:'π' },
+  { name:'Claude',  url:'https://claude.ai',         mark:'✳' },
+  { name:'Groq',    url:'https://groq.com',          mark:'G' },
+];
+const AI_MINI_SVG = [
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10z"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="12" r="2.6"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24"><text x="12" y="17.5" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor" font-family="Sora">π</text></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg>',
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="square"><path d="M19 5H5v14h14v-7h-7"/></svg>',
+];
+const PLAY_SVG  = '<svg width="13" height="13" viewBox="0 0 24 24"><path d="M6 4.5v15l13-7.5z" fill="currentColor"/></svg>';
+const PAUSE_SVG = '<svg width="13" height="13" viewBox="0 0 24 24"><path d="M6.5 4h4v16h-4zM13.5 4h4v16h-4z" fill="currentColor"/></svg>';
+
+/* ---------- state ---------- */
+const store = {
+  get(k,f){ try{ const v=localStorage.getItem('maatram_'+k); return v===null?f:v; }catch(e){ return f; } },
+  set(k,v){ try{ localStorage.setItem('maatram_'+k, v); }catch(e){} }
+};
+const state = {
+  theme:  THEMES.find(t=>t.id===store.get('theme','mint')) || THEMES[0],
+  face:   FACES.includes(store.get('face','neon')) ? store.get('face','neon') : 'neon',
+  is24:   store.get('24h','0')==='1',
+  showSec:store.get('sec','1')==='1',
+  intention: store.get('intention','Deep focus — one thing at a time'),
+  timerMode: TIMER_PRESETS.find(p=>p.id===store.get('timer','pomodoro')) ? store.get('timer','pomodoro') : 'pomodoro',
+  secondsLeft: 0,
+  running:false,
+  view:'clock',
+  dimmed:false,
+  orbits:true,
+  dust:true,
+  ambient:'off',
+};
+state.secondsLeft = preset(state.timerMode).minutes*60;
+function preset(id){ return TIMER_PRESETS.find(p=>p.id===id); }
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+/* ═══════════ SOUND ENGINE (WebAudio, no assets) ═══════════ */
+const Sound = {
+  ctx:null, master:null, amb:null,
+  ensure(){
+    if(!this.ctx){
+      const AC = window.AudioContext||window.webkitAudioContext;
+      this.ctx = new AC();
+      this.master = this.ctx.createGain(); this.master.gain.value=.9;
+      this.master.connect(this.ctx.destination);
+    }
+    if(this.ctx.state==='suspended') this.ctx.resume();
+    return this.ctx;
+  },
+  noiseBuf(color){
+    const ctx=this.ensure(), len=ctx.sampleRate*2, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+    if(color==='brown'){ let l=0; for(let i=0;i<len;i++){ const w=Math.random()*2-1; l=(l+.02*w)/1.02; d[i]=l*3.2; } }
+    else { for(let i=0;i<len;i++) d[i]=Math.random()*2-1; }
+    return buf;
+  },
+  playAmbient(type){
+    this.stopAmbient();
+    if(type==='off') return;
+    const ctx=this.ensure(), g=ctx.createGain(); g.gain.value=0; g.connect(this.master);
+    const nodes=[g];
+    if(type==='rain'){
+      const s=ctx.createBufferSource(); s.buffer=this.noiseBuf('white'); s.loop=true;
+      const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1400; bp.Q.value=.55;
+      const rg=ctx.createGain(); rg.gain.value=.16;
+      s.connect(bp).connect(rg).connect(g);
+      const lfo=ctx.createOscillator(); lfo.frequency.value=.27;
+      const lg=ctx.createGain(); lg.gain.value=.06; lfo.connect(lg).connect(rg.gain); lfo.start();
+      const s2=ctx.createBufferSource(); s2.buffer=this.noiseBuf('brown'); s2.loop=true;
+      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=420;
+      const g2=ctx.createGain(); g2.gain.value=.5; s2.connect(lp).connect(g2).connect(g);
+      s.start(); s2.start(); nodes.push(s,s2,lfo);
+      g.gain.linearRampToValueAtTime(.5, ctx.currentTime+1.2);
+    } else if(type==='brown'){
+      const s=ctx.createBufferSource(); s.buffer=this.noiseBuf('brown'); s.loop=true;
+      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=900;
+      s.connect(lp).connect(g); s.start(); nodes.push(s);
+      g.gain.linearRampToValueAtTime(.85, ctx.currentTime+1);
+    } else { /* 40 Hz binaural */
+      const merge=ctx.createChannelMerger(2);
+      const oL=ctx.createOscillator(); oL.frequency.value=200;
+      const oR=ctx.createOscillator(); oR.frequency.value=240;
+      const gL=ctx.createGain(); gL.gain.value=.5;
+      const gR=ctx.createGain(); gR.gain.value=.5;
+      oL.connect(gL).connect(merge,0,0); oR.connect(gR).connect(merge,0,1);
+      merge.connect(g); oL.start(); oR.start(); nodes.push(oL,oR);
+      g.gain.linearRampToValueAtTime(.22, ctx.currentTime+1);
+    }
+    this.amb={nodes,g};
+  },
+  stopAmbient(){
+    if(!this.amb) return;
+    const {nodes,g}=this.amb; this.amb=null;
+    const ctx=this.ctx, t=ctx.currentTime;
+    g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value,t);
+    g.gain.linearRampToValueAtTime(0,t+.35);
+    setTimeout(()=>{ nodes.forEach(n=>{ try{ n.stop?n.stop():n.disconnect(); }catch(e){} }); try{ g.disconnect(); }catch(e){} },420);
+  },
+  chime(kind){
+    const ctx=this.ensure(), t=ctx.currentTime;
+    const seq = kind==='reward' ? [660,880,1174] : kind==='start' ? [523,784] : [880];
+    seq.forEach((f,i)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      const st=t+i*.13;
+      g.gain.setValueAtTime(0,st);
+      g.gain.linearRampToValueAtTime(.14,st+.02);
+      g.gain.exponentialRampToValueAtTime(.0001,st+.5);
+      o.connect(g).connect(this.master); o.start(st); o.stop(st+.55);
+    });
+  }
+};
+
+/* ═══════════ AMBIENT CANVAS — orbits + dust ═══════════ */
+const cv=$('#ambient'), cx=cv.getContext('2d');
+let W=0,H=0,DPR=1, dust=[];
+function sizeCanvas(){
+  DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth; H=window.innerHeight;
+  cv.width=W*DPR; cv.height=H*DPR;
+  cx.setTransform(DPR,0,0,DPR,0,0);
+  seedDust();
+}
+function seedDust(){
+  dust=Array.from({length:72},()=>({
+    x:Math.random()*W, y:Math.random()*H,
+    r:.5+Math.random()*1.7, s:.06+Math.random()*.28,
+    ph:Math.random()*Math.PI*2, c:Math.random()<.55?0:1
+  }));
+}
+function hexA(hex,a){
+  const n=parseInt(hex.slice(1),16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+function drawAmbient(t){
+  const th=state.theme;
+  // base radial wash
+  const bg=cx.createRadialGradient(W*.5,H*.46,0, W*.5,H*.5, Math.max(W,H)*.78);
+  bg.addColorStop(0,th.bgA); bg.addColorStop(1,th.bgB);
+  cx.fillStyle=bg; cx.fillRect(0,0,W,H);
+
+  const cX=W*.5, cY=H*.52, base=Math.min(W,H);
+
+  // breathing core glow
+  const br=.5+.5*Math.sin(t/2600);
+  const core=cx.createRadialGradient(cX,cY,0,cX,cY,base*.55);
+  core.addColorStop(0,hexA(th.ac,.05+.035*br)); core.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=core; cx.fillRect(0,0,W,H);
+
+  // orbital rings
+  if(state.orbits){
+    const rings=[[.30,.000062,.13],[.42,-.000041,.09],[.56,.000026,.055]];
+    rings.forEach(([rr,sp,al],i)=>{
+      const rx=base*rr, ry=rx*.36, rot=t*sp + i*1.1;
+      cx.beginPath();
+      cx.ellipse(cX,cY,rx,ry,rot,0,Math.PI*2);
+      cx.strokeStyle=hexA(i===1?th.ac2:th.ac,al);
+      cx.lineWidth=1; cx.stroke();
+      // travelling satellite
+      const a=t*sp*4+i*2.2;
+      const px=cX+rx*Math.cos(a)*Math.cos(rot)-ry*Math.sin(a)*Math.sin(rot);
+      const py=cY+rx*Math.cos(a)*Math.sin(rot)+ry*Math.sin(a)*Math.cos(rot);
+      cx.beginPath(); cx.arc(px,py,2.2,0,Math.PI*2);
+      cx.fillStyle=hexA(i===1?th.ac2:th.ac,.85);
+      cx.shadowColor=th.ac; cx.shadowBlur=12; cx.fill(); cx.shadowBlur=0;
+    });
+  }
+
+  // dust field
+  if(state.dust){
+    dust.forEach(p=>{
+      p.y-=p.s; p.x+=Math.sin(t/2400+p.ph)*.12;
+      if(p.y<-8){ p.y=H+8; p.x=Math.random()*W; }
+      const tw=.5+.5*Math.sin(t/640+p.ph);
+      cx.beginPath(); cx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      cx.fillStyle=hexA(p.c?th.ac2:th.ac,.08+.3*tw);
+      cx.fill();
+    });
+  }
+}
+
+/* ═══════════ CLOCK FACES (markup ported from Maatram Sanctuary) ═══════════ */
+const clockStage=$('#clockFace');
+const DOW=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+function fmt(now){
+  let h=now.getHours(); const m=now.getMinutes(), s=now.getSeconds();
+  const ap=h>=12?'PM':'AM';
+  if(!state.is24){ h=h%12; if(h===0)h=12; }
+  return { hh:String(h).padStart(2,'0'), mm:String(m).padStart(2,'0'), ss:String(s).padStart(2,'0'), ap, raw:now };
+}
+
+function faceMarkup(now){
+  const { hh, mm, ss, ap } = fmt(now);
+  const P=state.theme.ac, S=state.theme.ac2;
+  const sec=state.showSec, is24=state.is24;
+
+  if(state.face==='neon'){
+    return `
+      <div class="flex items-baseline gap-2 sm:gap-4">
+        <div class="font-orbitron font-black tracking-tight leading-none text-[#eafff6] text-6xl sm:text-8xl xl:text-[6.8rem]"
+             style="text-shadow:0 0 32px ${P}66, 0 0 68px ${S}33;">
+          <span>${hh}</span><span class="colon-pulse mx-0.5 sm:mx-1" style="color:${P};">:</span><span>${mm}</span>
+        </div>
+        <div class="flex flex-col items-start gap-1">
+          ${sec?`<span class="font-mono-t font-bold text-lg sm:text-2xl px-2 py-0.5 rounded-lg bg-white/5 border border-white/10" style="color:${P};">${ss}</span>`:''}
+          ${!is24?`<span class="font-orbitron font-bold text-xs sm:text-sm tracking-widest text-white/55">${ap}</span>`:''}
+        </div>
+      </div>`;
+  }
+  if(state.face==='flip'){
+    return `
+      <div class="inline-flex items-center gap-2 sm:gap-3.5">
+        <div class="flip-card rounded-2xl px-4 py-3 sm:px-6 sm:py-5 min-w-[82px] sm:min-w-[128px] text-center">
+          <span class="font-mono-t font-extrabold text-5xl sm:text-7xl xl:text-8xl text-[#eafff6] leading-none">${hh}</span>
+        </div>
+        <div class="flex flex-col gap-2.5">
+          <span class="w-2 h-2 rounded-full colon-pulse" style="background:${P}; box-shadow:0 0 10px ${P};"></span>
+          <span class="w-2 h-2 rounded-full colon-pulse" style="background:${P}; box-shadow:0 0 10px ${P};"></span>
+        </div>
+        <div class="flip-card rounded-2xl px-4 py-3 sm:px-6 sm:py-5 min-w-[82px] sm:min-w-[128px] text-center">
+          <span class="font-mono-t font-extrabold text-5xl sm:text-7xl xl:text-8xl text-[#eafff6] leading-none">${mm}</span>
+        </div>
+        ${sec?`
+          <div class="flip-card rounded-xl px-3 py-2.5 sm:px-4 sm:py-3.5 min-w-[54px] sm:min-w-[74px] text-center self-end">
+            <span class="font-mono-t font-bold text-2xl sm:text-4xl leading-none" style="color:${P};">${ss}</span>
+          </div>`:''}
+        ${!is24?`<span class="font-orbitron font-bold text-xs sm:text-sm tracking-widest text-white/55 self-start mt-2">${ap}</span>`:''}
+      </div>`;
+  }
+  if(state.face==='minimal'){
+    return `
+      <div class="flex items-baseline gap-3">
+        <div class="font-sora font-extrabold tracking-tighter leading-none text-7xl sm:text-8xl xl:text-[7.2rem]"
+             style="background:linear-gradient(135deg,#ffffff 30%,${P} 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+          ${hh}:${mm}
+        </div>
+        <div class="flex flex-col items-start">
+          ${sec?`<span class="font-mono-t font-semibold text-xl sm:text-2xl text-white/60">${ss}</span>`:''}
+          ${!is24?`<span class="font-sora font-semibold text-xs uppercase tracking-widest" style="color:${P};">${ap}</span>`:''}
+        </div>
+      </div>`;
+  }
+  /* analog — zip1 dial with digital sub-dial, redrawn each tick */
+  const secAngle=now.getSeconds()*6;
+  const minAngle=now.getMinutes()*6+now.getSeconds()*0.1;
+  const hrAngle=(now.getHours()%12)*30+now.getMinutes()*0.5;
+  let ticks='';
+  for(let i=0;i<12;i++){
+    const q=i%3===0;
+    ticks+=`<line x1="100" y1="${q?14:18}" x2="100" y2="${q?26:24}" stroke="${q?P:'rgba(255,255,255,0.28)'}" stroke-width="${q?2.5:1.5}" stroke-linecap="round" transform="rotate(${i*30} 100 100)"/>`;
+  }
+  return `
+    <div class="relative w-48 h-48 sm:w-56 sm:h-56 rounded-full maatram-glass grid place-items-center" style="box-shadow:0 0 40px ${P}22;">
+      <svg class="w-full h-full" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+        ${ticks}
+        <text x="100" y="142" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="JetBrains Mono" font-size="12" font-weight="700">${hh}:${mm}${sec?':'+ss:''}</text>
+        <line x1="100" y1="100" x2="100" y2="54" stroke="#eafff6" stroke-width="4.5" stroke-linecap="round" transform="rotate(${hrAngle} 100 100)"/>
+        <line x1="100" y1="100" x2="100" y2="34" stroke="${S}" stroke-width="3" stroke-linecap="round" transform="rotate(${minAngle} 100 100)"/>
+        ${sec?`<line x1="100" y1="112" x2="100" y2="26" stroke="${P}" stroke-width="1.8" stroke-linecap="round" transform="rotate(${secAngle} 100 100)"/>`:''}
+        <circle cx="100" cy="100" r="4.5" fill="${P}"/>
+      </svg>
+    </div>`;
+}
+
+function updateClock(){
+  const now=new Date();
+  $('#dateLine').textContent=`${DOW[now.getDay()]} · ${String(now.getDate()).padStart(2,'0')} ${MON[now.getMonth()]} ${now.getFullYear()}`;
+  clockStage.innerHTML=faceMarkup(now);
+}
+function renderClock(){ updateClock(); }
+
+/* ═══════════ FOCUS TIMER (real, no points) ═══════════ */
+const RING_C=2*Math.PI*112;
+$('#ringProg').style.strokeDasharray=RING_C;
+
+function mmss(x){ return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0'); }
+
+function updateTimerUI(){
+  const total=preset(state.timerMode).minutes*60;
+  const t=mmss(state.secondsLeft);
+  $('#miniTime').textContent=t;
+  $('#miniLabel').textContent=preset(state.timerMode).label;
+  $('#focusTime').textContent=t;
+  $('#focusMode').textContent=preset(state.timerMode).label;
+  $('#focusSub').textContent=state.intention;
+  $('#ringProg').style.strokeDashoffset=RING_C*(1-state.secondsLeft/total);
+  const mini=$('#miniToggle');
+  mini.innerHTML=state.running?PAUSE_SVG:PLAY_SVG;
+  mini.style.background=state.running?'#ffd166':'var(--ac)';
+  mini.dataset.tip=(state.running?'Pause':'Start focus')+' · Space';
+  $('#miniDot').classList.toggle('pulse-dot',state.running);
+  const ft=$('#focusToggle');
+  ft.innerHTML=(state.running?PAUSE_SVG:PLAY_SVG)+`<span>${state.running?'Pause':'Start Focus'}</span>`;
+  ft.style.background=state.running?'#ffd166':'var(--ac)';
+  document.title=state.running?`${t} · ${preset(state.timerMode).label} — Maatram`:'Maatram · StandBy';
+  $$('#presetRow button').forEach(b=>{
+    const on=b.dataset.p===state.timerMode;
+    b.style.background=on?'var(--ac)':'transparent';
+    b.style.color=on?'#05130e':'rgba(255,255,255,.55)';
+  });
+}
+function toggleTimer(){
+  state.running=!state.running;
+  Sound.chime('start');
+  if(state.running) toast(`Focus started · ${preset(state.timerMode).label} ${mmss(state.secondsLeft)}`);
+  updateTimerUI();
+}
+function resetTimer(){
+  state.running=false;
+  state.secondsLeft=preset(state.timerMode).minutes*60;
+  updateTimerUI();
+}
+function completeTimer(){
+  state.running=false;
+  state.secondsLeft=preset(state.timerMode).minutes*60;
+  Sound.chime('reward');
+  toast(`${preset(state.timerMode).label} complete — take a break`);
+  updateTimerUI();
+}
+
+/* build preset pills */
+$('#presetRow').innerHTML=TIMER_PRESETS.map(p=>
+  `<button data-p="${p.id}" class="px-3.5 py-1.5 rounded-full text-xs font-sora font-semibold transition-all cursor-pointer border-none">${p.label} <span class="opacity-60 font-mono-t text-[10px] ml-0.5">${p.minutes}m</span></button>`
+).join('');
+$$('#presetRow button').forEach(b=>b.addEventListener('click',()=>{
+  state.timerMode=b.dataset.p; store.set('timer',state.timerMode);
+  state.running=false; state.secondsLeft=preset(state.timerMode).minutes*60;
+  Sound.chime('tick'); updateTimerUI();
+}));
+
+$('#miniToggle').addEventListener('click',toggleTimer);
+$('#focusToggle').addEventListener('click',toggleTimer);
+$('#focusReset').addEventListener('click',()=>{ Sound.chime('tick'); resetTimer(); });
+
+/* ═══════════ VIEWS ═══════════ */
+function setView(v){
+  if(state.view===v) return;
+  state.view=v;
+  const vc=$('#viewClock'), vf=$('#viewFocus');
+  vc.classList.toggle('hidden',v!=='clock'); vc.classList.toggle('flex',v==='clock');
+  vf.classList.toggle('hidden',v!=='focus'); vf.classList.toggle('flex',v==='focus');
+  const el=v==='clock'?vc:vf;
+  el.classList.remove('view-enter'); void el.offsetWidth; el.classList.add('view-enter');
+  paintViewBtns();
+}
+function paintViewBtns(){
+  [['#btnViewClock','clock'],['#btnViewFocus','focus']].forEach(([sel,id])=>{
+    const b=$(sel), on=state.view===id;
+    b.style.background=on?'var(--ac)':'transparent';
+    b.style.color=on?'#05130e':'rgba(255,255,255,.55)';
+    b.style.boxShadow=on?'0 0 16px color-mix(in srgb, var(--ac) 55%, transparent)':'none';
+  });
+}
+$('#btnViewClock').addEventListener('click',()=>setView('clock'));
+$('#btnViewFocus').addEventListener('click',()=>setView('focus'));
+
+/* ═══════════ THEME ═══════════ */
+function buildThemeDots(){
+  $('#themeDots').innerHTML=THEMES.map(t=>
+    `<button class="theme-dot" data-t="${t.id}" data-tip="${t.name}" style="background:linear-gradient(135deg,${t.ac},${t.ac2});color:${t.ac}"></button>`
+  ).join('');
+  $$('#themeDots .theme-dot').forEach(d=>d.addEventListener('click',()=>applyTheme(d.dataset.t,true)));
+}
+function applyTheme(id,announce){
+  const t=THEMES.find(x=>x.id===id)||THEMES[0];
+  state.theme=t; store.set('theme',t.id);
+  const r=document.documentElement.style;
+  r.setProperty('--ac',t.ac); r.setProperty('--ac2',t.ac2);
+  document.body.style.background=t.bgB;
+  $('#metaTheme').setAttribute('content',t.bgB);
+  $('#mLogo').style.background=`linear-gradient(135deg,${t.ac},${t.ac2})`;
+  $('#mLogo').style.boxShadow=`0 0 16px ${hexA(t.ac,.5)}`;
+  $$('#themeDots .theme-dot').forEach(d=>d.classList.toggle('active',d.dataset.t===t.id));
+  renderClock();
+  if(announce) toast(`Theme · ${t.name}`);
+}
+
+/* ═══════════ CLOCK FACE / TOGGLES ═══════════ */
+function cycleFace(){
+  state.face=FACES[(FACES.indexOf(state.face)+1)%FACES.length];
+  store.set('face',state.face);
+  $('#faceLabel').textContent=FACE_NAMES[state.face];
+  renderClock(); toast(`Clock face · ${FACE_NAMES[state.face][0]+FACE_NAMES[state.face].slice(1).toLowerCase()}`);
+}
+$('#btnFace').addEventListener('click',cycleFace);
+
+$('#tgl24').addEventListener('click',()=>{
+  state.is24=!state.is24; store.set('24h',state.is24?'1':'0');
+  $('#tgl24').classList.toggle('on',state.is24); renderClock();
+});
+$('#tglSec').addEventListener('click',()=>{
+  state.showSec=!state.showSec; store.set('sec',state.showSec?'1':'0');
+  $('#tglSec').classList.toggle('on',state.showSec); renderClock();
+});
+$('#tglOrbits').addEventListener('click',()=>{
+  state.orbits=!state.orbits; $('#tglOrbits').classList.toggle('on',state.orbits);
+});
+$('#tglParticles').addEventListener('click',()=>{
+  state.dust=!state.dust; $('#tglParticles').classList.toggle('on',state.dust);
+});
+
+/* dimmer + fullscreen */
+$('#btnDim').addEventListener('click',()=>{
+  state.dimmed=!state.dimmed;
+  $('#dimmer').classList.toggle('on',state.dimmed);
+  $('#btnDim').classList.toggle('active',state.dimmed);
+});
+function toggleFull(){
+  if(!document.fullscreenElement){ document.documentElement.requestFullscreen?.().catch(()=>{}); }
+  else{ document.exitFullscreen?.().catch(()=>{}); }
+}
+$('#btnFull').addEventListener('click',toggleFull);
+document.addEventListener('fullscreenchange',()=>{
+  const on=!!document.fullscreenElement;
+  $('#icExpand').classList.toggle('hidden',on);
+  $('#icShrink').classList.toggle('hidden',!on);
+});
+
+/* ═══════════ AI LAUNCH + PROMPT BAR (real actions only) ═══════════ */
+function launchAi(i,withPrompt){
+  const ai=AI[i], txt=(withPrompt?$('#promptInput').value.trim():'');
+  const go=()=>window.open(ai.url,'_blank','noopener,noreferrer');
+  if(txt && navigator.clipboard?.writeText){
+    navigator.clipboard.writeText(txt)
+      .then(()=>toast(`Prompt copied · Opening ${ai.name}`))
+      .catch(()=>toast(`Opening ${ai.name}`));
+  } else if(txt){ toast(`Opening ${ai.name}`); }
+  else toast(`Opening ${ai.name}`);
+  go();
+}
+$$('[data-ai]').forEach(b=>b.addEventListener('click',()=>launchAi(+b.dataset.ai,false)));
+
+/* prompt bar targets */
+$('#promptTargets').innerHTML=AI.map((a,i)=>
+  `<button class="dock-btn" data-tip="${a.name}" style="width:30px;height:30px" data-pt="${i}">${AI_MINI_SVG[i]}</button>`
+).join('');
+$$('#promptTargets [data-pt]').forEach(b=>b.addEventListener('click',()=>launchAi(+b.dataset.pt,true)));
+
+function setPrompt(open){
+  const w=$('#promptWrap');
+  if(open){
+    w.classList.remove('hidden');
+    const inner=w.firstElementChild;
+    w.style.animation='none'; void w.offsetWidth;
+    w.classList.add('prompt-pop');
+    setTimeout(()=>$('#promptInput').focus(),60);
+    $('#btnPrompt').classList.add('active');
+  } else {
+    w.classList.add('hidden'); w.classList.remove('prompt-pop');
+    $('#btnPrompt').classList.remove('active');
+  }
+}
+$('#btnPrompt').addEventListener('click',()=>setPrompt($('#promptWrap').classList.contains('hidden')));
+$('#promptClose').addEventListener('click',()=>setPrompt(false));
+$('#promptInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ e.preventDefault(); launchAi(0,true); }
+});
+
+/* ═══════════ AMBIENT SOUND BUTTONS ═══════════ */
+$$('[data-amb]').forEach(b=>b.addEventListener('click',()=>{
+  const type=b.dataset.amb;
+  state.ambient = state.ambient===type ? 'off' : type;
+  Sound.playAmbient(state.ambient);
+  $$('[data-amb]').forEach(x=>x.classList.toggle('active',x.dataset.amb===state.ambient));
+  toast(state.ambient==='off'?'Ambient off':`${b.dataset.tip.split(' ·')[0]} on`);
+}));
+
+/* ═══════════ INTENTION ═══════════ */
+const intent=$('#intention');
+intent.value=state.intention;
+intent.addEventListener('input',()=>{ state.intention=intent.value; store.set('intention',intent.value); $('#focusSub').textContent=intent.value; });
+intent.addEventListener('keydown',e=>{ if(e.key==='Enter') intent.blur(); });
+
+/* ═══════════ KEYBOARD ═══════════ */
+window.addEventListener('keydown',e=>{
+  const tag=(e.target.tagName||'').toUpperCase();
+  const typing=tag==='INPUT'||tag==='TEXTAREA';
+  if(typing){ if(e.key==='Escape'){ e.target.blur(); setPrompt(false); } return; }
+  if(e.key==='/'||(e.key.toLowerCase()==='k'&&(e.metaKey||e.ctrlKey))){
+    e.preventDefault(); setPrompt($('#promptWrap').classList.contains('hidden'));
+  }
+  else if(e.key==='Escape') setPrompt(false);
+  else if(e.key.toLowerCase()==='f'){ e.preventDefault(); toggleFull(); }
+  else if(e.key.toLowerCase()==='d'){ e.preventDefault(); $('#btnDim').click(); }
+  else if(e.key.toLowerCase()==='c'){ e.preventDefault(); cycleFace(); }
+  else if(e.key===' '){ e.preventDefault(); toggleTimer(); }
+  else if(['1','2','3','4','5'].includes(e.key)){ launchAi(+e.key-1,false); }
+});
+
+/* ═══════════ MAIN LOOPS ═══════════ */
+window.addEventListener('resize',sizeCanvas);
+sizeCanvas();
+
+setInterval(()=>{
+  updateClock();
+  if(state.running){
+    state.secondsLeft--;
+    if(state.secondsLeft<=0) completeTimer();
+    else updateTimerUI();
+  }
+},1000);
+
+(function frame(t){
+  drawAmbient(t||0);
+  requestAnimationFrame(frame);
+})(0);
+
+/* ---------- boot ---------- */
+buildThemeDots();
+applyTheme(state.theme.id,false);
+$('#faceLabel').textContent=FACE_NAMES[state.face];
+$('#tgl24').classList.toggle('on',state.is24);
+$('#tglSec').classList.toggle('on',state.showSec);
+paintViewBtns();
+updateTimerUI();
+renderClock();
+</script>
+</body>
+</html>
