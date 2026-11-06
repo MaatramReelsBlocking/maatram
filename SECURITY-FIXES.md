@@ -145,3 +145,16 @@ navigate **into** `/wellness` before uploading anything from there. Delete
 adds and replaces files, it never removes them.
 
 Then publish the Firestore rules (§1). The rules are the half that matters.
+
+## CSP scanner follow-up (2026-11-06)
+
+External scanner flagged the CSP. Status per item:
+
+- `object-src` lacked restriction: **already fixed**, set to `'none'`.
+- `data:` inside `script-src`: **already fixed**, not present in `script-src`. (`data:` remains in `font-src`, `img-src`, `media-src`, where it is needed.)
+- Broad `https:` in `object-src` / `script-src`: **already fixed**, not present.
+- `'unsafe-inline'` in `script-src`: **open**. 18 pages carry inline `<script>` blocks and 54 inline handlers. Needs nonce or hash migration, a rewrite, not a config edit.
+- `'unsafe-inline'` in `style-src`: **open**. 84 inline `style=` attributes and 49 `<style>` blocks. Removing it now would break styling on most pages.
+- No WAF detected: infrastructure item (Cloudflare or Vercel firewall), not a code change.
+
+`node test-csp.js`: 16 external requests checked, 0 blocked. Policy unchanged in this commit.
