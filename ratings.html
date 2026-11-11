@@ -334,7 +334,8 @@ body{padding-top:52px!important}
 (function(){
   const $=id=>document.getElementById(id), esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const bar=(label,n,total)=>'<div class="bar"><span title="'+esc(label)+'">'+esc(label)+'</span><i><b style="--w:'+(total?Math.round(n/total*100):0)+'%"></b></i><span>'+n+'</span></div>';
-  const stars=v=>'<span class="stars" style="--p:'+(v/5*100)+'%" role="img" aria-label="'+v+' out of 5 stars">★★★★★</span>';
+  /* coerce + clamp: the value is interpolated into an attribute, so it must be a plain number */
+  const stars=v=>{const n=Math.max(0,Math.min(5,Math.round(+v)||0));return '<span class="stars" style="--p:'+(n/5*100)+'%" role="img" aria-label="'+n+' out of 5 stars">★★★★★</span>';};
   const day=d=>d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
   let survey=null, live=null, site=[];   /* survey = legacy Google Form snapshot (/api/ratings), live = Firestore surveys */
   const MS=window.MAATRAM_SURVEY;
