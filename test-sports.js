@@ -155,10 +155,12 @@ ok('all time = lifetime + this month', /lifetime\|\|0\)\+\(v\.points\|\|0\)/.tes
 ok('month board counts points only for the current cycle', /points:v\.cycle===cur\?\(v\.points\|\|0\):0/.test(lb));
 /* behavioural: lift rebuild() out of the page and feed it docs */
 (function () {
-  const m = lb.match(/function rebuild\(\)\{[\s\S]*?\n    \}/);
+  /* rebuild() + the queueRank() it calls, up to the line that exports it. refreshMyRank is
+     stubbed: it only runs on a 400ms timer and needs Firestore, which this harness does not load. */
+  const m = lb.match(/function rebuild\(\)\{[\s\S]*?window\.__queueRank=queueRank;/);
   ok('rebuild() found', !!m);
   if (!m) return;
-  const run = new Function('cycleId', 'competes', 'byPoints', 'byLife', m[0] +
+  const run = new Function('cycleId', 'competes', 'byPoints', 'byLife', 'const window={}; function refreshMyRank(){}; ' + m[0] +
     '; let cloudUsers=[],cloudLife=[]; function render(){}; rebuild(); return {cloudUsers,cloudLife};');
   const cid = () => '2026-10';
   const comp = v => !!v && v.banned !== true;

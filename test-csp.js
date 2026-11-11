@@ -43,3 +43,6 @@ for(const u of ['https://firestore.googleapis.com/x','https://identitytoolkit.go
 if(!allow('frame-src','https://maatram-859f4.firebaseapp.com/')){ bad++; console.log('BLOCKED  [frame-src] firebase auth handler'); }
 if(!allow('frame-src','https://accounts.google.com/')){ bad++; console.log('BLOCKED  [frame-src] accounts.google.com'); }
 console.log('\n'+seen.size+' distinct external requests checked, '+bad+' blocked by the policy');
+/* summary: a clear pass/fail line and a non-zero exit code when anything is blocked */
+console.log(bad ? 'CSP check FAILED: '+bad+' request(s) blocked' : 'CSP check PASSED: every external request is allowed');
+process.exitCode = bad ? 1 : 0;
