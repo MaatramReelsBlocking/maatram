@@ -28,7 +28,14 @@ ok('index nav has links to match against', NAV_LINKS>0, String(NAV_LINKS));
   const h=read(n+'.html');
   ok(n+': Account link present once', (h.match(/href="login\.html"/g)||[]).length>=1
      && (h.match(/class="mn-link(?: active)?" href="login\.html"/g)||[]).length===1);
-  ok(n+': nav link count matches index', (h.match(/class="mn-link/g)||[]).length===NAV_LINKS);
+  /* not every page shows every optional link (e.g. standby/, ratings.html), so the
+     invariant is: the core links exist on every page, and every link on a page is a
+     real link that index also has. */
+  const hrefs=[...h.matchAll(/class="mn-link[^"]*" href="([^"]+)"/g)].map(m=>m[1]);
+  const idxHrefs=new Set([...read('index.html').matchAll(/class="mn-link[^"]*" href="([^"]+)"/g)].map(m=>m[1]));
+  const CORE=['timers.html','study-room.html','stats.html','leaderboard.html','sports.html','socials.html','download.html','login.html'];
+  ok(n+': core nav links present', CORE.every(c=>hrefs.includes(c)));
+  ok(n+': every nav link also exists on index', hrefs.every(x=>idxHrefs.has(x)));
   ok(n+': Sports link present once', (h.match(/class="mn-link(?: active)?" href="sports\.html"/g)||[]).length===1);
 });
 

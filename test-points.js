@@ -133,3 +133,5 @@ function monthAndBonus(){
   ok('weekly bonus not claimable twice in the same week', w.awards.length===1 && w.st['maatram_weekly_claim_u1']==='2026-W39');
   w=mk(); w.user('u1'); ok('weekly bonus waits for the laptop sync too', w.awards.length===0);
 }
+/* summary: printed on exit so it lands after every async check has finished */
+process.on('exit', () => console.log('\n' + (process.exitCode ? 'some checks FAILED' : 'all checks pass')));
