@@ -1,0 +1,62 @@
+name: Blocking not working
+description: A blocked app still opens, or a block stops working after a while
+labels: ["bug", "blocking"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Blocking depends on the exact app version and your phone. Fill in every field.
+        Reports without the versions usually cannot be reproduced.
+  - type: input
+    id: app_version
+    attributes:
+      label: Maatram app version
+      description: Settings > About in the app, or the version on the download page you installed from.
+      placeholder: v1.2 (code 2)
+    validations:
+      required: true
+  - type: input
+    id: blocked_app
+    attributes:
+      label: Blocked app and its exact version
+      description: Settings > Apps > (the app) > App info. Example for Instagram - 372.0.0.41.
+      placeholder: Instagram 372.0.0.41
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+      placeholder: Android 15
+    validations:
+      required: true
+  - type: input
+    id: phone
+    attributes:
+      label: Phone brand and model
+      placeholder: Samsung SM-M315F
+    validations:
+      required: true
+  - type: textarea
+    id: entry_path
+    attributes:
+      label: How you opened the app
+      description: Where you tapped first, for example "from the home feed", "from the Explore tab", "a link a friend sent in DMs", or "from the launcher icon".
+    validations:
+      required: true
+  - type: dropdown
+    id: what_happened
+    attributes:
+      label: What happened
+      options:
+        - It was not blocked at all
+        - It was blocked, then opened again after a few minutes
+        - Blocking stopped after the phone was idle or restarted
+        - Something else (describe below)
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Steps, a screenshot, or the logcat line (tag MaatramShield) if you can get it.

@@ -44,6 +44,22 @@ which one in the pull request.
    reduced-motion setting turned on.
 5. Commit with a plain message: `fix: study room timer drifts after resume`
 
+## When a blocked app changes its screens
+
+Apps update their layouts, and a block can stop working after an update. You don't need a
+new build to find the new view IDs. Connect an Android phone with USB debugging on, then:
+
+```bash
+adb devices                                   # your phone should appear here
+adb shell uiautomator dump /sdcard/window_dump.xml
+adb pull /sdcard/window_dump.xml              # saves the screen as XML
+```
+
+Open the screen you want to block (for example the Reels tab) before running the dump.
+Search the XML for the element's `resource-id`, `content-desc` or `class`, then include
+those in your pull request along with the app version you tested on. Please don't attach
+screenshots of other people's accounts or messages; a cropped screenshot of the layout is enough.
+
 ## Pull requests
 
 Fill in the template. The parts that matter:
