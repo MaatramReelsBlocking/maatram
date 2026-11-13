@@ -43,7 +43,10 @@ function page(uid,fs_,shared){const d=new JSDOM('<body></body>',{url:'https://ma
   const W6=page();W6.localStorage.setItem('maatram_mood_u1','2000-01-01');await W6.maatramMood.start('u1',{},{...F,getDoc:async()=>({exists:()=>false})});
   ok('new day allows new check-in',!!W6.document.getElementById('moodBox'));
   // read failure never nags
-  const W7=page();await W7.maatramMood.start('u3',{},{...F,getDoc:async()=>{throw Error('x');}});
+  const W7=page();
+  /* the page logs the read failure on purpose; keep the expected message out of the run output */
+  const realErr=console.error, realWarn=console.warn; console.error=()=>{}; console.warn=()=>{};
+  try{ await W7.maatramMood.start('u3',{},{...F,getDoc:async()=>{throw Error('x');}}); } finally{ console.error=realErr; console.warn=realWarn; }
   ok('unverifiable day does not show popup',!W7.document.getElementById('moodBox'));
   // rules + wiring
   const r=fs.readFileSync(__dirname+'/firestore.rules','utf8');
