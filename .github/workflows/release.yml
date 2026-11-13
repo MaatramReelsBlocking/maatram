@@ -1,0 +1,38 @@
+name: Release checksum
+
+# Runs only when a version tag like v1.3 is pushed. Publishes the APK that is
+# committed in this repo with its SHA-256, so people can check the download.
+# It does NOT prove the APK was built from this source; that needs a build
+# workflow in the Android repo.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  checksum:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find the APK and write its SHA-256
+        run: |
+          APK=$(ls maatram-v*.apk | sort -V | tail -1)
+          echo "APK=$APK" >> "$GITHUB_ENV"
+          sha256sum "$APK" | tee "$APK.sha256"
+
+      - name: Create the release with the checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          HASH=$(cut -d' ' -f1 "$APK.sha256")
+          gh release create "$GITHUB_REF_NAME" "$APK" "$APK.sha256" \
+            --title "Maatram $GITHUB_REF_NAME" \
+            --notes "APK: $APK
+          SHA-256: $HASH
+
+          Check the download: sha256sum $APK  (should print $HASH)" \
+            || gh release upload "$GITHUB_REF_NAME" "$APK" "$APK.sha256" --clobber
