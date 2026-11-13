@@ -101,4 +101,3 @@ Ram Saravanan, Aswanth Kumar.J, Ridhun S. and Vivan V R.
 
 ## License
 
-<!-- Confirm license and repo visibility before publishing. -->
