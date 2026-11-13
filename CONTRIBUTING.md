@@ -37,8 +37,8 @@ which one in the pull request.
 2. Make the smallest change that fixes the thing.
 3. Run the tests:
    ```bash
-   node test-roles.js
    node test-gate.js
+   node test-site.js
    ```
 4. Check the page at 375px, 768px and 1280px, and with the browser's
    reduced-motion setting turned on.

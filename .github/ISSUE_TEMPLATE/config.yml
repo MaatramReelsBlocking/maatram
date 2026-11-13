@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Questions and general chat
-    url: https://discord.gg/qdbK2VgjV
-    about: Ask in Discord rather than opening an issue.
+    url: https://maatram.co.in/socials.html
+    about: Use the contact details on the socials page rather than opening an issue.
   - name: Security vulnerability
     url: https://github.com/MaatramReelsBlocking/Maatram-/blob/main/SECURITY.md
     about: Do not open a public issue. Email maatram97@gmail.com.

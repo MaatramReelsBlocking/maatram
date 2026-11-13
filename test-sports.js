@@ -178,7 +178,7 @@ ok('month board counts points only for the current cycle', /points:v\.cycle===cu
 ok('only Google photo URLs render', /PHOTO_RE=\/\^https:\\\/\\\/\[a-z0-9\.-\]\+\\\.googleusercontent\\\.com\\\//.test(lb)
    && (lb.match(/photoOk\(u\.photo\)\?/g) || []).length === 2);
 ok('board listens only while signed in', /unsubs\.forEach\(f=>f\(\)\)/.test(lb) && /Sign in to view/.test(lb));
-ok('signed-out empty state links to login', /<a href="login\.html">Sign in<\/a> to see who is on top/.test(lb));
+ok('signed-out empty state links to login', /<a href="login\.html">Save my points<\/a> to see who is on top/.test(lb));
 ok('rows animate once, live updates keep them visible', /const shown=new Set\(\)/.test(lb) && /if\(seen\('r'\+u\.id\)\) r\.classList\.add\('in'\)/.test(lb));
 ok('dead leaderboard code removed', !/fbUser|fbApi|updateDoc|increment|maatramAddPoints|mePill|signInLink/.test(lb));
 ok('both boards sorted client-side', /cloudUsers\.sort\(/.test(lb) && /cloudLife\s*\.sort\(/.test(lb));
@@ -222,7 +222,7 @@ ok('events read skips old listings', /F\.where\('date','>=',isoDay\(from\)\),F\.
 
 /* ── 11. flat delivery (he uploads to the repo root) ── */
 const files = fs.readdirSync(__dirname).filter(f => f !== 'node_modules' && f !== 'package.json' && f !== 'package-lock.json');
-ok('no unexpected subfolders in package', files.every(f => ['wellness','docs','chrome-extension','api','assets'].includes(f) || f.startsWith('.') || !fs.statSync(path.join(__dirname, f)).isDirectory()));
+ok('no unexpected subfolders in package', files.every(f => ['wellness','docs','chrome-extension','api','assets','standby','images','tools'].includes(f) || f.startsWith('.') || !fs.statSync(path.join(__dirname, f)).isDirectory()));
 
 /* ── 12. coach's corner ── */
 ok('coach section exists', !!D.getElementById('coach'));
@@ -258,7 +258,7 @@ ok('remove button styled', /\.ev \.rm\{/.test(sports));
 ok('author uid carried into the list', /by:v\.by\|\|''/.test(sports));
 ok('board re-renders when auth resolves', /onAuthStateChanged\(U\.getAuth\(app\),u=>\{\s*me=u; authed=!!u;/.test(sports));
 ok('listings listen only while signed in', /if\(unsub\)\{unsub\(\);unsub=null;\}/.test(sports) && /Sign in to view/.test(sports)
-   && /<a href="login\.html">Sign in<\/a> to browse them/.test(sports));
+   && /<a href="login\.html">Save my points<\/a> to browse them/.test(sports));
 ok('remove shown to the Maatram account and the author', /me&&db&&api&&\(\(me\.email\|\|''\)\.toLowerCase\(\)===ADMIN_EMAIL\|\|me\.uid===e\.by\)/.test(sports));
 ok('add-event fields are labelled', ['aTitle','aSport','aCity','aDate','aVenue','aOrg','aUrl'].every(id => D.getElementById(id).getAttribute('aria-label')));
 ok('nav auth wrapper balanced', !!D.querySelector('#mnav #mnavAuth #mnavChip'));
