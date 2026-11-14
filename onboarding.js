@@ -63,22 +63,37 @@
     var s = document.createElement('style'); s.id = 'mobCSS'; s.textContent = CSS; document.head.appendChild(s);
   }
 
-  /* ── Shield check: only the native bridge can answer, and only "running" counts as verified ── */
+  /* ── Shield check. Real contract (android AppBlockerPlugin.getStatus):
+     { enabled: boolean  -- Maatram Shield is switched on in Accessibility settings,
+       serviceRunning: boolean -- the AccessibilityService is connected right now }
+     Verified only when BOTH are literally true. Anything else is "unable to verify". ── */
+  var UNABLE = 'Unable to verify Shield status. Open Settings > Accessibility, check that Maatram Shield is on, and follow the setup guide.';
   function shieldCheck() {
     return new Promise(function (resolve) {
-      var C = window.Capacitor, P = C && C.Plugins, plug = null;
-      if (P) { for (var k in P) { if (/blocker|shield/i.test(k) && P[k] && P[k].getStatus) { plug = P[k]; break; } } }
-      if (!plug) return resolve({ native: !!C, verified: false, text: C
-        ? 'Could not check Shield from here. Open Settings > Accessibility and confirm Maatram Shield is on.'
-        : 'Shield can only be checked inside the Maatram Android app. This website cannot confirm that blocking works.' });
-      var done = false, t = setTimeout(function () { if (!done) { done = true; resolve({ native: true, verified: false, text: 'Shield did not answer. Check Settings > Accessibility.' }); } }, 3000);
+      var C = window.Capacitor, plug = C && C.Plugins && C.Plugins.AppBlocker;
+      if (!C || !C.isNativePlatform || !C.isNativePlatform()) {
+        return resolve({ native: false, verified: false,
+          text: 'Shield can only be checked inside the Maatram Android app. This website cannot confirm that blocking works.' });
+      }
+      if (!plug || typeof plug.getStatus !== 'function') return resolve({ native: true, verified: false, text: UNABLE });
+      var done = false, t = setTimeout(function () {
+        if (!done) { done = true; resolve({ native: true, verified: false, text: UNABLE }); }
+      }, 3000);
       plug.getStatus().then(function (r) {
         if (done) return; done = true; clearTimeout(t);
-        var running = !!(r && (r.running === true || r.serviceRunning === true));
-        resolve({ native: true, verified: running,
-          text: running ? 'Shield is on and running. Blocking starts when you start a Hard Lock.'
-                        : 'Shield is not running yet. Follow the steps in the setup guide, then check again.' });
-      }).catch(function () { if (!done) { done = true; clearTimeout(t); resolve({ native: true, verified: false, text: 'Shield check failed. Follow the setup guide.' }); } });
+        if (r && r.enabled === true && r.serviceRunning === true) {
+          return resolve({ native: true, verified: true, text: 'Shield is on and running. Blocking starts when you start a Hard Lock.' });
+        }
+        if (r && r.enabled === false) {
+          return resolve({ native: true, verified: false, text: 'Shield is off. Follow the steps in the setup guide to turn it on.' });
+        }
+        if (r && r.enabled === true && r.serviceRunning === false) {
+          return resolve({ native: true, verified: false, text: 'Shield is turned on but not running yet. Restart Maatram, then check again.' });
+        }
+        resolve({ native: true, verified: false, text: UNABLE });
+      }).catch(function () {
+        if (!done) { done = true; clearTimeout(t); resolve({ native: true, verified: false, text: UNABLE }); }
+      });
     });
   }
 

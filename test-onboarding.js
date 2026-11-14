@@ -64,29 +64,42 @@ const open = w => !!w.document.getElementById('mob');
   ok('web visitor is told Shield cannot be checked here', /only be checked inside the Maatram Android app/.test(txt1));
   ok('web visitor never sees "running"', !/is on and running/.test(txt1));
 
-  w = page('https://maatram.co.in/timers.html?tour=1', {
-    Capacitor: { Plugins: { AppBlocker: { getStatus: () => Promise.resolve({ running: false }) } } } });
-  await wait(20);
-  for (let i = 0; i < 3; i++) { w.document.querySelector('[data-a="next"]').click(); await wait(5); }
-  await wait(30);
-  const txt2 = (w.document.getElementById('mobShield') || {}).textContent || '';
-  ok('native app with Shield stopped is NOT shown as running', !/is on and running/.test(txt2) && /not running/.test(txt2));
+  /* Native mocks use the REAL getStatus contract from AppBlockerPlugin.java:
+     { enabled, serviceRunning, locked, lockEnd, secondsLeft, whatsappAllowed, lastBlocked } */
+  const native = (getStatus) => ({ isNativePlatform: () => true, Plugins: { AppBlocker: { getStatus } } });
+  const shieldText = async (cap, waitMs = 30) => {
+    const w = page('https://maatram.co.in/timers.html?tour=1', { Capacitor: cap });
+    await wait(20);
+    for (let i = 0; i < 3; i++) { w.document.querySelector('[data-a="next"]').click(); await wait(5); }
+    await wait(waitMs);
+    return (w.document.getElementById('mobShield') || {}).textContent || '';
+  };
+  const ON = /is on and running/;
+  const UNABLE = /Unable to verify Shield status/;
 
-  w = page('https://maatram.co.in/timers.html?tour=1', {
-    Capacitor: { Plugins: { AppBlocker: { getStatus: () => Promise.resolve({ running: true }) } } } });
-  await wait(20);
-  for (let i = 0; i < 3; i++) { w.document.querySelector('[data-a="next"]').click(); await wait(5); }
-  await wait(30);
-  const txt3 = (w.document.getElementById('mobShield') || {}).textContent || '';
-  ok('native app with Shield running is shown as running', /is on and running/.test(txt3));
+  let t = await shieldText(native(() => Promise.resolve({ enabled: false, serviceRunning: false })));
+  ok('enabled:false is reported as off, never running', /is off/.test(t) && !ON.test(t));
 
-  w = page('https://maatram.co.in/timers.html?tour=1', {
-    Capacitor: { Plugins: { AppBlocker: { getStatus: () => new Promise(() => {}) } } } });
-  await wait(20);
-  for (let i = 0; i < 3; i++) { w.document.querySelector('[data-a="next"]').click(); await wait(5); }
-  await wait(3300);
-  const txt4 = (w.document.getElementById('mobShield') || {}).textContent || '';
-  ok('a check that never answers is reported as not verified', /did not answer/.test(txt4) && !/is on and running/.test(txt4));
+  t = await shieldText(native(() => Promise.resolve({ enabled: true, serviceRunning: false })));
+  ok('enabled but service not running is NOT verified', /not running yet/.test(t) && !ON.test(t));
+
+  t = await shieldText(native(() => Promise.resolve({ enabled: true, serviceRunning: true })));
+  ok('enabled AND serviceRunning true is verified', ON.test(t));
+
+  t = await shieldText(native(() => Promise.resolve({ running: true })));
+  ok('old field name "running" alone is NOT treated as verified', !ON.test(t) && UNABLE.test(t));
+
+  t = await shieldText(native(() => Promise.resolve({})));
+  ok('missing fields are reported as unable to verify', UNABLE.test(t) && !ON.test(t));
+
+  t = await shieldText({ isNativePlatform: () => true, Plugins: {} });
+  ok('native app with no AppBlocker plugin shows unable to verify', UNABLE.test(t) && !ON.test(t));
+
+  t = await shieldText(native(() => Promise.reject(new Error('bridge down'))));
+  ok('a rejected getStatus shows unable to verify', UNABLE.test(t) && !ON.test(t));
+
+  t = await shieldText(native(() => new Promise(() => {})), 3300);
+  ok('a check that never answers shows unable to verify', UNABLE.test(t) && !ON.test(t));
 
   console.log('\n' + pass + '/' + (pass + fail) + ' checks pass' + (fail ? '  — ' + fail + ' FAILED' : ''));
   process.exit(fail ? 1 : 0);
